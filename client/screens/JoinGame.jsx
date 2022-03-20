@@ -5,7 +5,7 @@ import globalStyles from "../styles/globalStyles";
 const JoinGame = () => {
   return (
     <View style={globalStyles.container}>
-      <Text style={globalStyles.titleText}>JoinGame</Text>
+      <Text style={globalStyles.titleText}>JoinGame(btn)</Text>
     </View>
   );
 };
