@@ -11,7 +11,7 @@ const Room = ({ navigation }) => {
       <Text style={globalStyles.titleText}>Room</Text>
 
       <TouchableOpacity onPress={pressHandler}>
-        <Text style={globalStyles.titleText}>NEW GAME (test btn)</Text>
+        <Text style={globalStyles.titleText}>NEW GAME (testbtn)</Text>
       </TouchableOpacity>
     </View>
   );
