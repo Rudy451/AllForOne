@@ -8,6 +8,7 @@ import JoinGame from './screens/JoinGame';
 import Room from './screens/Room';
 import Main from './screens/Main';
 import Credits from './screens/Credits';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
