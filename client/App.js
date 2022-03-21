@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import JoinGame from './screens/JoinGame';
 import Room from './screens/Room';
 import Main from './screens/Main';
-import Credits from './screens/Credits';
+import IosFonts from './screens/Credits';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +42,7 @@ export default function App() {
         />
         <Stack.Screen
           name='Credits'
-          component={Credits}
+          component={IosFonts}
           options={{ gestureEnabled: false }}
         />
       </Stack.Navigator>

@@ -12,10 +12,37 @@ const Room = ({ navigation }) => {
     <View style={globalStyles.container}>
       <EnterCryptoModal />
       <SignInModal />
-      <Text style={globalStyles.titleText}>Room</Text>
-      <TouchableOpacity onPress={pressHandler}>
-        <Text style={globalStyles.titleText}>Start game (testbtn)</Text>
+      <Text
+        style={globalStyles.titleTextBold}
+      >{`Welcome to \nALL FOR ONE`}</Text>
+      <Text
+        style={{ ...globalStyles.subText, textAlign: 'center' }}
+      >{`Share the room code to allow others to join \nthe game. Maximum of 10 players`}</Text>
+      <View style={globalStyles.lightContainer}>
+        <Text style={globalStyles.titleTextMedium}>ROOM</Text>
+        <View style={globalStyles.darkContainer}>
+          <Text style={globalStyles.titleTextMedium}>17HU8</Text>
+        </View>
+      </View>
+      <View style={globalStyles.darkContainer}>
+        <Text style={globalStyles.titleTextMedium}></Text>
+      </View>
+      <TouchableOpacity onPress={pressHandler} style={globalStyles.lightBtn}>
+        <Text style={globalStyles.buttonText}>Start game</Text>
       </TouchableOpacity>
+      <Text
+        style={{
+          ...globalStyles.subText,
+          fontSize: 12,
+          marginTop: 30,
+          padding: 0,
+          // borderWidth: 2,
+          // borderColor: 'red',
+        }}
+      >
+        {`We are not responsible for any loss of friendship, life long grudges or
+        \nacts of revenge due to the outcome of this game. Happy Hunting!`}
+      </Text>
     </View>
   );
 };
