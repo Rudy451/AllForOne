@@ -10,8 +10,8 @@ const Room = ({ navigation }) => {
   };
   return (
     <View style={globalStyles.container}>
-      <SignInModal />
       <EnterCryptoModal />
+      <SignInModal />
       <Text style={globalStyles.titleText}>Room</Text>
       <TouchableOpacity onPress={pressHandler}>
         <Text style={globalStyles.titleText}>Start game (testbtn)</Text>
