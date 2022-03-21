@@ -8,11 +8,16 @@ const globalStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  lightContainer: {}, //lighter grey containers border radius on everything is 5
+  glowTitle: {},
+
   titleText: {
     color: "white",
     fontSize: 24,
   },
   subText: {},
+  darkBtn: {},
+  lightBtn: {},
 });
 
 export default globalStyles;
