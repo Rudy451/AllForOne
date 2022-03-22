@@ -1,15 +1,20 @@
 import { View, Text, Button, TouchableOpacity, Image } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import globalStyles from '../styles/globalStyles';
 import logo from '../assets/logo.png';
+import SignInModal from '../modals/SignIn';
 // import RadialGradient from 'react-native-radial-gradient';
 
 const Home = ({ navigation }) => {
+  const [type, setType] = useState('');
+  const [isSignInVisible, setSignInVisibility] = useState(false);
   const pressHandler = () => {
-    navigation.navigate('JoinGame');
+    setType('Player');
+    setSignInVisibility(true);
   };
   const pressHandlerRoom = () => {
-    navigation.navigate('Room');
+    setType('Captain');
+    setSignInVisibility(true);
   };
   return (
     <View style={{ ...globalStyles.container, justifyContent: 'flex-start' }}>
@@ -21,6 +26,12 @@ const Home = ({ navigation }) => {
         radius={200}
       ></RadialGradient> */}
       <Image source={logo} style={{ marginVertical: 40, marginLeft: 30 }} />
+      <SignInModal
+        type={type}
+        isSignInVisible={isSignInVisible}
+        setSignInVisibility={setSignInVisibility}
+        navigation={navigation}
+      />
       <TouchableOpacity
         onPress={pressHandlerRoom}
         style={globalStyles.lightBtn}

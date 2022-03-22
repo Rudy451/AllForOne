@@ -16,7 +16,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Room = ({ navigation }) => {
+const Room = ({ navigation, route }) => {
+  const { type } = route.params;
   const pressHandler = () => {
     navigation.navigate('Main');
   };
@@ -49,6 +50,7 @@ const Room = ({ navigation }) => {
         justifyContent: 'flex-start',
       }}
     >
+      {type === 'Captain' ? <EnterCryptoModal /> : null}
       <EnterCryptoModal />
       <SignInModal />
       <Text
@@ -57,6 +59,7 @@ const Room = ({ navigation }) => {
           marginTop: 80,
         }}
       >{`Welcome to \nALL FOR ONE`}</Text>
+      <Text style={{ color: 'white' }}>{JSON.stringify(type)}</Text>
       <Text
         style={{ ...globalStyles.subText, textAlign: 'center' }}
       >{`Share the room code to allow others to join \nthe game. Maximum of 10 players`}</Text>
@@ -116,7 +119,7 @@ const Room = ({ navigation }) => {
         style={{
           ...globalStyles.subText,
           fontSize: 12,
-          marginTop: windowHeight - 100,
+          marginTop: windowHeight - 90,
           padding: 0,
           textAlign: 'center',
           position: 'absolute',
