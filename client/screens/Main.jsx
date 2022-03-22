@@ -32,7 +32,7 @@ const Main = ({ navigation }) => {
   };
   return (
     <>
-      <View style={globalStyles.container}>
+      <View style={[globalStyles.container, { justifyContent: "flex-end" }]}>
         <View
           style={{
             backgroundColor: "#182624",
@@ -49,7 +49,7 @@ const Main = ({ navigation }) => {
               { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
             ]}
           >
-            <Text style={[globalStyles.titleText, { textAlign: "center" }]}>
+            <Text style={[globalStyles.titleTextBold, { textAlign: "center" }]}>
               Check-In
             </Text>
           </TouchableOpacity>

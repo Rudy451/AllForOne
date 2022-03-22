@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import { NavigationRouteContext } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import { NavigationEvents } from "react-navigation";
 
-function SignInModal() {
-  const [modalVisible, setModalVisible] = useState(true);
+function SignInModal({
+  isSignInVisible,
+  setSignInVisibility,
+  type,
+  navigation,
+}) {
+  const signInOnPress = () => {
+    if (type === "Captain") {
+      navigation.navigate("Room", { type: "Captain" });
+      setSignInVisibility(!isSignInVisible);
+    } else {
+      navigation.navigate("JoinGame", { type: "Player" });
+      setSignInVisibility(!isSignInVisible);
+    }
+  };
   return (
-    <Modal
-      animationType='slide'
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        //TODO metamask sign in logic goes here
-        Alert.alert('Modal has been closed.');
-        setModalVisible(!modalVisible);
-      }}
-    >
+    <Modal animationType="slide" transparent={true} visible={isSignInVisible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>
@@ -22,7 +28,7 @@ function SignInModal() {
           <Pressable
             style={[styles.button, styles.buttonClose]}
             // Need to be able to sign in with metamask when the button is clicked
-            onPress={() => setModalVisible(!modalVisible)}
+            onPress={signInOnPress}
           >
             <Text style={styles.textStyle}>SIGN IN</Text>
           </Pressable>
@@ -34,17 +40,17 @@ function SignInModal() {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 55,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -59,16 +65,16 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 50,
     elevation: 2,
-    backgroundColor: '#182724',
+    backgroundColor: "#182724",
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
