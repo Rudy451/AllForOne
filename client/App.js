@@ -29,12 +29,12 @@ export default function App() {
         <Stack.Screen
           name='Room'
           component={Room}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: true }}
         />
         <Stack.Screen
           name='JoinGame'
           component={JoinGame}
-          options={{ gestureEnabled: false }}
+          options={{ gestureEnabled: true }}
         />
         <Stack.Screen
           name='Main'

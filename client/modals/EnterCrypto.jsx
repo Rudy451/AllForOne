@@ -8,6 +8,7 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import globalStyles from '../styles/globalStyles';
 
 function EnterCryptoModal() {
   const [modalVisible, setModalVisible] = useState(true);
@@ -29,23 +30,41 @@ function EnterCryptoModal() {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>
+          <Text style={globalStyles.subText}>
             Captain sets the pot amount for all players. Players will be sent an
             alert to agree or diagree with the buy-in amount.
           </Text>
-          <TextInput
-            value={amount}
-            onChangeText={(text) => setAmount(text)}
-            style={styles.input}
-            placeholder='Enter amount'
-            placeholderTextColor={'white'}
-          ></TextInput>
+          <View
+            style={{
+              ...globalStyles.lightContainer,
+              justifyContent: 'center',
+            }}
+          >
+            <View
+              style={{
+                ...globalStyles.darkContainer,
+                height: 90,
+                width: 254,
+                justifyContent: 'center',
+              }}
+            >
+              <TextInput
+                value={amount}
+                onChangeText={(text) => setAmount(text)}
+                style={{
+                  ...globalStyles.titleTextMedium,
+                }}
+                placeholder='Enter amount'
+                placeholderTextColor={'white'}
+              ></TextInput>
+            </View>
+          </View>
           <Pressable
-            style={[styles.button, styles.buttonClose]}
+            style={globalStyles.lightBtn}
             // Need to be able to sign in with metamask when the button is clicked
             onPress={handlePress}
           >
-            <Text style={styles.textStyle}>SET PRICE</Text>
+            <Text style={globalStyles.buttonText}>SET PRICE</Text>
           </Pressable>
         </View>
       </View>
@@ -60,10 +79,9 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 55,
+    margin: 40,
+    backgroundColor: 'black',
+    padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -73,14 +91,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  button: {
-    marginTop: 20,
-    borderRadius: 10,
-    padding: 10,
-    paddingHorizontal: 50,
-    elevation: 2,
-    backgroundColor: '#57f3d3',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#00E6B7',
   },
   textStyle: {
     color: 'white',

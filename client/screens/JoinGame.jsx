@@ -1,17 +1,16 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import globalStyles from '../styles/globalStyles';
-import SignInModal from '../modals/SignIn';
 import { TextInput } from 'react-native-gesture-handler';
 
-const JoinGame = ({ navigation }) => {
+const JoinGame = ({ navigation, route }) => {
+  const { type } = route.params;
   const [roomCode, setRoomCode] = useState('');
   const pressHandler = () => {
-    navigation.navigate('Room');
+    navigation.navigate('Room', { type: 'Player' });
   };
   return (
     <View style={globalStyles.container}>
-      <SignInModal />
       <View
         style={{
           ...globalStyles.lightContainer,
@@ -31,7 +30,7 @@ const JoinGame = ({ navigation }) => {
             value={roomCode}
             onChange={(text) => setRoomCode(text)}
             style={globalStyles.titleTextMedium}
-            placeholder={'Enter '}
+            placeholder={''}
             placeholderTextColor={'white'}
           ></TextInput>
         </View>
