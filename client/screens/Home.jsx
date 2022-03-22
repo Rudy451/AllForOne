@@ -1,23 +1,23 @@
-import { View, Text, Button, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
-import globalStyles from "../styles/globalStyles";
-import logo from "../assets/logo.png";
-import SignInModal from "../modals/SignIn";
+import { View, Text, Button, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import globalStyles from '../styles/globalStyles';
+import logo from '../assets/logo.png';
+import SignInModal from '../modals/SignIn';
 // import RadialGradient from 'react-native-radial-gradient';
 
 const Home = ({ navigation }) => {
-  const [type, setType] = useState("");
+  const [type, setType] = useState('');
   const [isSignInVisible, setSignInVisibility] = useState(false);
   const pressHandler = () => {
-    setType("Player");
+    setType('Player');
     setSignInVisibility(true);
   };
   const pressHandlerRoom = () => {
-    setType("Captain");
+    setType('Captain');
     setSignInVisibility(true);
   };
   return (
-    <View style={globalStyles.container}>
+    <View style={{ ...globalStyles.container, justifyContent: 'flex-start' }}>
       {/* <RadialGradient
         style={{ width: 200, height: 200 }}
         colors={['black', 'green', 'blue', 'red']}
@@ -25,14 +25,13 @@ const Home = ({ navigation }) => {
         center={[100, 100]}
         radius={200}
       ></RadialGradient> */}
-      <Image source={logo} />
+      <Image source={logo} style={{ marginVertical: 40, marginLeft: 30 }} />
       <SignInModal
         type={type}
         isSignInVisible={isSignInVisible}
         setSignInVisibility={setSignInVisibility}
         navigation={navigation}
       />
-
       <TouchableOpacity
         onPress={pressHandlerRoom}
         style={globalStyles.lightBtn}
