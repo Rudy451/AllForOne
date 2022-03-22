@@ -12,7 +12,7 @@ const Home = ({ navigation }) => {
     navigation.navigate('Room');
   };
   return (
-    <View style={globalStyles.container}>
+    <View style={{ ...globalStyles.container, justifyContent: 'flex-start' }}>
       {/* <RadialGradient
         style={{ width: 200, height: 200 }}
         colors={['black', 'green', 'blue', 'red']}
@@ -20,7 +20,7 @@ const Home = ({ navigation }) => {
         center={[100, 100]}
         radius={200}
       ></RadialGradient> */}
-      <Image source={logo} />
+      <Image source={logo} style={{ marginVertical: 40, marginLeft: 30 }} />
       <TouchableOpacity
         onPress={pressHandlerRoom}
         style={globalStyles.lightBtn}
