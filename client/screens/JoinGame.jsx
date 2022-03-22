@@ -1,14 +1,14 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
-import globalStyles from "../styles/globalStyles";
-import { TextInput } from "react-native-gesture-handler";
-import EnterRoomCode from "../EnterRoomCode";
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import globalStyles from '../styles/globalStyles';
+import { TextInput } from 'react-native-gesture-handler';
+import EnterRoomCode from '../EnterRoomCode';
 
 const JoinGame = ({ navigation, route }) => {
   const { type } = route.params;
-  const [roomCode, setRoomCode] = useState("");
+  const [roomCode, setRoomCode] = useState('');
   const pressHandler = () => {
-    navigation.navigate("Room", { type: "Player" });
+    navigation.navigate('Room', { type: 'Player' });
   };
   return (
     <View style={globalStyles.container}>
@@ -16,7 +16,7 @@ const JoinGame = ({ navigation, route }) => {
         style={{
           ...globalStyles.lightContainer,
           height: 300,
-          justifyContent: "center",
+          justifyContent: 'center',
         }}
       >
         <EnterRoomCode />
@@ -26,8 +26,8 @@ const JoinGame = ({ navigation, route }) => {
             value={roomCode}
             onChange={(text) => setRoomCode(text)}
             style={globalStyles.titleTextMedium}
-            placeholder={""}
-            placeholderTextColor={"white"}
+            placeholder={''}
+            placeholderTextColor={'white'}
           ></TextInput>
         </View>
       </View>

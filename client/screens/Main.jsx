@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import globalStyles from '../styles/globalStyles';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import RulesModal from '../modals/Rules';
 import LocationModal from '../modals/Locations';
 import ExitModal from '../modals/Exit';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+// import locationServices from '../services/locationServices';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -30,10 +33,47 @@ const Main = ({ navigation }) => {
   const openExit = () => {
     setModalExitVisible(!modalExitVisible);
   };
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      console.log(location);
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
+  // let coordinate = { latitude: 51.505, longitude: -0.09 };
+  // if (location) {
+  //   coordinate = {
+  //     latitude: location.latitude,
+  //     longitude: location.longitude,
+  //   };
+  // }
+
   return (
     <>
       <View style={[globalStyles.container, { justifyContent: 'flex-end' }]}>
-        <View
+        <View style={styles.container}>
+          <MapView style={styles.map}>
+            {/* <Marker coordinate={coordinate} /> */}
+          </MapView>
+        </View>
+        {/* <View
           style={{
             backgroundColor: '#182624',
             width: '80%',
@@ -53,7 +93,7 @@ const Main = ({ navigation }) => {
               Check-In
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       <View
         style={{
@@ -97,11 +137,19 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-
     padding: 10,
-
     elevation: 2,
     backgroundColor: '#00E6B7',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 });
 
