@@ -5,38 +5,38 @@ import {
   Dimensions,
   StyleSheet,
   SafeAreaView,
-} from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import React from 'react';
-import globalStyles from '../styles/globalStyles';
-import SignInModal from '../modals/SignIn';
-import EnterCryptoModal from '../modals/EnterCrypto';
-import { FontAwesome5 } from '@expo/vector-icons';
+} from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import React from "react";
+import globalStyles from "../styles/globalStyles";
+import SignInModal from "../modals/SignIn";
+import EnterCryptoModal from "../modals/EnterCrypto";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const Room = ({ navigation, route }) => {
   const { type } = route.params;
   const pressHandler = () => {
-    navigation.navigate('Main');
+    navigation.navigate("Main");
   };
-  const mockTotal = '60ETH';
+  const mockTotal = "60ETH";
   const mockUsernames = [
-    'CaptainWatchYoBack',
-    'KanyeWinAll',
-    'MrStealYaCash',
-    'TheDragon',
+    "CaptainWatchYoBack",
+    "KanyeWinAll",
+    "MrStealYaCash",
+    "TheDragon",
   ];
   const renderItem = ({ item }) => {
     return (
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: "row",
           padding: 5,
         }}
       >
-        <FontAwesome5 name='hourglass-half' size={20} color='#00E6B7' />
+        <FontAwesome5 name="hourglass-half" size={20} color="#00E6B7" />
         <Text style={{ ...globalStyles.subText, padding: 0, paddingLeft: 10 }}>
           {item}
         </Text>
@@ -47,21 +47,20 @@ const Room = ({ navigation, route }) => {
     <View
       style={{
         ...globalStyles.container,
-        justifyContent: 'flex-start',
+        justifyContent: "flex-start",
       }}
     >
-      {type === 'Captain' ? <EnterCryptoModal /> : null}
-      <EnterCryptoModal />
-      <SignInModal />
+      {type === "Captain" ? <EnterCryptoModal /> : null}
+
       <Text
         style={{
           ...globalStyles.titleTextBold,
           marginTop: 80,
         }}
       >{`Welcome to \nALL FOR ONE`}</Text>
-      <Text style={{ color: 'white' }}>{JSON.stringify(type)}</Text>
+      <Text style={{ color: "white" }}>{JSON.stringify(type)}</Text>
       <Text
-        style={{ ...globalStyles.subText, textAlign: 'center' }}
+        style={{ ...globalStyles.subText, textAlign: "center" }}
       >{`Share the room code to allow others to join \nthe game. Maximum of 10 players`}</Text>
       <View style={globalStyles.lightContainer}>
         <Text style={globalStyles.titleTextMedium}>ROOM</Text>
@@ -73,8 +72,8 @@ const Room = ({ navigation, route }) => {
         style={{
           ...globalStyles.lightContainer,
           marginVertical: 30,
-          alignItems: 'flex-start',
-          height: '30%',
+          alignItems: "flex-start",
+          height: "30%",
           padding: 10,
         }}
       >
@@ -93,9 +92,9 @@ const Room = ({ navigation, route }) => {
           style={{
             width: 120,
             height: 130,
-            position: 'absolute',
-            marginLeft: '60%',
-            marginTop: '50%',
+            position: "absolute",
+            marginLeft: "60%",
+            marginTop: "50%",
           }}
         >
           <Text style={globalStyles.subText}>Current Total:</Text>
@@ -103,7 +102,7 @@ const Room = ({ navigation, route }) => {
             {mockTotal}
           </Text>
           <Text
-            style={{ ...globalStyles.subText, fontSize: 12, color: '#00E6B7' }}
+            style={{ ...globalStyles.subText, fontSize: 12, color: "#00E6B7" }}
           >
             PROPOSE NEW BUY-IN
           </Text>
@@ -121,8 +120,8 @@ const Room = ({ navigation, route }) => {
           fontSize: 12,
           marginTop: windowHeight - 90,
           padding: 0,
-          textAlign: 'center',
-          position: 'absolute',
+          textAlign: "center",
+          position: "absolute",
         }}
       >
         {`We are not responsible for any loss of friendship, life long grudges or
