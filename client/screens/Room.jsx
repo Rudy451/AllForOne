@@ -1,22 +1,24 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
-import globalStyles from '../styles/globalStyles';
-import SignInModal from '../modals/SignIn';
-import EnterCryptoModal from '../modals/EnterCrypto';
+import { View, Text, TouchableOpacity } from "react-native";
+import React from "react";
+import globalStyles from "../styles/globalStyles";
+import SignInModal from "../modals/SignIn";
+import EnterCryptoModal from "../modals/EnterCrypto";
 
-const Room = ({ navigation }) => {
+const Room = ({ navigation, route }) => {
+  const { type } = route.params;
   const pressHandler = () => {
-    navigation.navigate('Main');
+    navigation.navigate("Main");
   };
   return (
     <View style={globalStyles.container}>
-      <EnterCryptoModal />
-      <SignInModal />
+      {type === "Captain" ? <EnterCryptoModal /> : null}
+
       <Text
         style={globalStyles.titleTextBold}
       >{`Welcome to \nALL FOR ONE`}</Text>
+      <Text style={{ color: "white" }}>{JSON.stringify(type)}</Text>
       <Text
-        style={{ ...globalStyles.subText, textAlign: 'center' }}
+        style={{ ...globalStyles.subText, textAlign: "center" }}
       >{`Share the room code to allow others to join \nthe game. Maximum of 10 players`}</Text>
       <View style={globalStyles.lightContainer}>
         <Text style={globalStyles.titleTextMedium}>ROOM</Text>

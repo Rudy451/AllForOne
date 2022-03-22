@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import globalStyles from "../styles/globalStyles";
@@ -31,8 +32,28 @@ const Main = ({ navigation }) => {
   };
   return (
     <>
-      <View style={globalStyles.container}>
-        <Text style={globalStyles.titleText}>Main(geo map)</Text>
+      <View style={[globalStyles.container, { justifyContent: "flex-end" }]}>
+        <View
+          style={{
+            backgroundColor: "#182624",
+            width: "80%",
+            height: "30%",
+            borderRadius: 20,
+            marginBottom: 20,
+            justifyContent: "flex-end",
+          }}
+        >
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
+            ]}
+          >
+            <Text style={[globalStyles.titleTextBold, { textAlign: "center" }]}>
+              Check-In
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <View
         style={{
@@ -73,6 +94,14 @@ const Main = ({ navigation }) => {
 const styles = StyleSheet.create({
   header: {
     // position: 'absolute',
+  },
+  button: {
+    marginTop: 20,
+
+    padding: 10,
+
+    elevation: 2,
+    backgroundColor: "#00E6B7",
   },
 });
 
