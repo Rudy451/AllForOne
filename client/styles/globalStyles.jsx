@@ -1,12 +1,20 @@
-import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { View, Text, StyleSheet, StatusBar, Dimensions } from "react-native";
 import React from "react";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const globalStyles = StyleSheet.create({
   container: {
     backgroundColor: "#0b1313",
     flex: 1,
+    width: windowWidth,
+    height: windowHeight,
+    paddingBottom: 50,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  innerContainer: {
     paddingTop: StatusBar.currentHeight,
     paddingBottom: StatusBar.currentHeight,
     overflow: "scroll",
@@ -59,12 +67,14 @@ const globalStyles = StyleSheet.create({
   darkBtn: {
     marginTop: 20,
     borderRadius: 10,
-    padding: 10,
+    padding: 5,
     paddingHorizontal: 50,
     elevation: 2,
     backgroundColor: "#182724",
   },
   lightBtn: {
+    width: "60%",
+    height: "8%",
     marginTop: 20,
     borderRadius: 10,
     padding: 10,
@@ -76,6 +86,7 @@ const globalStyles = StyleSheet.create({
     color: "white",
     fontSize: 24,
     fontFamily: "AvenirNextCondensed-Bold",
+    textAlign: "center",
   },
 });
 

@@ -12,7 +12,6 @@ import React from "react";
 import globalStyles from "../styles/globalStyles";
 import EnterCryptoModal from "../modals/EnterCrypto";
 import { FontAwesome5 } from "@expo/vector-icons";
-import Container from "../components/Container";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -24,10 +23,6 @@ const Room = ({ navigation, route }) => {
   };
   const mockTotal = "60ETH";
   const mockUsernames = [
-    "CaptainWatchYoBack",
-    "KanyeWinAll",
-    "MrStealYaCash",
-    "TheDragon",
     "CaptainWatchYoBack",
     "KanyeWinAll",
     "MrStealYaCash",
@@ -50,7 +45,7 @@ const Room = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={globalStyles.container}>
-      <ScrollView>
+      <ScrollView style={{ marginBottom: 20 }}>
         <ScrollView contentContainerStyle={globalStyles.container}>
           {type === "Captain" ? <EnterCryptoModal /> : null}
 
@@ -117,7 +112,7 @@ const Room = ({ navigation, route }) => {
             onPress={pressHandler}
             style={{ ...globalStyles.lightBtn, marginTop: 0 }}
           >
-            <Text style={globalStyles.buttonText}>Start game</Text>
+            <Text style={globalStyles.buttonText}>START GAME</Text>
           </TouchableOpacity>
           <Text
             style={{

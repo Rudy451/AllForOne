@@ -18,7 +18,7 @@ const Home = ({ navigation }) => {
     setSignInVisibility(true);
   };
   return (
-    <View style={{ ...globalStyles.container, justifyContent: "flex-start" }}>
+    <View style={globalStyles.container}>
       {/* <RadialGradient
         style={{ width: 200, height: 200 }}
         colors={['black', 'green', 'blue', 'red']}
@@ -26,7 +26,15 @@ const Home = ({ navigation }) => {
         center={[100, 100]}
         radius={200}
       ></RadialGradient> */}
-      <Image source={Logo} style={{ marginVertical: 30, marginLeft: 0 }} />
+      <Image
+        source={Logo}
+        style={{
+          marginVertical: 30,
+          marginLeft: 0,
+          width: "90%",
+          height: "50%",
+        }}
+      />
 
       <SignInModal
         type={type}
