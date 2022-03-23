@@ -5,6 +5,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Pressable,
+  Image,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import globalStyles from '../styles/globalStyles';
@@ -14,7 +15,9 @@ import LocationModal from '../modals/Locations';
 import ExitModal from '../modals/Exit';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-// import locationServices from '../services/locationServices';
+import MapViewDirections from 'react-native-maps-directions';
+import locationsForTheGame from './locations';
+import { API_KEY_DIRECTIONS } from '@env';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -41,8 +44,6 @@ const Main = ({ navigation }) => {
     latitude: 39.106805261119526,
     longitude: -104.84521832274527,
   });
-
-  const locationsForTheGame = [];
 
   useEffect(() => {
     (async () => {
@@ -75,21 +76,7 @@ const Main = ({ navigation }) => {
     <>
       <View style={[globalStyles.container, { justifyContent: 'flex-end' }]}>
         <View style={styles.container}>
-          <MapView style={styles.map}>
-            {/* <Marker
-              coordinate={coordinate}
-              draggable={true}
-              onDragStart={(e) =>
-                console.log('drag start: ', e.nativeEvent.coordinates)
-              }
-              onDragEnd={(e) =>
-                console.log('drag end: ', e.nativeEvent.coordinates)
-              }
-            >
-              <Callout>
-                <Text>You're here!</Text>
-              </Callout>
-            </Marker> */}
+          <MapView style={styles.map} provider='google'>
             <Marker
               coordinate={pin}
               draggable={true}
@@ -107,6 +94,29 @@ const Main = ({ navigation }) => {
                 <Text>You're here!</Text>
               </Callout>
             </Marker>
+            {locationsForTheGame.map((location) => {
+              <Marker
+                coordinate={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                }}
+                pinColor='pink'
+              >
+                <Callout>
+                  <Text>{location.name}</Text>
+                </Callout>
+              </Marker>;
+            })}
+            <MapViewDirections
+              origin={{
+                latitude: 39.106805261119526,
+                longitude: -104.84521832274527,
+              }}
+              destination={{ latitude: 39.7518, longitude: -105.014 }}
+              apikey={API_KEY_DIRECTIONS}
+              strokeColor='green'
+              strokeWidth={3}
+            />
           </MapView>
         </View>
         {/* <View

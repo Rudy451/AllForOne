@@ -15,13 +15,16 @@ const JoinGame = ({ navigation, route }) => {
       <View
         style={{
           ...globalStyles.lightContainer,
-          height: 300,
+          height: '40%',
+          width: '90%',
           justifyContent: 'center',
         }}
       >
         <EnterRoomCode />
 
-        <View style={globalStyles.darkContainer}>
+        <View
+          style={{ ...globalStyles.darkContainer, height: '20%', width: '70%' }}
+        >
           <TextInput
             value={roomCode}
             onChange={(text) => setRoomCode(text)}
