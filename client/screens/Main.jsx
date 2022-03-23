@@ -15,9 +15,7 @@ import LocationModal from '../modals/Locations';
 import ExitModal from '../modals/Exit';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import MapViewDirections from 'react-native-maps-directions';
 import locationsForTheGame from './locations';
-import { API_KEY_DIRECTIONS } from '@env';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -72,8 +70,6 @@ const Main = ({ navigation }) => {
     };
   }
 
-  console.log('testing the gitignore');
-
   return (
     <>
       <View style={[globalStyles.container, { justifyContent: 'flex-end' }]}>
@@ -109,16 +105,6 @@ const Main = ({ navigation }) => {
                 </Callout>
               </Marker>;
             })}
-            <MapViewDirections
-              origin={{
-                latitude: 39.106805261119526,
-                longitude: -104.84521832274527,
-              }}
-              destination={{ latitude: 39.7518, longitude: -105.014 }}
-              apikey={API_KEY_DIRECTIONS}
-              strokeColor='green'
-              strokeWidth={3}
-            />
           </MapView>
         </View>
         {/* <View
