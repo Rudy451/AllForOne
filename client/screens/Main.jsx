@@ -72,6 +72,8 @@ const Main = ({ navigation }) => {
     };
   }
 
+  console.log('testing the gitignore');
+
   return (
     <>
       <View style={[globalStyles.container, { justifyContent: 'flex-end' }]}>
