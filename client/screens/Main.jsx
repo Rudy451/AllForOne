@@ -12,7 +12,7 @@ import { Entypo, Ionicons } from '@expo/vector-icons';
 import RulesModal from '../modals/Rules';
 import LocationModal from '../modals/Locations';
 import ExitModal from '../modals/Exit';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Callout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 // import locationServices from '../services/locationServices';
 
@@ -33,8 +33,16 @@ const Main = ({ navigation }) => {
   const openExit = () => {
     setModalExitVisible(!modalExitVisible);
   };
+
+  //MAP CODE
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [pin, setPin] = useState({
+    latitude: 39.106805261119526,
+    longitude: -104.84521832274527,
+  });
+
+  const locationsForTheGame = [];
 
   useEffect(() => {
     (async () => {
@@ -43,7 +51,6 @@ const Main = ({ navigation }) => {
         setErrorMsg('Permission to access location was denied');
         return;
       }
-
       let location = await Location.getCurrentPositionAsync({});
       console.log(location);
       setLocation(location);
@@ -56,21 +63,50 @@ const Main = ({ navigation }) => {
   } else if (location) {
     text = JSON.stringify(location);
   }
-
-  // let coordinate = { latitude: 51.505, longitude: -0.09 };
-  // if (location) {
-  //   coordinate = {
-  //     latitude: location.latitude,
-  //     longitude: location.longitude,
-  //   };
-  // }
+  let coordinate = {};
+  if (location) {
+    coordinate = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+  }
 
   return (
     <>
       <View style={[globalStyles.container, { justifyContent: 'flex-end' }]}>
         <View style={styles.container}>
           <MapView style={styles.map}>
-            {/* <Marker coordinate={coordinate} /> */}
+            {/* <Marker
+              coordinate={coordinate}
+              draggable={true}
+              onDragStart={(e) =>
+                console.log('drag start: ', e.nativeEvent.coordinates)
+              }
+              onDragEnd={(e) =>
+                console.log('drag end: ', e.nativeEvent.coordinates)
+              }
+            >
+              <Callout>
+                <Text>You're here!</Text>
+              </Callout>
+            </Marker> */}
+            <Marker
+              coordinate={pin}
+              draggable={true}
+              onDragStart={(e) =>
+                console.log('drag start: ', e.nativeEvent.coordinate)
+              }
+              onDragEnd={(e) =>
+                setPin({
+                  latitude: e.nativeEvent.coordinate.latitude,
+                  longitude: e.nativeEvent.coordinate.longitude,
+                })
+              }
+            >
+              <Callout>
+                <Text>You're here!</Text>
+              </Callout>
+            </Marker>
           </MapView>
         </View>
         {/* <View
