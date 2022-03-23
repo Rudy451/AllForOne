@@ -21,17 +21,13 @@ const globalStyles = StyleSheet.create({
   },
   lightContainer: {
     backgroundColor: "#182624",
-    width: 304,
-    height: 140,
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
+    margin: 5,
+    padding: 10,
+    justifyContent: "center",
   },
   darkContainer: {
     backgroundColor: "black",
-    width: 144,
-    height: 55,
-    borderWidth: 1,
+
     borderRadius: 5,
     alignSelf: "center",
     padding: 5,
@@ -61,7 +57,7 @@ const globalStyles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontFamily: "Avenir Next Condensed",
-    padding: 10,
+    padding: 0,
     textAlign: "center",
   },
   darkBtn: {
@@ -81,6 +77,7 @@ const globalStyles = StyleSheet.create({
     paddingHorizontal: 50,
     elevation: 2,
     backgroundColor: "#00E6B7",
+    justifyContent: "center",
   },
   buttonText: {
     color: "white",

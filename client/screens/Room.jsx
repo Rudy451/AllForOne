@@ -45,101 +45,175 @@ const Room = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={globalStyles.container}>
-      <ScrollView style={{ marginBottom: 20 }}>
-        <ScrollView contentContainerStyle={globalStyles.container}>
-          {type === "Captain" ? <EnterCryptoModal /> : null}
+      {type === "Captain" ? <EnterCryptoModal /> : null}
 
+      <View style={{ ...styles.innerContainers, height: "45%" }}>
+        <Text
+          style={{
+            ...globalStyles.titleTextBold,
+            marginTop: 20,
+            height: "30%",
+            lineHeight: 45,
+          }}
+        >{`Welcome to \nALL FOR ONE`}</Text>
+        <Text
+          style={{
+            ...globalStyles.subText,
+            textAlign: "center",
+            fontSize: 15,
+            width: "70%",
+            margin: 5,
+          }}
+        >{`Share the room code to allow others to join the game. Maximum of 10 players`}</Text>
+        <View
+          style={{
+            ...globalStyles.lightContainer,
+            padding: 0,
+            width: "100%",
+            height: "40%",
+          }}
+        >
           <Text
             style={{
-              ...globalStyles.titleTextBold,
-              marginTop: 80,
+              ...globalStyles.titleTextMedium,
+              width: "100%",
+              height: "45%",
             }}
-          >{`Welcome to \nALL FOR ONE`}</Text>
-          <Text
-            style={{ ...globalStyles.subText, textAlign: "center" }}
-          >{`Share the room code to allow others to join \nthe game. Maximum of 10 players`}</Text>
-          <View style={globalStyles.lightContainer}>
-            <Text style={globalStyles.titleTextMedium}>ROOM</Text>
-            <View style={globalStyles.darkContainer}>
-              <Text style={globalStyles.titleTextMedium}>17HU8</Text>
-            </View>
-          </View>
+          >
+            ROOM
+          </Text>
           <View
             style={{
-              ...globalStyles.lightContainer,
-              marginVertical: 30,
-              alignItems: "flex-start",
-              height: "30%",
-              padding: 10,
+              ...globalStyles.darkContainer,
+              width: "55%",
+              height: "45%",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Text style={{ ...globalStyles.titleTextMedium, fontSize: 24 }}>
-              Players Entered
-            </Text>
-            <SafeAreaView style={styles.container}>
-              <FlatList
-                data={mockUsernames}
-                renderItem={renderItem}
-                keyExtractor={(item) => item}
-                style={styles.flatlist}
-              ></FlatList>
-            </SafeAreaView>
-            <View
+            <Text
               style={{
-                width: "70%",
-                height: "75%",
-                position: "absolute",
-                marginLeft: "60%",
-                marginTop: "30%",
+                ...globalStyles.titleTextMedium,
+                width: "100%",
+                height: "100%",
               }}
             >
-              <Text style={globalStyles.subText}>Current Total:</Text>
-              <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-                {mockTotal}
-              </Text>
-              <Text
-                style={{
-                  ...globalStyles.subText,
-                  fontSize: 12,
-                  color: "#00E6B7",
-                }}
-              >
-                PROPOSE NEW BUY-IN
-              </Text>
-            </View>
+              17HU8
+            </Text>
           </View>
-          <TouchableOpacity
-            onPress={pressHandler}
-            style={{ ...globalStyles.lightBtn, marginTop: 0 }}
-          >
-            <Text style={globalStyles.buttonText}>START GAME</Text>
-          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={{ ...styles.innerContainers, justifyContent: "flex-end" }}>
+        <View
+          style={{
+            ...globalStyles.lightContainer,
+            marginVertical: 10,
+            alignItems: "flex-start",
+            height: "65%",
+            width: "100%",
+            padding: 10,
+          }}
+        >
           <Text
             style={{
-              ...globalStyles.subText,
-              fontSize: 12,
-              marginTop: 30,
-              marginBottom: 50,
-              padding: 0,
-              textAlign: "center",
+              ...globalStyles.titleTextMedium,
+              fontSize: 24,
+              width: "100%",
+              height: "15%",
+              textAlign: "left",
+              margin: 5,
             }}
           >
-            {`We are not responsible for any loss of friendship, life long grudges or
-        acts of revenge due to the outcome of this game. Happy Hunting!`}
+            Players Entered
           </Text>
-        </ScrollView>
-      </ScrollView>
+
+          <FlatList
+            data={mockUsernames}
+            renderItem={renderItem}
+            keyExtractor={(item) => item}
+            style={styles.flatlist}
+          ></FlatList>
+
+          <View
+            style={{
+              width: "70%",
+              height: "40%",
+              position: "absolute",
+              marginLeft: "60%",
+              marginTop: "30%",
+            }}
+          >
+            <Text style={globalStyles.subText}>Current Total:</Text>
+            <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
+              {mockTotal}
+            </Text>
+            <Text
+              style={{
+                ...globalStyles.subText,
+                fontSize: 12,
+                color: "#00E6B7",
+              }}
+            >
+              PROPOSE NEW BUY-IN
+            </Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={pressHandler}
+          style={{
+            ...globalStyles.lightBtn,
+            marginTop: 10,
+            height: "15%",
+            width: "65%",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              ...globalStyles.buttonText,
+              width: "100%",
+            }}
+          >
+            START GAME
+          </Text>
+        </TouchableOpacity>
+        <Text
+          style={{
+            ...globalStyles.subText,
+            fontSize: 12,
+            marginTop: 15,
+            marginBottom: 5,
+            width: "100%",
+            height: "10%",
+            flexWrap: "wrap",
+          }}
+        >
+          {`We are not responsible for any loss of friendship, life long grudges or
+        acts of revenge due to the outcome of this game. Happy Hunting!`}
+        </Text>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
+    height: windowHeight,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: 0,
+    margin: 0,
+    width: windowWidth,
+  },
+  innerContainers: {
+    width: "90%",
+    height: "50%",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   flatlist: {
     paddingVertical: 10,
+    width: "100%",
   },
 });
 
