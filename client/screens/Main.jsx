@@ -50,9 +50,14 @@ const Main = ({ navigation }) => {
         setErrorMsg('Permission to access location was denied');
         return;
       }
-      let location = await Location.getCurrentPositionAsync({});
-      console.log(location);
-      setLocation(location);
+      setInterval(async () => {
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Highest,
+          maximumAge: 10000,
+        });
+        setLocation(location);
+        console.log('inside the func: ', location);
+      }, 5000);
     })();
   }, []);
 
@@ -69,14 +74,31 @@ const Main = ({ navigation }) => {
       longitude: location.coords.longitude,
     };
   }
-
+  console.log('outside: ', location);
   return (
     <>
-      <View style={[globalStyles.container, { justifyContent: 'flex-end' }]}>
+      <View
+        style={[
+          globalStyles.container,
+          {
+            justifyContent: 'flex-end',
+            paddingBottom: 0,
+          },
+        ]}
+      >
         <View style={styles.container}>
-          <MapView style={styles.map} provider='google'>
+          <MapView
+            style={styles.map}
+            provider='google'
+            initialRegion={{
+              latitude: 39.739235,
+              longitude: -104.99025,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          >
             <Marker
-              coordinate={pin}
+              coordinate={coordinate}
               draggable={true}
               onDragStart={(e) =>
                 console.log('drag start: ', e.nativeEvent.coordinate)
@@ -115,6 +137,9 @@ const Main = ({ navigation }) => {
             borderRadius: 20,
             marginBottom: 20,
             justifyContent: 'flex-end',
+            // position: 'absolute',
+            // borderWidth: 2,
+            // borderColor: 'red',
           }}
         >
           <TouchableOpacity
@@ -166,9 +191,6 @@ const Main = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    // position: 'absolute',
-  },
   button: {
     marginTop: 20,
     padding: 10,
