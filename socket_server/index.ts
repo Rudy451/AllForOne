@@ -7,7 +7,6 @@ const dotenv = require('dotenv');
 import 'reflect-metadata';
 
 const {Controller} = require("./controllers");
-//const db = require('./models');
 
 dotenv.config({path: `${__dirname}/../.env`});
 const host = process.env.HOST as string;
