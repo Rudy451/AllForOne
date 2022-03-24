@@ -78,60 +78,57 @@ const Main = ({ navigation }) => {
   // console.log("outside: ", location);
   return (
     <>
-      <View
-        style={[
-          globalStyles.container,
-          {
-            justifyContent: "flex-end",
-            paddingBottom: 0,
-          },
-        ]}
+      <MapView
+        style={styles.map}
+        provider="google"
+        initialRegion={{
+          latitude: 39.739235,
+          longitude: -104.99025,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
       >
-        <View style={styles.container}>
-          <MapView
-            style={styles.map}
-            provider="google"
-            initialRegion={{
-              latitude: 39.739235,
-              longitude: -104.99025,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+        <Marker
+          coordinate={coordinate}
+          draggable={true}
+          onDragStart={(e) =>
+            console.log("drag start: ", e.nativeEvent.coordinate)
+          }
+          onDragEnd={(e) =>
+            setPin({
+              latitude: e.nativeEvent.coordinate.latitude,
+              longitude: e.nativeEvent.coordinate.longitude,
+            })
+          }
+        >
+          <Callout>
+            <Text>You're here!</Text>
+          </Callout>
+        </Marker>
+        {locationsForTheGame.map((location) => {
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
             }}
+            pinColor="pink"
           >
-            <Marker
-              coordinate={coordinate}
-              draggable={true}
-              onDragStart={(e) =>
-                console.log("drag start: ", e.nativeEvent.coordinate)
-              }
-              onDragEnd={(e) =>
-                setPin({
-                  latitude: e.nativeEvent.coordinate.latitude,
-                  longitude: e.nativeEvent.coordinate.longitude,
-                })
-              }
-            >
-              <Callout>
-                <Text>You're here!</Text>
-              </Callout>
-            </Marker>
-            {locationsForTheGame.map((location) => {
-              <Marker
-                coordinate={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                }}
-                pinColor="pink"
-              >
-                <Callout>
-                  <Text>{location.name}</Text>
-                </Callout>
-              </Marker>;
-            })}
-          </MapView>
+            <Callout>
+              <Text>{location.name}</Text>
+            </Callout>
+          </Marker>;
+        })}
+        <View
+          style={{
+            height: "100%",
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+        >
+          <CheckInModal location={location} setLocation={setLocation} />
         </View>
-        <CheckInModal location={location} setLocation={setLocation} />
-      </View>
+      </MapView>
+
       <View
         style={{
           backgroundColor: "#182624",
@@ -175,15 +172,16 @@ const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: "#00E6B7",
   },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  container: {},
   map: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
+    flex: 1,
+    width: windowWidth,
+    height: windowHeight,
+    paddingBottom: 50,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
