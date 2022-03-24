@@ -15,7 +15,7 @@ import LocationModal from '../modals/Locations';
 import ExitModal from '../modals/Exit';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import locationsForTheGame from './locations';
+import locationsForTheGame from '../cities/Denver';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
