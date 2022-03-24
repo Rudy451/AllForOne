@@ -16,19 +16,17 @@ const Chattanooga = [
     state: "TN",
     latitude: 35.05552237416245,
     longitude: -85.30774106324982,
-    question:
-      "What's the name of the dog that's always ready to give you a hi five?",
+    question: "This side ends with a scream.",
   },
 
   {
     id: 3,
-    location: "Old Building Collapse",
+    location: "Ross's Landing",
     City: "Chattanooga",
     state: "TN",
-    latitude: 35.05490819312549,
-    longitude: -85.30943785558155,
-    question:
-      "What restaurant originally occupied this spot before it gave way to a crumbling roof?",
+    latitude: 35.056768,
+    longitude: -85.309832,
+    question: "Go stair at the running water by the riverside.",
   },
   {
     id: 4,
@@ -37,7 +35,8 @@ const Chattanooga = [
     state: "TN",
     latitude: 35.062182520255526,
     longitude: -85.30772240419256,
-    question: "What state is the owner of River Street Deli from?",
+    question:
+      "You can often find me behind the counter encouraging you to buy the sandwich I like best today. ",
   },
   {
     id: 5,
@@ -46,7 +45,7 @@ const Chattanooga = [
     state: "TN",
     latitude: 35.06245598491883,
     longitude: -85.30768626201176,
-    question: "What kind of dance do you do in front of Clumpies?",
+    question: "You put one foot in, you put one foot out, do the....",
   },
   {
     id: 6,
@@ -55,7 +54,8 @@ const Chattanooga = [
     state: "TN",
     latitude: 35.061314786199006,
     longitude: -85.30759823642703,
-    question: "How many creatures are permanently at Coolidge park?",
+    question:
+      "No animals allowed at this park except for the ones always there.",
   },
   {
     id: 7,
@@ -65,7 +65,7 @@ const Chattanooga = [
     latitude: 35.060361641139934,
     longitude: -85.31094593831801,
     question:
-      " At Renaissance Park, what is the name of the artistic piece that sends you on a walk through wires and vines?",
+      "You can go straight on the boring path or veer right down a short artistic path in this park.",
   },
   {
     id: 8,
@@ -74,7 +74,8 @@ const Chattanooga = [
     state: "TN",
     latitude: 35.056077912031526,
     longitude: -85.30664918880245,
-    question: "What is the equine statue made of?",
+    question:
+      "Neiggghhh! If you tried to ride me you'll probably get arrested.",
   },
 ];
 
