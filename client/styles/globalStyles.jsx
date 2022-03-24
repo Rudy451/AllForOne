@@ -27,7 +27,6 @@ const globalStyles = StyleSheet.create({
   },
   darkContainer: {
     backgroundColor: 'black',
-
     borderRadius: 5,
     alignSelf: 'center',
     padding: 5,

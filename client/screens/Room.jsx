@@ -8,20 +8,21 @@ import {
   ScrollView,
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState } from 'react';
 import globalStyles from '../styles/globalStyles';
 import EnterCryptoModal from '../modals/EnterCrypto';
 import { FontAwesome5 } from '@expo/vector-icons';
+import BuyInAmount from '../modals/BuyInAmount';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Room = ({ navigation, route }) => {
+  const [amount, setAmount] = useState();
   const { type } = route.params;
   const pressHandler = () => {
     navigation.navigate('Main');
   };
-  const mockTotal = '60ETH';
   const mockUsernames = [
     'CaptainWatchYoBack',
     'KanyeWinAll',
@@ -45,7 +46,11 @@ const Room = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={globalStyles.container}>
-      {type === 'Captain' ? <EnterCryptoModal /> : null}
+      {type === 'Captain' ? (
+        <EnterCryptoModal setAmount={setAmount} amount={amount} />
+      ) : (
+        <BuyInAmount amount={amount} navigation={navigation} />
+      )}
       <View style={{ ...styles.innerContainers, height: '45%' }}>
         <Text
           style={{
@@ -144,7 +149,7 @@ const Room = ({ navigation, route }) => {
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-              {mockTotal}
+              {amount ? `${amount * mockUsernames.length}ETH` : '0ETH'}
             </Text>
             <Text
               style={{
