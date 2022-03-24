@@ -16,6 +16,7 @@ import ExitModal from '../modals/Exit';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import locationsForTheGame from '../cities/Denver';
+import CheckInModal from '../modals/Check-In';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -56,7 +57,6 @@ const Main = ({ navigation }) => {
           maximumAge: 10000,
         });
         setLocation(location);
-        console.log('inside the func: ', location);
       }, 5000);
     })();
   }, []);
@@ -74,7 +74,7 @@ const Main = ({ navigation }) => {
       longitude: location.coords.longitude,
     };
   }
-  console.log('outside: ', location);
+  // console.log("checking interval: ", location);
   return (
     <>
       <View
@@ -129,30 +129,7 @@ const Main = ({ navigation }) => {
             })}
           </MapView>
         </View>
-        {/* <View
-          style={{
-            backgroundColor: '#182624',
-            width: '80%',
-            height: '30%',
-            borderRadius: 20,
-            marginBottom: 20,
-            justifyContent: 'flex-end',
-            // position: 'absolute',
-            // borderWidth: 2,
-            // borderColor: 'red',
-          }}
-        >
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
-            ]}
-          >
-            <Text style={[globalStyles.titleTextBold, { textAlign: 'center' }]}>
-              Check-In
-            </Text>
-          </TouchableOpacity>
-        </View> */}
+        {/* <CheckInModal location={location} setLocation={setLocation} /> */}
       </View>
       <View
         style={{
