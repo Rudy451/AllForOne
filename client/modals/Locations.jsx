@@ -7,7 +7,7 @@ import locationsForTheGame from '../cities/Denver';
 function LocationModal({ modalLocationVisible, setModalLocationVisible }) {
   const mapLocations = () => {
     return locationsForTheGame.map((location) => (
-      <View style={{ margin: 8, flexDirection: 'row' }}>
+      <View key={location.id} style={{ margin: 8, flexDirection: 'row' }}>
         <Ionicons name='checkmark-circle' size={24} color='white' />
         <Text style={styles.modalText}>{location.name}</Text>
       </View>
