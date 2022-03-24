@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import globalStyles from "../styles/globalStyles";
 import * as Location from "expo-location";
+import { SafeAreaView } from "react-navigation";
 
 function CheckInModal({ setLocation }) {
   const onPress = async () => {
@@ -13,47 +14,47 @@ function CheckInModal({ setLocation }) {
     console.log("This is current location", location);
   };
   return (
-    <Modal animationType="slide" transparent={true} visible={true}>
-      <View
-        style={{
-          backgroundColor: "#182624",
-          width: "80%",
-          height: "30%",
-          borderRadius: 20,
-          marginBottom: 20,
-          justifyContent: "flex-end",
-          // position: 'absolute',
-          // borderWidth: 2,
-          // borderColor: 'red',
-        }}
-      >
-        <TouchableOpacity
-          style={[
-            styles.button,
-            { borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
-          ]}
-          onPress={onPress}
-        >
+    <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+        <View style={styles.textView}>
+          <Text style={[globalStyles.subText, { justifyContent: "flex-end" }]}>
+            This is the start of your scavanger hunt. Go to the given location
+            and press check-in when you believe you are there. If correct a
+            question will be displayed in this.
+          </Text>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={onPress}>
           <Text style={[globalStyles.titleTextBold, { textAlign: "center" }]}>
             Check-In
           </Text>
         </TouchableOpacity>
       </View>
-    </Modal>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   centeredView: {
-    flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
-    marginTop: 5,
+  },
+  modalView: {
+    backgroundColor: "#182624",
+    width: "95%",
+
+    borderRadius: 20,
+    marginBottom: "5%",
+    justifyContent: "flex-end",
+  },
+  textView: {
+    paddingHorizontal: 10,
   },
   button: {
     marginTop: 20,
-    padding: 10,
+    padding: 3,
     elevation: 2,
     backgroundColor: "#00E6B7",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
 
   textStyle: {

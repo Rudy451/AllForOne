@@ -6,20 +6,20 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import globalStyles from "../styles/globalStyles";
-import { Entypo, Ionicons } from "@expo/vector-icons";
-import RulesModal from "../modals/Rules";
-import LocationModal from "../modals/Locations";
-import ExitModal from "../modals/Exit";
-import MapView, { Callout, Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import locationsForTheGame from "./locations";
-import CheckInModal from "../modals/Check-In";
+} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import globalStyles from '../styles/globalStyles';
+import { Entypo, Ionicons } from '@expo/vector-icons';
+import RulesModal from '../modals/Rules';
+import LocationModal from '../modals/Locations';
+import ExitModal from '../modals/Exit';
+import MapView, { Callout, Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+import locationsForTheGame from '../cities/Denver';
+import CheckInModal from '../modals/Check-In';
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Main = ({ navigation }) => {
   const [modalRuleVisible, setModalRuleVisible] = useState(false);
@@ -47,8 +47,8 @@ const Main = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
         return;
       }
       setInterval(async () => {
@@ -57,12 +57,11 @@ const Main = ({ navigation }) => {
           maximumAge: 10000,
         });
         setLocation(location);
-        // console.log("inside the func: ", location);
       }, 5000);
     })();
   }, []);
 
-  let text = "Waiting..";
+  let text = 'Waiting..';
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
@@ -75,88 +74,91 @@ const Main = ({ navigation }) => {
       longitude: location.coords.longitude,
     };
   }
-  // console.log("outside: ", location);
+  // console.log("checking interval: ", location);
+
+  const mapMarkers = () => {
+    return locationsForTheGame.map((location) => (
+      <Marker
+        key={location.location}
+        coordinate={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }}
+        pinColor='teal'
+      >
+        <Callout>
+          <Text>{location.location}</Text>
+        </Callout>
+      </Marker>
+    ));
+  };
+
   return (
     <>
-      <View
-        style={[
-          globalStyles.container,
-          {
-            justifyContent: "flex-end",
-            paddingBottom: 0,
-          },
-        ]}
+      <MapView
+        style={styles.map}
+        provider='google'
+        initialRegion={{
+          latitude: 39.739235,
+          longitude: -104.99025,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
       >
-        <View style={styles.container}>
-          <MapView
-            style={styles.map}
-            provider="google"
-            initialRegion={{
-              latitude: 39.739235,
-              longitude: -104.99025,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Marker
-              coordinate={coordinate}
-              draggable={true}
-              onDragStart={(e) =>
-                console.log("drag start: ", e.nativeEvent.coordinate)
-              }
-              onDragEnd={(e) =>
-                setPin({
-                  latitude: e.nativeEvent.coordinate.latitude,
-                  longitude: e.nativeEvent.coordinate.longitude,
-                })
-              }
-            >
-              <Callout>
-                <Text>You're here!</Text>
-              </Callout>
-            </Marker>
-            {locationsForTheGame.map((location) => {
-              <Marker
-                coordinate={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                }}
-                pinColor="pink"
-              >
-                <Callout>
-                  <Text>{location.name}</Text>
-                </Callout>
-              </Marker>;
-            })}
-          </MapView>
+        <Marker
+          coordinate={coordinate}
+          draggable={true}
+          onDragStart={(e) =>
+            console.log('drag start: ', e.nativeEvent.coordinate)
+          }
+          onDragEnd={(e) =>
+            setPin({
+              latitude: e.nativeEvent.coordinate.latitude,
+              longitude: e.nativeEvent.coordinate.longitude,
+            })
+          }
+        >
+          <Callout>
+            <Text>You're here!</Text>
+          </Callout>
+        </Marker>
+        {mapMarkers()}
+        <View
+          style={{
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <CheckInModal location={location} setLocation={setLocation} />
         </View>
-        <CheckInModal location={location} setLocation={setLocation} />
-      </View>
+      </MapView>
+
       <View
         style={{
-          backgroundColor: "#182624",
-          height: "8%",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-evenly",
+          backgroundColor: '#182624',
+          height: '8%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
         }}
       >
         <TouchableOpacity onPress={openRules}>
-          <Entypo name="info-with-circle" size={24} color="#00E6B7" />
+          <Entypo name='info-with-circle' size={24} color='#00E6B7' />
           <RulesModal
             modalRuleVisible={modalRuleVisible}
             setModalRuleVisible={setModalRuleVisible}
           ></RulesModal>
         </TouchableOpacity>
         <TouchableOpacity onPress={openLocation}>
-          <Entypo name="location" size={24} color="#00E6B7" />
+          <Entypo name='location' size={24} color='#00E6B7' />
           <LocationModal
             modalLocationVisible={modalLocationVisible}
             setModalLocationVisible={setModalLocationVisible}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={openExit}>
-          <Ionicons name="exit" size={24} color="#00E6B7" />
+          <Ionicons name='exit' size={24} color='#00E6B7' />
           <ExitModal
             modalExitVisible={modalExitVisible}
             setModalExitVisible={setModalExitVisible}
@@ -173,17 +175,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 10,
     elevation: 2,
-    backgroundColor: "#00E6B7",
+    backgroundColor: '#00E6B7',
   },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  container: {},
   map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    flex: 1,
+    width: windowWidth,
+    height: windowHeight,
+    paddingBottom: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
