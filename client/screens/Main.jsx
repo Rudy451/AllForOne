@@ -17,6 +17,7 @@ import MapView, { Callout, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import locationsForTheGame from "../cities/Denver";
 import CheckInModal from "../modals/Check-In";
+import { AntDesign } from "@expo/vector-icons";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -25,6 +26,7 @@ const Main = ({ navigation }) => {
   const [modalRuleVisible, setModalRuleVisible] = useState(false);
   const [modalLocationVisible, setModalLocationVisible] = useState(false);
   const [modalExitVisible, setModalExitVisible] = useState(false);
+  const [modalCheckInVisible, setModalCheckInVisible] = useState(true);
 
   const openRules = () => {
     setModalRuleVisible(!modalRuleVisible);
@@ -34,6 +36,9 @@ const Main = ({ navigation }) => {
   };
   const openExit = () => {
     setModalExitVisible(!modalExitVisible);
+  };
+  const openCheckIn = () => {
+    setModalCheckInVisible(!modalCheckInVisible);
   };
 
   //MAP CODE
@@ -124,18 +129,7 @@ const Main = ({ navigation }) => {
         </Marker>
         {mapMarkers()}
       </MapView>
-      <View
-        style={{
-          height: "100%",
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "flex-end",
-          bottom: "8%",
-          position: "absolute",
-        }}
-      >
-        <CheckInModal location={location} setLocation={setLocation} />
-      </View>
+
       <View
         style={{
           backgroundColor: "#182624",
@@ -151,6 +145,26 @@ const Main = ({ navigation }) => {
             modalRuleVisible={modalRuleVisible}
             setModalRuleVisible={setModalRuleVisible}
           ></RulesModal>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={openCheckIn}>
+          <AntDesign name="playcircleo" size={24} color="#00E6B7" />
+          {/* <View
+            style={{
+              height: "100%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              bottom: "8%",
+              position: "absolute",
+            }}
+          > */}
+          <CheckInModal
+            location={location}
+            setLocation={setLocation}
+            modalCheckInVisible={modalCheckInVisible}
+            setModalCheckInVisible={setModalCheckInVisible}
+          />
+          {/* </View> */}
         </TouchableOpacity>
         <TouchableOpacity onPress={openLocation}>
           <Entypo name="location" size={24} color="#00E6B7" />
