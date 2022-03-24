@@ -1,4 +1,14 @@
 const locationsForTheGame = [
+  // {
+  //   id: 1,
+  //   location: "Game Start",
+  //   City: "Chattanooga",
+  //   state: "TN",
+  //   latitude: 35.05817,
+  //   longitude: -85.307296,
+  //   question:
+  //     "This is the start of your scavanger hunt. Go to the given location and press check-in when you believe you are there. If correct a question will be displayed on a similar pop-up as this.",
+  // },
   {
     name: 'Downtown Aquarium',
     latitude: 39.7518,
