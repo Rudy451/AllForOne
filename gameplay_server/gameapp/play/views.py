@@ -1,4 +1,3 @@
-from multiprocessing import allow_connection_pickling
 from django.http import HttpResponse
 from django.utils import timezone
 from rest_framework.decorators import api_view
@@ -92,15 +91,17 @@ def user_question_request(request):
     landmark_index = random.randint(0, 7)
     target_landmark = landmarks[landmark_index]
   # pick hardest question if current time plus hardest question time is less than target round time
-  elif (user[0].active_game_time + landmarks[len(landmarks-1)].average_challenge_completion_time) < (user[0].city.average_game_completion_time / 7):
-    target_landmark = landmarks[len(landmarks-1)]
+  elif (user[0].active_game_time + landmarks[len(landmarks)-1].average_challenge_completion_time) < (float(user[0].completed_challenge_count) * float(user[0].city.average_game_completion_time) / 7.0):
+    target_landmark = landmarks[len(landmarks)-1]
+    print("I'm Under")
   # pick easiest question if current time plus easiest question time is greater than or equal to than target round time
-  elif (user[0].active_game_time + landmarks[0].average_challenge_completion_time) >= (user[0].city.average_game_completion_time / 7):
-    target_landmark = landmarks[0].question
+  elif (user[0].active_game_time + landmarks[0].average_challenge_completion_time) >= (float(user[0].completed_challenge_count) * float(user[0].city.average_game_completion_time) / 7.0):
+    target_landmark = landmarks[0]
+    print("I'm over")
   else:
     # heuristic: pick first landmark with average question time that fits within target time range
     landmark_index = 1
-    while user[0].active_game_time + landmarks[landmark_index] < (user[0].city.average_game_completion_time / 7):
+    while (float(user[0].active_game_time) + float(landmarks[landmark_index].average_challenge_completion_time)) < (float(user[0].city.average_game_completion_time) / 7.0):
       landmark_index += 1
     target_landmark = landmarks[landmark_index - 1]
 
@@ -147,13 +148,20 @@ def user_location_check(request):
         )
         # check if user has solved all seven challenges
         if(new_completed_challenge_count == 7):
+          new_total_game_completion_time = user[0].city.total_game_completion_time + user[0].active_game_time
+          new_total_game_completions = user[0].city.total_game_completions + 1
+          new_average_game_completion_time = float(new_total_game_completion_time) / float(new_total_game_completions)
+          user[0].city.total_game_completion_time=new_total_game_completion_time
+          user[0].city.total_game_completions=new_total_game_completions
+          user[0].city.average_game_completion_time=new_average_game_completion_time
+          user[0].city.save()
           meters_from_destination = "winner"
         # else just confirm success
         else:
           meters_from_destination = 0
     else:
       # return distance from target in meters for client
-      meters_from_destination = (user.city.allowable_distance_difference - current_distance) * 1.1 / 0.00001
+      meters_from_destination = (float(user[0].city.allowable_distance_difference) - current_distance) * 1.1 / 0.00001
 
   # return status of push request
   return HttpResponse(meters_from_destination)
