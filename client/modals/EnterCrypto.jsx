@@ -49,6 +49,7 @@ function EnterCryptoModal({ setAmount, amount }) {
               }}
             >
               <TextInput
+                autoCorrect={false}
                 value={amount}
                 onChangeText={(text) => setAmount(text)}
                 style={{
