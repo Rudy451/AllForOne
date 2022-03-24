@@ -1,6 +1,5 @@
 from django.utils import timezone
 from django.db import models
-from datetime import datetime
 import uuid
 
 # Create your models here.
@@ -36,7 +35,22 @@ class Cities(models.Model):
     null=False,
     blank=False
   )
-  average_game_completion_time = models.IntegerField(
+  total_game_completion_time = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
+  )
+  total_game_completions = models.IntegerField(
+    default=1,
+    null=False,
+    blank=False
+  )
+  average_game_completion_time = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
     null=False,
     blank=False
   )
