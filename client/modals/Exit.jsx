@@ -1,32 +1,34 @@
-import React, { useState } from "react";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  Pressable,
-  View,
-  TextInput,
-} from "react-native";
+import React from 'react';
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import globalStyles from '../styles/globalStyles';
 
 function ExitModal({ modalExitVisible, setModalExitVisible, navigation }) {
   const pressEndGame = () => {
-    navigation.navigate("Home");
+    navigation.navigate('Home');
   };
   return (
     <Modal
-      animationType="slide"
+      animationType='slide'
       transparent={true}
       visible={modalExitVisible}
       onRequestClose={() => {
-        //TODO metamask sign in logic goes here
-        Alert.alert("Modal has been closed.");
+        Alert.alert('Modal has been closed.');
         setModalExitVisible(!modalExitVisible);
       }}
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>
+        <View
+          style={{
+            ...styles.modalView,
+            ...globalStyles.darkContainer,
+          }}
+        >
+          <Text
+            style={{
+              ...globalStyles.subText,
+              paddingHorizontal: '5%',
+            }}
+          >
             Captain sets the pot amount for all players. Players will be sent an
             alert to agree or diagree with the buy-in amount.
           </Text>
@@ -53,17 +55,15 @@ function ExitModal({ modalExitVisible, setModalExitVisible, navigation }) {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
     borderRadius: 20,
-    padding: 55,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    paddingVertical: '5%',
   },
   button: {
     marginTop: 20,
@@ -78,24 +79,17 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 50,
     elevation: 2,
-    backgroundColor: "#57f3d3",
+    backgroundColor: '#57f3d3',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: "black",
-    width: 250,
-    height: 50,
-    borderRadius: 10,
-    textAlign: "center",
-    color: "white",
+    textAlign: 'center',
+    color: 'white',
   },
 });
 
