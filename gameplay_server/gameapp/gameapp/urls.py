@@ -21,5 +21,9 @@ from play import views
 # test adding true routes today (03/23/2022)
 urlpatterns = [
     path('', views.home, name='home'),
+    re_path('entry/?', views.user_entry, name='user_entry'),
+    re_path('question/?', views.user_question_request, name='user_request'),
+    re_path('check/?', views.user_location_check, name='user_check'),
+    re_path('clear/?', views.clear_user_game_status, name='clear_user'),
     re_path('admin/', admin.site.urls),
 ]
