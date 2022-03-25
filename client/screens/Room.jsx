@@ -8,34 +8,43 @@ import {
   ScrollView,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import globalStyles from "../styles/globalStyles";
 import EnterCryptoModal from "../modals/EnterCrypto";
 import { FontAwesome5 } from "@expo/vector-icons";
 import BuyInAmount from "../modals/BuyInAmount";
 import { io } from "socket.io-client";
+import { SocketContext } from "../services/useContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-const socket = io("http://127.0.0.1:3000");
 
-const roomName = ["tiger", "cow", "chicken", "dragon", "fish", "butterfly"];
+const roomName = ["Tiger", "Cow", "Chicken", "Dragon", "Fish", "Butterfly"];
 
-const getRoomName = () => {
+const getRoomName = (() => {
   let randomRoomIndex = Math.floor(Math.random() * roomName.length);
   return roomName[randomRoomIndex];
-};
+})();
 
+//START OF ROOM
 const Room = ({ navigation, route }) => {
   const [amount, setAmount] = useState();
-  const { type } = route.params;
+  const { type, room } = route.params;
+  const { socket } = useContext(SocketContext);
+  const [roomName, setRoomName] = useState(getRoomName);
+
   const pressHandler = () => {
     navigation.navigate("Main");
   };
-  let roomNameCall = getRoomName();
+
   useEffect(() => {
+    if (roomName == "") {
+      setRoomName(roomNameCall);
+    }
     socket.emit("user entered room", socket.id);
-    socket.emit("join room", roomNameCall);
+    if (type === "Captain") {
+      socket.emit("join room", roomName);
+    }
 
     // //My IP address (Fatima)
     // const socket = io('http://10.0.0.153:3000');
@@ -127,7 +136,7 @@ const Room = ({ navigation, route }) => {
                 height: "100%",
               }}
             >
-              {roomNameCall}
+              {roomName}
             </Text>
           </View>
         </View>
