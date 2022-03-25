@@ -39,7 +39,7 @@ const locationsForTheGame = [
   },
   {
     id: 4,
-    location: '16th Street Mall',
+    location: '16th Street Mall - starting point',
     city: 'Denver',
     state: 'CO',
     latitude: 39.7478,

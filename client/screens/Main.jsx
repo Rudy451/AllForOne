@@ -13,7 +13,7 @@ import { Entypo, Ionicons } from '@expo/vector-icons';
 import RulesModal from '../modals/Rules';
 import LocationModal from '../modals/Locations';
 import ExitModal from '../modals/Exit';
-import MapView, { Callout, Marker } from 'react-native-maps';
+import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import * as Location from 'expo-location';
 import locationsForTheGame from '../cities/Denver';
 import CheckInModal from '../modals/Check-In';
@@ -104,14 +104,16 @@ const Main = ({ navigation }) => {
         style={styles.map}
         provider='google'
         initialRegion={{
-          latitude: coordinate.latitude,
-          longtitude: coordinate.longitude,
+          latitude: 39.106805261119526,
+          longitude: -104.84521832274527,
+          // latitude: coordinate.latitude,
+          // longtitude: coordinate.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
       >
         <Marker
-          coordinate={coordinate}
+          coordinate={pin}
           draggable={true}
           onDragStart={(e) =>
             console.log('drag start: ', e.nativeEvent.coordinate)
@@ -128,6 +130,18 @@ const Main = ({ navigation }) => {
           </Callout>
         </Marker>
         {mapMarkers()}
+        {/* STARTING POINT OF THE GAME AND THE RADIUS WITHIN 1.1MILE */}
+        <Circle
+          center={{
+            latitude: 39.7478,
+            longitude: -104.9949,
+          }}
+          //radius in meters
+          radius={1770.28}
+          strokeWidth={1}
+          strokeColor={'#1a66ff'}
+          fillColor={'rgba(230,238,255,0.5)'}
+        />
       </MapView>
 
       <View
