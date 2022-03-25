@@ -14,7 +14,6 @@ function EnterCryptoModal({ setAmount, amount }) {
   const [modalVisible, setModalVisible] = useState(true);
   const handlePress = () => {
     setModalVisible(!modalVisible);
-
     Alert.alert(`Amount has been set to ${amount}ETH`);
   };
   return (
@@ -49,6 +48,7 @@ function EnterCryptoModal({ setAmount, amount }) {
               }}
             >
               <TextInput
+                keyboardType='numeric'
                 autoCorrect={false}
                 value={amount}
                 onChangeText={(text) => setAmount(text)}
@@ -62,7 +62,6 @@ function EnterCryptoModal({ setAmount, amount }) {
           </View>
           <Pressable
             style={{ ...globalStyles.lightBtn, width: '75%', height: 55 }}
-            // Need to be able to sign in with metamask when the button is clicked
             onPress={handlePress}
           >
             <Text style={globalStyles.buttonText}>SET PRICE</Text>
