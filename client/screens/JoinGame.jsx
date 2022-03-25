@@ -26,6 +26,7 @@ const JoinGame = ({ navigation, route }) => {
           style={{ ...globalStyles.darkContainer, height: '20%', width: '70%' }}
         >
           <TextInput
+            autoCorrect={false}
             value={roomCode}
             onChange={(text) => setRoomCode(text)}
             style={globalStyles.titleTextMedium}
