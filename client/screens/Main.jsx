@@ -56,13 +56,13 @@ const Main = ({ navigation }) => {
         setErrorMsg('Permission to access location was denied');
         return;
       }
-      setInterval(async () => {
-        let location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Highest,
-          maximumAge: 10000,
-        });
-        setLocation(location);
-      }, 5000);
+      // setInterval(async () => {
+      let location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Highest,
+        maximumAge: 10000,
+      });
+      setLocation(location);
+      // }, 5000);
     })();
   }, []);
 
@@ -104,8 +104,8 @@ const Main = ({ navigation }) => {
         style={styles.map}
         provider='google'
         initialRegion={{
-          latitude: 39.739235,
-          longitude: -104.99025,
+          latitude: coordinate.latitude,
+          longtitude: coordinate.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
