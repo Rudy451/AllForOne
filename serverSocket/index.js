@@ -1,30 +1,30 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const http = require("http");
+const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
+const { Server } = require('socket.io');
 const io = new Server(server);
 
-const cors = require("cors");
+const cors = require('cors');
 
 // const { Controller } = require("./controllers");
 
-const host = "localhost";
+const host = 'localhost';
 const port = 3000;
 
 const corsOptions = {
-  origin: "*",
+  origin: '*',
   //   methods: ['GET']
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
-io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+io.on('connection', (socket) => {
+  console.log('a user connected', socket.id);
 
-  socket.on("join room", (roomCode) => {
-    console.log("Here is the room code", roomCode);
+  socket.on('join room', (roomCode) => {
+    console.log('Here is the room code', roomCode);
   });
 });
 
