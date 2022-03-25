@@ -56,13 +56,14 @@ const Main = ({ navigation }) => {
         setErrorMsg("Permission to access location was denied");
         return;
       }
-      setInterval(async () => {
-        let location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Highest,
-          maximumAge: 10000,
-        });
-        setLocation(location);
-      }, 5000);
+      // setInterval(async () => {
+      let location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Highest,
+        maximumAge: 10000,
+        i,
+      });
+      setLocation(location);
+      // }, 5000);
     })();
   }, []);
 

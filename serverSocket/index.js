@@ -4,6 +4,7 @@ const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const { instrument } = require("@socket.io/admin-ui");
 
 const cors = require("cors");
 
@@ -24,9 +25,12 @@ io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 
   socket.on("join room", (roomCode) => {
+    socket.join(roomCode);
     console.log("Here is the room code", roomCode);
   });
 });
+
+instrument(io, { auth: false });
 
 server.listen(port, host, () => {
   console.log(`listening on ${host}:${port}...`);
