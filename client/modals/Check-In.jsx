@@ -35,7 +35,7 @@ function CheckInModal({
             <Text style={[globalStyles.subText, { marginHorizontal: 20 }]}>
               This is the start of your scavanger hunt. Go to the given location
               and press check-in when you believe you are there. If correct a
-              question will be displayed in this.
+              riddle will be displayed in this.
             </Text>
           </View>
           <TouchableOpacity style={styles.button} onPress={onPress}>
