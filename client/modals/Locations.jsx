@@ -9,7 +9,7 @@ function LocationModal({ modalLocationVisible, setModalLocationVisible }) {
     return locationsForTheGame.map((location) => (
       <View key={location.id} style={{ margin: 8, flexDirection: 'row' }}>
         <Ionicons name='checkmark-circle' size={24} color='white' />
-        <Text style={styles.modalText}>{location.name}</Text>
+        <Text style={styles.modalText}>{location.location}</Text>
       </View>
     ));
   };

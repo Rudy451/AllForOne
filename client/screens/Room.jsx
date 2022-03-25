@@ -13,10 +13,18 @@ import globalStyles from "../styles/globalStyles";
 import EnterCryptoModal from "../modals/EnterCrypto";
 import { FontAwesome5 } from "@expo/vector-icons";
 import BuyInAmount from "../modals/BuyInAmount";
-import { io, socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
+const socket = io("http://127.0.0.1:3000");
+
+const roomName = ["tiger", "cow", "chicken", "dragon", "fish", "butterfly"];
+
+const getRoomName = () => {
+  let randomRoomIndex = Math.floor(Math.random() * roomName.length);
+  return roomName[randomRoomIndex];
+};
 
 const Room = ({ navigation, route }) => {
   const [amount, setAmount] = useState();
@@ -24,18 +32,22 @@ const Room = ({ navigation, route }) => {
   const pressHandler = () => {
     navigation.navigate("Main");
   };
-
+  let roomNameCall = getRoomName();
   useEffect(() => {
-    const socket = io("http://127.0.0.1:3000");
+    socket.emit("user entered room", socket.id);
+    socket.emit("join room", roomNameCall);
+
+    // //My IP address (Fatima)
+    // const socket = io('http://10.0.0.153:3000');
   }, []);
 
-  const joinRoom = (roomCode) => {
-    socket.emit("join room", roomCode);
-    console.log("connected to room");
-  };
+  // const joinRoom = (roomCode) => {
+  //   socket.emit("join room", roomCode);
+  //   console.log("connected to room");
+  // };
 
-  joinRoom();
-  console.log(joinRoom);
+  // joinRoom();
+  // console.log(joinRoom);
   const mockUsernames = [
     "CaptainWatchYoBack",
     "KanyeWinAll",
@@ -115,7 +127,7 @@ const Room = ({ navigation, route }) => {
                 height: "100%",
               }}
             >
-              TEST
+              {roomNameCall}
             </Text>
           </View>
         </View>
