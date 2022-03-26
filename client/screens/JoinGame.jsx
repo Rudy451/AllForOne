@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import globalStyles from "../styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import EnterRoomCode from "../EnterRoomCode";
-import { socket } from "socket.io-client";
+// import { socket } from "socket.io-client";
 import { SocketContext } from "../services/useContext";
 
 const JoinGame = ({ navigation, route }) => {

@@ -1,5 +1,4 @@
 import * as Location from 'expo-location';
-import { TurboModuleRegistry } from 'react-native';
 
 const getCurrentLocation = async () => {
   let { status } = await Location.requestForegroundPermissionsAsync();
