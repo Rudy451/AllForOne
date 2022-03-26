@@ -6,37 +6,45 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-} from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import React, { useState, useEffect } from "react";
-import globalStyles from "../styles/globalStyles";
-import EnterCryptoModal from "../modals/EnterCrypto";
-import { FontAwesome5 } from "@expo/vector-icons";
-import BuyInAmount from "../modals/BuyInAmount";
-import { io } from "socket.io-client";
+} from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import React, { useState, useEffect, useContext } from 'react';
+import globalStyles from '../styles/globalStyles';
+import EnterCryptoModal from '../modals/EnterCrypto';
+import { FontAwesome5 } from '@expo/vector-icons';
+import BuyInAmount from '../modals/BuyInAmount';
+import { io } from 'socket.io-client';
+import { SocketContext } from '../services/useContext';
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-const socket = io("http://127.0.0.1:3000");
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
-const roomName = ["tiger", "cow", "chicken", "dragon", "fish", "butterfly"];
+const roomName = ['Tiger', 'Cow', 'Chicken', 'Dragon', 'Fish', 'Butterfly'];
 
-const getRoomName = () => {
+const getRoomName = (() => {
   let randomRoomIndex = Math.floor(Math.random() * roomName.length);
   return roomName[randomRoomIndex];
-};
+})();
 
+//START OF ROOM
 const Room = ({ navigation, route }) => {
   const [amount, setAmount] = useState();
-  const { type } = route.params;
-  const pressHandler = () => {
-    navigation.navigate("Main");
-  };
-  let roomNameCall = getRoomName();
-  useEffect(() => {
-    socket.emit("user entered room", socket.id);
-    socket.emit("join room", roomNameCall);
+  const { type, room } = route.params;
+  const { socket } = useContext(SocketContext);
+  const [roomName, setRoomName] = useState(getRoomName);
 
+  const pressHandler = () => {
+    navigation.navigate('Main');
+  };
+
+  useEffect(() => {
+    if (roomName == '') {
+      setRoomName(roomNameCall);
+    }
+    socket.emit('user entered room', socket.id);
+    if (type === 'Captain') {
+      socket.emit('join room', roomName);
+    }
     // //My IP address (Fatima)
     // const socket = io('http://10.0.0.153:3000');
   }, []);
@@ -48,21 +56,22 @@ const Room = ({ navigation, route }) => {
 
   // joinRoom();
   // console.log(joinRoom);
+
   const mockUsernames = [
-    "CaptainWatchYoBack",
-    "KanyeWinAll",
-    "MrStealYaCash",
-    "TheDragon",
+    'CaptainWatchYoBack',
+    'KanyeWinAll',
+    'MrStealYaCash',
+    'TheDragon',
   ];
   const renderItem = ({ item }) => {
     return (
       <View
         style={{
-          flexDirection: "row",
+          flexDirection: 'row',
           padding: 5,
         }}
       >
-        <FontAwesome5 name="hourglass-half" size={20} color="#00E6B7" />
+        <FontAwesome5 name='hourglass-half' size={20} color='#00E6B7' />
         <Text style={{ ...globalStyles.subText, padding: 0, paddingLeft: 10 }}>
           {item}
         </Text>
@@ -71,26 +80,26 @@ const Room = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={globalStyles.container}>
-      {type === "Captain" ? (
+      {type === 'Captain' ? (
         <EnterCryptoModal setAmount={setAmount} amount={amount} />
       ) : (
         <BuyInAmount amount={amount} navigation={navigation} />
       )}
-      <View style={{ ...styles.innerContainers, height: "45%" }}>
+      <View style={{ ...styles.innerContainers, height: '45%' }}>
         <Text
           style={{
             ...globalStyles.titleTextBold,
             marginTop: 20,
-            height: "30%",
+            height: '30%',
             lineHeight: 45,
           }}
         >{`Welcome to \nALL FOR ONE`}</Text>
         <Text
           style={{
             ...globalStyles.subText,
-            textAlign: "center",
+            textAlign: 'center',
             fontSize: 15,
-            width: "70%",
+            width: '70%',
             margin: 5,
           }}
         >{`Share the room code to allow others to join the game. Maximum of 10 players`}</Text>
@@ -98,15 +107,15 @@ const Room = ({ navigation, route }) => {
           style={{
             ...globalStyles.lightContainer,
             padding: 0,
-            width: "100%",
-            height: "40%",
+            width: '100%',
+            height: '40%',
           }}
         >
           <Text
             style={{
               ...globalStyles.titleTextMedium,
-              width: "100%",
-              height: "45%",
+              width: '100%',
+              height: '45%',
             }}
           >
             ROOM
@@ -114,32 +123,32 @@ const Room = ({ navigation, route }) => {
           <View
             style={{
               ...globalStyles.darkContainer,
-              width: "55%",
-              height: "45%",
-              justifyContent: "center",
-              alignItems: "center",
+              width: '55%',
+              height: '45%',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <Text
               style={{
                 ...globalStyles.titleTextMedium,
-                width: "100%",
-                height: "100%",
+                width: '100%',
+                height: '100%',
               }}
             >
-              {roomNameCall}
+              {roomName}
             </Text>
           </View>
         </View>
       </View>
-      <View style={{ ...styles.innerContainers, justifyContent: "flex-end" }}>
+      <View style={{ ...styles.innerContainers, justifyContent: 'flex-end' }}>
         <View
           style={{
             ...globalStyles.lightContainer,
             marginVertical: 10,
-            alignItems: "flex-start",
-            height: "65%",
-            width: "100%",
+            alignItems: 'flex-start',
+            height: '65%',
+            width: '100%',
             padding: 10,
           }}
         >
@@ -147,9 +156,9 @@ const Room = ({ navigation, route }) => {
             style={{
               ...globalStyles.titleTextMedium,
               fontSize: 24,
-              width: "100%",
-              height: "15%",
-              textAlign: "left",
+              width: '100%',
+              height: '15%',
+              textAlign: 'left',
               margin: 5,
             }}
           >
@@ -165,22 +174,22 @@ const Room = ({ navigation, route }) => {
 
           <View
             style={{
-              width: "70%",
-              height: "40%",
-              position: "absolute",
-              marginLeft: "60%",
-              marginTop: "30%",
+              width: '70%',
+              height: '40%',
+              position: 'absolute',
+              marginLeft: '60%',
+              marginTop: '30%',
             }}
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-              {amount ? `${amount * mockUsernames.length}ETH` : "0ETH"}
+              {amount ? `${amount * mockUsernames.length}ETH` : '0ETH'}
             </Text>
             <Text
               style={{
                 ...globalStyles.subText,
                 fontSize: 12,
-                color: "#00E6B7",
+                color: '#00E6B7',
               }}
             >
               PROPOSE NEW BUY-IN
@@ -192,15 +201,15 @@ const Room = ({ navigation, route }) => {
           style={{
             ...globalStyles.lightBtn,
             marginTop: 10,
-            height: "15%",
-            width: "65%",
-            justifyContent: "center",
+            height: '15%',
+            width: '65%',
+            justifyContent: 'center',
           }}
         >
           <Text
             style={{
               ...globalStyles.buttonText,
-              width: "100%",
+              width: '100%',
             }}
           >
             START GAME
@@ -212,9 +221,9 @@ const Room = ({ navigation, route }) => {
             fontSize: 12,
             marginTop: 15,
             marginBottom: 5,
-            width: "100%",
-            height: "10%",
-            flexWrap: "wrap",
+            width: '100%',
+            height: '10%',
+            flexWrap: 'wrap',
           }}
         >
           {`We are not responsible for any loss of friendship, life long grudges or
@@ -228,21 +237,21 @@ const Room = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     height: windowHeight,
-    justifyContent: "flex-start",
-    alignItems: "center",
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     padding: 0,
     margin: 0,
     width: windowWidth,
   },
   innerContainers: {
-    width: "90%",
-    height: "50%",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    width: '90%',
+    height: '50%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   flatlist: {
     paddingVertical: 10,
-    width: "100%",
+    width: '100%',
   },
 });
 
