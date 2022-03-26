@@ -1,11 +1,12 @@
 from django.http import HttpResponse
 from django.utils import timezone
+from django.db.models import Sum
 from rest_framework.decorators import api_view
 import json
 import math
 import random
 
-from .models import Cities, Landmarks, Users
+from .models import Cities, Landmarks, Users, TimeRecords
 
 # Create your views here.
 
@@ -36,7 +37,7 @@ def update_visited_landmarks(user, landmark):
 def home(request):
   return HttpResponse("It Works!!!")
 
-@api_view(['POST', 'GET', 'PUT'])
+@api_view(['POST', 'PUT'])
 def user_entry(request):
   # extract user data for query
   body_decoded = request.body.decode('utf-8')
@@ -63,7 +64,7 @@ def user_entry(request):
   # return city by closest coordinates to client
   return HttpResponse(shortest_city_id)
 
-@api_view(['POST', 'GET', 'PUT'])
+@api_view(['POST', 'PUT'])
 def user_question_request(request):
   # extract user data for query
   body_decoded = request.body.decode('utf-8')
@@ -93,11 +94,9 @@ def user_question_request(request):
   # pick hardest question if current time plus hardest question time is less than target round time
   elif (user[0].active_game_time + landmarks[len(landmarks)-1].average_challenge_completion_time) < (float(user[0].completed_challenge_count) * float(user[0].city.average_game_completion_time) / 7.0):
     target_landmark = landmarks[len(landmarks)-1]
-    print("I'm Under")
   # pick easiest question if current time plus easiest question time is greater than or equal to than target round time
   elif (user[0].active_game_time + landmarks[0].average_challenge_completion_time) >= (float(user[0].completed_challenge_count) * float(user[0].city.average_game_completion_time) / 7.0):
     target_landmark = landmarks[0]
-    print("I'm over")
   else:
     # heuristic: pick first landmark with average question time that fits within target time range
     landmark_index = 1
@@ -106,7 +105,7 @@ def user_question_request(request):
     target_landmark = landmarks[landmark_index - 1]
 
   # update visited landmarks in database with selected target
-  update_visited_landmarks(user, target_landmark)
+  #update_visited_landmarks(user, target_landmark)
 
   # return question to client
   return HttpResponse(target_landmark.question)
@@ -129,13 +128,15 @@ def user_location_check(request):
       landmark = Landmarks.objects.filter(question=user_query['question'])
       if(len(landmark) > 0):
         # new total challenge completion time used as part of average challenge completion time calculation
-        new_total_challenge_completion_time = float(landmark[0].total_challenge_completion_time) + float(timezone.now().timestamp() - user[0].last_login_time.timestamp())
-        # new total challenge completions used as part of average challenge completion time calculation
-        new_total_completions=landmark[0].total_challenge_completions + 1
+        new_total_challenge_completion_time = float(timezone.now().timestamp() - user[0].last_login_time.timestamp())
+        landmark_records = TimeRecords.objects.filter(landmark=landmark[0]).order_by('completion_time')
+        landmark_records[0].completion_time=new_total_challenge_completion_time
+        landmark_records[0].completion_date=timezone.now()
+        landmark_records[0].landmark=landmark[0]
+        landmark_records[0].save()
+        new_average_challenge_completion_time = float(landmark_records.aggregate(Sum('completion_time'))['completion_time__sum'])  / 5.0
         landmark.update(
-          total_challenge_completion_time=new_total_challenge_completion_time,
-          total_challenge_completions=new_total_completions,
-          average_challenge_completion_time=new_total_challenge_completion_time / new_total_completions
+          average_challenge_completion_time=new_average_challenge_completion_time
         )
         # update user completed challenges for tracking purposes
         new_completed_challenge_count = user[0].completed_challenge_count + 1
@@ -148,11 +149,13 @@ def user_location_check(request):
         )
         # check if user has solved all seven challenges
         if(new_completed_challenge_count == 7):
-          new_total_game_completion_time = user[0].city.total_game_completion_time + user[0].active_game_time
-          new_total_game_completions = user[0].city.total_game_completions + 1
-          new_average_game_completion_time = float(new_total_game_completion_time) / float(new_total_game_completions)
-          user[0].city.total_game_completion_time=new_total_game_completion_time
-          user[0].city.total_game_completions=new_total_game_completions
+          new_total_game_completion_time = user[0].active_game_time
+          city_records = TimeRecords.objects.filter(city=user[0].city).order_by('completion_time')
+          city_records[0].completion_time=new_total_game_completion_time
+          city_records[0].completion_date=timezone.now()
+          city_records[0].city=user[0].city
+          city_records[0].save()
+          new_average_game_completion_time = float(city_records.aggregate(Sum('completion_time'))['completion_time__sum'])  / 5.0
           user[0].city.average_game_completion_time=new_average_game_completion_time
           user[0].city.save()
           meters_from_destination = "winner"
