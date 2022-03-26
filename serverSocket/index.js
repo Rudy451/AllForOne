@@ -25,8 +25,23 @@ io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 
   socket.on("join room", (roomCode) => {
+    // if (roomCode === "") {
     socket.join(roomCode);
+    // } else {
+    //   socket.to(roomCode);
+    // }
+
     console.log("Here is the room code", roomCode);
+  });
+
+  socket.on("room check", (roomCheck) => {
+    const roomList = Array.from(io.sockets.adapter.rooms).filter((rm) => {
+      return rm[0] == roomCheck;
+    });
+    console.log(roomList, "list here");
+    // comsole.log(roomCheck, 'roomcheck here')
+
+    socket.join(roomList[0][0]);
   });
 });
 
