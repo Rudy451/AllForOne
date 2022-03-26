@@ -1,28 +1,35 @@
-import React from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import globalStyles from "../styles/globalStyles";
-import * as Location from "expo-location";
-import { AntDesign } from "@expo/vector-icons";
+import React from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import globalStyles from '../styles/globalStyles';
+import * as Location from 'expo-location';
+import { AntDesign } from '@expo/vector-icons';
 
 function CheckInModal({
   setLocation,
   modalCheckInVisible,
   setModalCheckInVisible,
-}) {
+})
+{
+  //TODO
+  //api call checkIn()
+  //conditions logic
+  //if 0 then api call getQuestion()
+  //if result>0 then display message with result
+  //if winner then api call clearUser() and socket brodcast
   const onPress = async () => {
     let location = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.Highest,
       maximumAge: 10000,
     });
     setLocation(location);
-    console.log("This is current location", location);
+    console.log('This is current location', location);
   };
   const onClose = () => {
     setModalCheckInVisible(!modalCheckInVisible);
   };
   return (
     <Modal
-      animationType="none"
+      animationType='none'
       transparent={true}
       visible={modalCheckInVisible}
     >
@@ -30,16 +37,22 @@ function CheckInModal({
         <View style={styles.modalView}>
           <View style={styles.textView}>
             <TouchableOpacity onPress={onClose}>
-              <AntDesign name="closecircleo" size={24} color="#00E6B7" />
+              <AntDesign name='closecircleo' size={24} color='#00E6B7' />
             </TouchableOpacity>
-            <Text style={[globalStyles.subText, { marginHorizontal: 20 }]}>
+            {/* <Text style={[globalStyles.subText, { marginHorizontal: 20 }]}>
               This is the start of your scavanger hunt. Go to the given location
               and press check-in when you believe you are there. If correct a
               riddle will be displayed in this.
+            </Text> */}
+            {/* <Text style={[globalStyles.subText, { marginHorizontal: 40 }]}>
+              Here is the riddle: This place smells a little fishy...
+            </Text> */}
+            <Text style={[globalStyles.subText, { marginHorizontal: 40 }]}>
+              Here is the riddle: There used to be Six Flags in these gardens...
             </Text>
           </View>
           <TouchableOpacity style={styles.button} onPress={onPress}>
-            <Text style={[globalStyles.titleTextBold, { textAlign: "center" }]}>
+            <Text style={[globalStyles.titleTextBold, { textAlign: 'center' }]}>
               Check-In
             </Text>
           </TouchableOpacity>
@@ -50,18 +63,18 @@ function CheckInModal({
 }
 const styles = StyleSheet.create({
   centeredView: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
-    backgroundColor: "rgba(196, 196, 196, 0.5)",
+    backgroundColor: 'rgba(196, 196, 196, 0.5)',
   },
   modalView: {
     margin: 20,
-    backgroundColor: "#182624",
+    backgroundColor: '#182624',
     borderRadius: 5,
-    width: "95%",
-    alignItems: "center",
-    shadowColor: "#000",
+    width: '95%',
+    alignItems: 'center',
+    shadowColor: '#000',
   },
   //   modalView: {
   //     backgroundColor: "#182624",
@@ -74,17 +87,17 @@ const styles = StyleSheet.create({
   //   },
   textView: {
     margin: 20,
-    position: "relative",
+    position: 'relative',
   },
   button: {
     padding: 3,
     elevation: 2,
-    backgroundColor: "#00E6B7",
+    backgroundColor: '#00E6B7',
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    width: "100%",
+    width: '100%',
 
-    position: "relative",
+    position: 'relative',
   },
 });
 
