@@ -10,9 +10,11 @@ const JoinGame = ({ navigation, route }) => {
   const { type } = route.params;
   const [roomCode, setRoomCode] = useState("");
   const { socket } = useContext(SocketContext);
+
   const pressHandler = () => {
     socket.emit("room check", roomCode);
-    navigation.navigate("Room", { type: "Player" });
+
+    navigation.navigate("Room", { type: "Player", roomCode: roomCode });
   };
   return (
     <View style={globalStyles.container}>
