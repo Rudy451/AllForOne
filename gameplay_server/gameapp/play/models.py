@@ -35,18 +35,6 @@ class Cities(models.Model):
     null=False,
     blank=False
   )
-  total_game_completion_time = models.DecimalField(
-    max_digits=24,
-    decimal_places=14,
-    default=0.0,
-    null=False,
-    blank=False
-  )
-  total_game_completions = models.IntegerField(
-    default=1,
-    null=False,
-    blank=False
-  )
   average_game_completion_time = models.DecimalField(
     max_digits=24,
     decimal_places=14,
@@ -85,18 +73,6 @@ class Landmarks(models.Model):
     max_length=200,
     unique=True,
     editable=False,
-    null=False,
-    blank=False
-  )
-  total_challenge_completion_time = models.DecimalField(
-    max_digits=24,
-    decimal_places=14,
-    default=0.0,
-    null=False,
-    blank=False
-  )
-  total_challenge_completions = models.IntegerField(
-    default=0,
     null=False,
     blank=False
   )
@@ -189,5 +165,34 @@ class Users(models.Model):
     Landmarks,
     related_name='challenge_seven',
     default='03ee9967-9056-4cc1-9954-ff10f9d19973',
+    on_delete=models.CASCADE
+  )
+
+class TimeRecords(models.Model):
+  time_record_id=models.UUIDField(
+    primary_key=True,
+    default = uuid.uuid4,
+    editable=False
+  )
+  completion_time = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
+  )
+  completion_date = models.DateTimeField(
+    default=timezone.now
+  )
+  city = models.ForeignKey(
+    Cities,
+    blank=True,
+    null=True,
+    on_delete=models.CASCADE
+  )
+  landmark = models.ForeignKey(
+    Landmarks,
+    blank=True,
+    null=True,
     on_delete=models.CASCADE
   )
