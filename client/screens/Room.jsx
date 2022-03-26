@@ -29,7 +29,7 @@ const getRoomName = (() => {
 //START OF ROOM
 const Room = ({ navigation, route }) => {
   const [amount, setAmount] = useState();
-  const { type, room } = route.params;
+  const { type, roomCode } = route.params;
   const { socket } = useContext(SocketContext);
   const [roomName, setRoomName] = useState(getRoomName);
 
@@ -38,12 +38,10 @@ const Room = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    if (roomName == "") {
-      setRoomName(roomNameCall);
-    }
     socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
+      console.log(roomCode, "here is roomcode");
     }
 
     // //My IP address (Fatima)
@@ -89,8 +87,8 @@ const Room = ({ navigation, route }) => {
         <Text
           style={{
             ...globalStyles.titleTextBold,
-            marginTop: 20,
-            height: "30%",
+            marginTop: 10,
+            height: "35%",
             lineHeight: 45,
           }}
         >{`Welcome to \nALL FOR ONE`}</Text>
@@ -124,7 +122,7 @@ const Room = ({ navigation, route }) => {
             style={{
               ...globalStyles.darkContainer,
               width: "55%",
-              height: "45%",
+              height: "50%",
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -136,7 +134,7 @@ const Room = ({ navigation, route }) => {
                 height: "100%",
               }}
             >
-              {roomName}
+              {type === "Captain" ? roomName : roomCode}
             </Text>
           </View>
         </View>
