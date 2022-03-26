@@ -8,7 +8,14 @@ function CheckInModal({
   setLocation,
   modalCheckInVisible,
   setModalCheckInVisible,
-}) {
+})
+{
+  //TODO
+  //api call checkIn()
+  //conditions logic
+  //if 0 then api call getQuestion()
+  //if result>0 then display message with result
+  //if winner then api call clearUser() and socket brodcast
   const onPress = async () => {
     let location = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.Highest,

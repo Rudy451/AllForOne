@@ -38,19 +38,10 @@ const Room = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-<<<<<<< HEAD
-    if (roomName == '') {
-      setRoomName(roomNameCall);
-    }
-    socket.emit('user entered room', socket.id);
-    if (type === 'Captain') {
-      socket.emit('join room', roomName);
-=======
     socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
       console.log(roomCode, "here is roomcode");
->>>>>>> efcc2c697c8a4ba718a68f6d99072450c371acca
     }
     // //My IP address (Fatima)
     // const socket = io('http://10.0.0.153:3000');
@@ -96,13 +87,8 @@ const Room = ({ navigation, route }) => {
         <Text
           style={{
             ...globalStyles.titleTextBold,
-<<<<<<< HEAD
-            marginTop: 20,
-            height: '30%',
-=======
             marginTop: 10,
             height: "35%",
->>>>>>> efcc2c697c8a4ba718a68f6d99072450c371acca
             lineHeight: 45,
           }}
         >{`Welcome to \nALL FOR ONE`}</Text>
@@ -135,17 +121,14 @@ const Room = ({ navigation, route }) => {
           <View
             style={{
               ...globalStyles.darkContainer,
-<<<<<<< HEAD
               width: '55%',
               height: '45%',
               justifyContent: 'center',
               alignItems: 'center',
-=======
               width: "55%",
               height: "50%",
               justifyContent: "center",
               alignItems: "center",
->>>>>>> efcc2c697c8a4ba718a68f6d99072450c371acca
             }}
           >
             <Text
