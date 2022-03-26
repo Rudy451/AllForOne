@@ -23,6 +23,10 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Main = ({ navigation }) => {
+  //TODO
+  //getLocations api call
+  //set state with locations
+  //set initial region
   const [modalRuleVisible, setModalRuleVisible] = useState(false);
   const [modalLocationVisible, setModalLocationVisible] = useState(false);
   const [modalExitVisible, setModalExitVisible] = useState(false);
@@ -104,10 +108,10 @@ const Main = ({ navigation }) => {
         style={styles.map}
         provider='google'
         initialRegion={{
-          latitude: 39.106805261119526,
-          longitude: -104.84521832274527,
-          // latitude: coordinate.latitude,
-          // longtitude: coordinate.longitude,
+          // latitude: 39.106805261119526,
+          // longitude: -104.84521832274527,
+          latitude: coordinate.latitude,
+          longtitude: coordinate.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
