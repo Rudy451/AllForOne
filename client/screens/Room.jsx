@@ -32,21 +32,37 @@ const Room = ({ navigation, route }) => {
   const { type, roomCode } = route.params;
   const { socket } = useContext(SocketContext);
   const [roomName, setRoomName] = useState(getRoomName);
+  const [userNames, setUserNames] = useState([]);
 
   const pressHandler = () => {
     navigation.navigate('Main');
   };
 
   useEffect(() => {
+    setUserNames((userNames) => [
+      ...userNames,
+      generateUserName(first, middle, end, ranNum),
+    ]);
+    console.log(userNames);
     socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
-      console.log(roomCode, "here is roomcode");
     }
+<<<<<<< HEAD
+=======
     // //My IP address (Fatima)
     // const socket = io('http://10.0.0.153:3000');
+>>>>>>> e466fe38b09f801a58c8c5053238864bd1b74f41
   }, []);
+  const ranNum = () => {
+    return Math.floor(Math.random() * 14);
+  };
+  const generateUserName = (arr1, arr2, arr3, cb) => {
+    return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
+  };
 
+<<<<<<< HEAD
+=======
   // const joinRoom = (roomCode) => {
   //   socket.emit("join room", roomCode);
   //   console.log("connected to room");
@@ -55,12 +71,14 @@ const Room = ({ navigation, route }) => {
   // joinRoom();
   // console.log(joinRoom);
 
+>>>>>>> e466fe38b09f801a58c8c5053238864bd1b74f41
   const mockUsernames = [
     'CaptainWatchYoBack',
     'KanyeWinAll',
     'MrStealYaCash',
     'TheDragon',
   ];
+
   const renderItem = ({ item }) => {
     return (
       <View
@@ -168,7 +186,7 @@ const Room = ({ navigation, route }) => {
           </Text>
 
           <FlatList
-            data={mockUsernames}
+            data={userNames}
             renderItem={renderItem}
             keyExtractor={(item) => item}
             style={styles.flatlist}
@@ -185,7 +203,11 @@ const Room = ({ navigation, route }) => {
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
+<<<<<<< HEAD
+              {amount ? `${amount * userNames.length}ETH` : "0ETH"}
+=======
               {amount ? `${amount * mockUsernames.length}ETH` : '0ETH'}
+>>>>>>> e466fe38b09f801a58c8c5053238864bd1b74f41
             </Text>
             <Text
               style={{
@@ -258,3 +280,51 @@ const styles = StyleSheet.create({
 });
 
 export default Room;
+const first = [
+  "Captain",
+  "Mr",
+  "Miss",
+  "Granny",
+  "Kanye",
+  "The",
+  "Little",
+  "Master",
+  "Sensei",
+  "Maestro",
+  "Madame",
+  "Sir",
+  "Prince",
+  "Major",
+];
+const middle = [
+  "Wiggle",
+  "Hippy",
+  "Long",
+  "Tart",
+  "StealYa",
+  "Bitter",
+  "Sly",
+  "Quick",
+  "Woke",
+  "Fire",
+  "Sweaty",
+  "Crazy",
+  "Wild",
+  "Cuckoo",
+];
+const end = [
+  "Bottom",
+  "Bean",
+  "Taco",
+  "Cash",
+  "Burrito",
+  "Cow",
+  "Cheese",
+  "Goat",
+  "Cabbage",
+  "Snail",
+  "Worm",
+  "Dragon",
+  "Lettuce",
+  "Potato",
+];
