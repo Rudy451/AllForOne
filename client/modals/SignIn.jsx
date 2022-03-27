@@ -11,6 +11,10 @@ function SignInModal({
   navigation,
 }) {
   const signInOnPress = () => {
+    //TODO USERENTRY
+    //sign in with metamask
+    //API CALL userEntry(data)
+    //set the username state
     if (type === 'Captain') {
       navigation.navigate('Room', { type: 'Captain' });
       setSignInVisibility(!isSignInVisible);

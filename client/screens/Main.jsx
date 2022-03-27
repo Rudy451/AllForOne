@@ -6,23 +6,27 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import globalStyles from "../styles/globalStyles";
-import { Entypo, Ionicons } from "@expo/vector-icons";
-import RulesModal from "../modals/Rules";
-import LocationModal from "../modals/Locations";
-import ExitModal from "../modals/Exit";
-import MapView, { Callout, Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import locationsForTheGame from "../cities/Denver";
-import CheckInModal from "../modals/Check-In";
-import { AntDesign } from "@expo/vector-icons";
+} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import globalStyles from '../styles/globalStyles';
+import { Entypo, Ionicons } from '@expo/vector-icons';
+import RulesModal from '../modals/Rules';
+import LocationModal from '../modals/Locations';
+import ExitModal from '../modals/Exit';
+import MapView, { Callout, Marker, Circle } from 'react-native-maps';
+import * as Location from 'expo-location';
+import locationsForTheGame from '../cities/Denver';
+import CheckInModal from '../modals/Check-In';
+import { AntDesign } from '@expo/vector-icons';
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Main = ({ navigation }) => {
+  //TODO
+  //getLocations api call
+  //set state with locations
+  //set initial region
   const [modalRuleVisible, setModalRuleVisible] = useState(false);
   const [modalLocationVisible, setModalLocationVisible] = useState(false);
   const [modalExitVisible, setModalExitVisible] = useState(false);
@@ -52,22 +56,21 @@ const Main = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
         return;
       }
       // setInterval(async () => {
       let location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Highest,
         maximumAge: 10000,
-        i,
       });
       setLocation(location);
       // }, 5000);
     })();
   }, []);
 
-  let text = "Waiting..";
+  let text = 'Waiting..';
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
@@ -90,7 +93,7 @@ const Main = ({ navigation }) => {
           latitude: location.latitude,
           longitude: location.longitude,
         }}
-        pinColor="teal"
+        pinColor='teal'
       >
         <Callout>
           <Text>{location.location}</Text>
@@ -103,19 +106,21 @@ const Main = ({ navigation }) => {
     <>
       <MapView
         style={styles.map}
-        provider="google"
+        provider='google'
         initialRegion={{
-          latitude: 39.739235,
-          longitude: -104.99025,
+          // latitude: 39.106805261119526,
+          // longitude: -104.84521832274527,
+          latitude: coordinate.latitude,
+          longtitude: coordinate.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
       >
         <Marker
-          coordinate={coordinate}
+          coordinate={pin}
           draggable={true}
           onDragStart={(e) =>
-            console.log("drag start: ", e.nativeEvent.coordinate)
+            console.log('drag start: ', e.nativeEvent.coordinate)
           }
           onDragEnd={(e) =>
             setPin({
@@ -129,26 +134,38 @@ const Main = ({ navigation }) => {
           </Callout>
         </Marker>
         {mapMarkers()}
+        {/* STARTING POINT OF THE GAME AND THE RADIUS WITHIN 1.1MILE */}
+        <Circle
+          center={{
+            latitude: 39.7478,
+            longitude: -104.9949,
+          }}
+          //radius in meters
+          radius={1770.28}
+          strokeWidth={1}
+          strokeColor={'#1a66ff'}
+          fillColor={'rgba(230,238,255,0.5)'}
+        />
       </MapView>
 
       <View
         style={{
-          backgroundColor: "#182624",
-          height: "8%",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-evenly",
+          backgroundColor: '#182624',
+          height: '8%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
         }}
       >
         <TouchableOpacity onPress={openRules}>
-          <Entypo name="info-with-circle" size={24} color="#00E6B7" />
+          <Entypo name='info-with-circle' size={24} color='#00E6B7' />
           <RulesModal
             modalRuleVisible={modalRuleVisible}
             setModalRuleVisible={setModalRuleVisible}
           ></RulesModal>
         </TouchableOpacity>
         <TouchableOpacity onPress={openCheckIn}>
-          <AntDesign name="playcircleo" size={24} color="#00E6B7" />
+          <AntDesign name='playcircleo' size={24} color='#00E6B7' />
           {/* <View
             style={{
               height: "100%",
@@ -168,14 +185,14 @@ const Main = ({ navigation }) => {
           {/* </View> */}
         </TouchableOpacity>
         <TouchableOpacity onPress={openLocation}>
-          <Entypo name="location" size={24} color="#00E6B7" />
+          <Entypo name='location' size={24} color='#00E6B7' />
           <LocationModal
             modalLocationVisible={modalLocationVisible}
             setModalLocationVisible={setModalLocationVisible}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={openExit}>
-          <Ionicons name="exit" size={24} color="#00E6B7" />
+          <Ionicons name='exit' size={24} color='#00E6B7' />
           <ExitModal
             modalExitVisible={modalExitVisible}
             setModalExitVisible={setModalExitVisible}
@@ -192,16 +209,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 10,
     elevation: 2,
-    backgroundColor: "#00E6B7",
+    backgroundColor: '#00E6B7',
   },
   container: {},
   map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
     flex: 1,
     paddingBottom: 50,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
