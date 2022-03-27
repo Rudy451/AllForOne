@@ -164,6 +164,7 @@ def user_location_check(request):
           meters_from_destination = 0
     else:
       # return distance from target in meters for client
+      # Convert to int/round to 0
       meters_from_destination = (float(user[0].city.allowable_distance_difference) - current_distance) * 1.1 / 0.00001
 
   # return status of push request
