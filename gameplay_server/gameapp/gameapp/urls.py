@@ -22,6 +22,7 @@ from play import views
 urlpatterns = [
     path('', views.home, name='home'),
     re_path('entry/?', views.user_entry, name='user_entry'),
+    re_path('locations/?', views.get_locations, name='get_locations'),
     re_path('question/?', views.user_question_request, name='user_request'),
     re_path('check/?', views.user_location_check, name='user_check'),
     re_path('clear/?', views.clear_user_game_status, name='clear_user'),

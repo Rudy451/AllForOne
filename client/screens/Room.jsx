@@ -48,11 +48,8 @@ const Room = ({ navigation, route }) => {
     if (type === "Captain") {
       socket.emit("join room", roomName);
     }
-<<<<<<< HEAD
-=======
     // //My IP address (Fatima)
     // const socket = io('http://10.0.0.153:3000');
->>>>>>> e466fe38b09f801a58c8c5053238864bd1b74f41
   }, []);
   const ranNum = () => {
     return Math.floor(Math.random() * 14);
@@ -61,8 +58,6 @@ const Room = ({ navigation, route }) => {
     return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
   };
 
-<<<<<<< HEAD
-=======
   // const joinRoom = (roomCode) => {
   //   socket.emit("join room", roomCode);
   //   console.log("connected to room");
@@ -71,7 +66,6 @@ const Room = ({ navigation, route }) => {
   // joinRoom();
   // console.log(joinRoom);
 
->>>>>>> e466fe38b09f801a58c8c5053238864bd1b74f41
   const mockUsernames = [
     'CaptainWatchYoBack',
     'KanyeWinAll',
@@ -203,11 +197,7 @@ const Room = ({ navigation, route }) => {
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-<<<<<<< HEAD
-              {amount ? `${amount * userNames.length}ETH` : "0ETH"}
-=======
               {amount ? `${amount * mockUsernames.length}ETH` : '0ETH'}
->>>>>>> e466fe38b09f801a58c8c5053238864bd1b74f41
             </Text>
             <Text
               style={{
