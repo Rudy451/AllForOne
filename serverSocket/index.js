@@ -41,6 +41,7 @@ io.on('connection', (socket) => {
     // comsole.log(roomCheck, 'roomcheck here')
 
     socket.join(roomList[0][0]);
+    socket.broadcast.emit('user connected', socket.id);
   });
 
   socket.on('get users', async (roomCode) => {
@@ -55,9 +56,9 @@ io.on('connection', (socket) => {
     //this also works
     let ids = await io.in(roomCode).allSockets();
     console.log([...ids]);
-
     // console.log(roomUsers);
-    // socket.emit(roomUsers);
+    socket.emit('users', [...ids]);
+    console.log([...ids]);
     // let userss = io.sockets.clients(roomCode);
     // console.log(userss);
     // io.in(roomCode).clients((err, clients) => {
@@ -86,6 +87,7 @@ io.on('connection', (socket) => {
   // socket.on('disconnect', () => {
   //   users = users.filter((u) => u.id !== socket.id);
   //   io.emit('new user', users);
+  // io.emit('user disconnected')
   // });
 });
 
