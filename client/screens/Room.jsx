@@ -48,6 +48,8 @@ const Room = ({ navigation, route }) => {
     if (type === "Captain") {
       socket.emit("join room", roomName);
     }
+    // //My IP address (Fatima)
+    // const socket = io('http://10.0.0.153:3000');
   }, []);
   const ranNum = () => {
     return Math.floor(Math.random() * 14);
@@ -56,12 +58,20 @@ const Room = ({ navigation, route }) => {
     return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
   };
 
-  // const mockUsernames = [
-  //   "CaptainWatchYoBack",
-  //   "KanyeWinAll",
-  //   "MrStealYaCash",
-  //   "TheDragon",
-  // ];
+  // const joinRoom = (roomCode) => {
+  //   socket.emit("join room", roomCode);
+  //   console.log("connected to room");
+  // };
+
+  // joinRoom();
+  // console.log(joinRoom);
+
+  const mockUsernames = [
+    "CaptainWatchYoBack",
+    "KanyeWinAll",
+    "MrStealYaCash",
+    "TheDragon",
+  ];
 
   const renderItem = ({ item }) => {
     return (
@@ -187,7 +197,7 @@ const Room = ({ navigation, route }) => {
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-              {amount ? `${amount * userNames.length}ETH` : "0ETH"}
+              {amount ? `${amount * mockUsernames.length}ETH` : "0ETH"}
             </Text>
             <Text
               style={{

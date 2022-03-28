@@ -76,6 +76,13 @@ class Landmarks(models.Model):
     null=False,
     blank=False
   )
+  hint = models.CharField(
+    max_length=200,
+    default='',
+    editable=False,
+    null=False,
+    blank=False
+  )
   average_challenge_completion_time = models.DecimalField(
     max_digits=24,
     decimal_places=14,
@@ -85,6 +92,8 @@ class Landmarks(models.Model):
   )
   city = models.ForeignKey(
     Cities,
+    blank=True,
+    null=True,
     on_delete=models.CASCADE
   )
 

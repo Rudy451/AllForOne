@@ -44,7 +44,23 @@ def user_entry(request):
   user_query = json.loads(body_decoded)
   user = Users.objects.filter(public_key_address=user_query['public_key_address'])
 
-  # select closest city for questions
+  # create new user if none exists
+  if len(user) == 0:
+    user = Users.objects.create(public_key_address=user_query['public_key_address'], user_name=user_query['user_name'])
+  # update city_id to closest city & last_login to now
+  else:
+    user.update(last_login_time=timezone.now(), user_name=user_query['user_name'])
+
+  # return city by closest coordinates to client
+  return HttpResponse(user_query['user_name'])
+
+@api_view(['PUT'])
+def get_locations(request):
+  body_decoded = request.body.decode('utf-8')
+  user_query = json.loads(body_decoded)
+  user = Users.objects.filter(public_key_address=user_query['public_key_address'])
+
+   # select closest city for questions
   cities = Cities.objects.all()
   shortest_city_id = ''
   shortest_distance = 100000000
@@ -53,16 +69,10 @@ def user_entry(request):
     if city_distance < shortest_distance:
       shortest_city_id = city.city_id
       shortest_distance = city_distance
+  user.update(city_id=shortest_city_id)
 
-  # create new user if none exists
-  if len(user) == 0:
-    user = Users.objects.create(public_key_address=user_query['public_key_address'], user_name=user_query['user_name'], city_id=shortest_city_id)
-  # update city_id to closest city & last_login to now
-  else:
-    user.update(last_login_time=timezone.now(), city_id=shortest_city_id)
-
-  # return city by closest coordinates to client
-  return HttpResponse(shortest_city_id)
+  landmarks = Landmarks.objects.filter(city_id__in=[shortest_city_id]).values('landmark_name', 'longitude', 'latitude', 'question', 'hint')
+  return HttpResponse(landmarks)
 
 @api_view(['POST', 'PUT'])
 def user_question_request(request):
@@ -158,12 +168,13 @@ def user_location_check(request):
           new_average_game_completion_time = float(city_records.aggregate(Sum('completion_time'))['completion_time__sum'])  / 5.0
           user[0].city.average_game_completion_time=new_average_game_completion_time
           user[0].city.save()
-          meters_from_destination = "winner"
+          meters_from_destination = user[0].user_name
         # else just confirm success
         else:
           meters_from_destination = 0
     else:
       # return distance from target in meters for client
+      # Convert to int/round to 0
       meters_from_destination = (float(user[0].city.allowable_distance_difference) - current_distance) * 1.1 / 0.00001
 
   # return status of push request
