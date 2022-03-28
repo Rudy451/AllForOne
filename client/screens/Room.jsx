@@ -36,14 +36,26 @@ const Room = ({ navigation, route }) => {
   const pressHandler = () => {
     navigation.navigate('Main');
   };
-
+  useEffect(() => {
+    socket.onAny((event, ...args) => {
+      console.log({ event, args });
+    });
+    console.log('test');
+  }, []);
   useEffect(() => {
     socket.emit('user entered room', socket.id);
     if (type === 'Captain') {
       socket.emit('join room', roomName);
       console.log(roomName, 'here is roomcode');
-      socket.emit('get users', roomName);
     }
+    socket.emit('get users', roomName);
+    socket.on('users', (res) => {
+      console.log('hi');
+      console.log(res);
+    });
+    socket.on('user connected', (res) => {
+      console.log(res);
+    });
     // //My IP address (Fatima)
     // const socket = io('http://10.0.0.153:3000');
   }, []);

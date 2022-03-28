@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import globalStyles from '../styles/globalStyles';
 import { TextInput } from 'react-native-gesture-handler';
 import EnterRoomCode from '../EnterRoomCode';
@@ -13,7 +13,9 @@ const JoinGame = ({ navigation, route }) => {
 
   const pressHandler = () => {
     socket.emit('room check', roomCode);
-    socket.emit('get users', roomCode, (res) => {
+    socket.emit('get users', roomCode);
+    // socket.on('users', (res) => {});
+    socket.on('user connected', (res) => {
       console.log(res);
     });
     navigation.navigate('Room', { type: 'Player', roomCode: roomCode });
