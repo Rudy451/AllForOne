@@ -4,8 +4,6 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Pressable,
-  Image,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import globalStyles from '../styles/globalStyles';
@@ -108,10 +106,10 @@ const Main = ({ navigation }) => {
         style={styles.map}
         provider='google'
         initialRegion={{
-          // latitude: 39.106805261119526,
-          // longitude: -104.84521832274527,
-          latitude: coordinate.latitude,
-          longtitude: coordinate.longitude,
+          latitude: 39.106805261119526,
+          longitude: -104.84521832274527,
+          // latitude: coordinate.latitude,
+          // longtitude: coordinate.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
