@@ -48,12 +48,12 @@ const Room = ({ navigation, route }) => {
     if (type === 'Captain') {
       socket.emit('join room', roomName);
       console.log(roomName, 'here is roomcode');
-      setUserNames((userNames) => [
-        ...userNames,
-        generateUserName(first, middle, end, ranNum),
-      ]);
       console.log(userNames);
     }
+    setUserNames((userNames) => [
+      ...userNames,
+      generateUserName(first, middle, end, ranNum),
+    ]);
     socket.emit('get users', roomName);
     socket.on('users', (res) => {
       console.log('hi');
