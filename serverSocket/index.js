@@ -31,17 +31,17 @@ io.on('connection', (socket) => {
     //   socket.to(roomCode);
     // }
 
-    console.log('Here is the room code', roomCode);
+    // console.log("Here is the room code", roomCode);
   });
   socket.on('room check', (roomCheck) => {
     const roomList = Array.from(io.sockets.adapter.rooms).filter((rm) => {
       return rm[0] == roomCheck;
     });
-    console.log(roomList, 'list here');
+    // console.log(roomList, "list here");
     // comsole.log(roomCheck, 'roomcheck here')
 
     socket.join(roomList[0][0]);
-    socket.broadcast.emit('user connected', socket.id);
+    // socket.broadcast.emit("user connected", socket.id);
   });
 
   socket.on('get users', async (roomCode) => {
@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
     console.log([...ids]);
     // console.log(roomUsers);
     socket.emit('users', [...ids]);
-    console.log([...ids]);
+    // console.log([...ids]);
     // let userss = io.sockets.clients(roomCode);
     // console.log(userss);
     // io.in(roomCode).clients((err, clients) => {
@@ -68,16 +68,15 @@ io.on('connection', (socket) => {
   });
 
   // let users = [];
-  // socket.on('join server', (username, amount) => {
+  // socket.on("update users", (username, amount) => {
   //   const user = {
   //     username,
   //     amount,
   //     id: socket.id,
   //   };
   //   users.push(user);
-  //   console.log('Here is the users: ', users);
-  //   io.emit('new user', users);
-  // every time new user joins it will update the users array and we can set the state in the front-end
+  //   console.log("Here is the users: ", users);
+  //   io.emit("new user", users);
   // });
 
   // socket.on('join room', (roomName) => {
