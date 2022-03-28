@@ -68,14 +68,16 @@ io.on('connection', (socket) => {
   });
 
   // let users = [];
-  // socket.on('join server', (username) => {
+  // socket.on('join server', (username, amount) => {
   //   const user = {
   //     username,
+  //     amount,
   //     id: socket.id,
   //   };
   //   users.push(user);
   //   console.log('Here is the users: ', users);
   //   io.emit('new user', users);
+  // every time new user joins it will update the users array and we can set the state in the front-end
   // });
 
   // socket.on('join room', (roomName) => {
