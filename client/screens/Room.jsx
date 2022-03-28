@@ -6,20 +6,20 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-} from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import React, { useState, useEffect, useContext } from 'react';
-import globalStyles from '../styles/globalStyles';
-import EnterCryptoModal from '../modals/EnterCrypto';
-import { FontAwesome5 } from '@expo/vector-icons';
-import BuyInAmount from '../modals/BuyInAmount';
-import { io } from 'socket.io-client';
-import { SocketContext } from '../services/useContext';
+} from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import React, { useState, useEffect, useContext } from "react";
+import globalStyles from "../styles/globalStyles";
+import EnterCryptoModal from "../modals/EnterCrypto";
+import { FontAwesome5 } from "@expo/vector-icons";
+import BuyInAmount from "../modals/BuyInAmount";
+import { io } from "socket.io-client";
+import { SocketContext } from "../services/useContext";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
-const roomName = ['Tiger', 'Cow', 'Chicken', 'Dragon', 'Fish', 'Butterfly'];
+const roomName = ["Tiger", "Cow", "Chicken", "Dragon", "Fish", "Butterfly"];
 
 const getRoomName = (() => {
   let randomRoomIndex = Math.floor(Math.random() * roomName.length);
@@ -35,7 +35,7 @@ const Room = ({ navigation, route }) => {
   const [userNames, setUserNames] = useState([]);
 
   const pressHandler = () => {
-    navigation.navigate('Main');
+    navigation.navigate("Main");
   };
 
   useEffect(() => {
@@ -67,21 +67,21 @@ const Room = ({ navigation, route }) => {
   // console.log(joinRoom);
 
   const mockUsernames = [
-    'CaptainWatchYoBack',
-    'KanyeWinAll',
-    'MrStealYaCash',
-    'TheDragon',
+    "CaptainWatchYoBack",
+    "KanyeWinAll",
+    "MrStealYaCash",
+    "TheDragon",
   ];
 
   const renderItem = ({ item }) => {
     return (
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: "row",
           padding: 5,
         }}
       >
-        <FontAwesome5 name='hourglass-half' size={20} color='#00E6B7' />
+        <FontAwesome5 name="hourglass-half" size={20} color="#00E6B7" />
         <Text style={{ ...globalStyles.subText, padding: 0, paddingLeft: 10 }}>
           {item}
         </Text>
@@ -90,12 +90,12 @@ const Room = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={globalStyles.container}>
-      {type === 'Captain' ? (
+      {type === "Captain" ? (
         <EnterCryptoModal setAmount={setAmount} amount={amount} />
       ) : (
         <BuyInAmount amount={amount} navigation={navigation} />
       )}
-      <View style={{ ...styles.innerContainers, height: '45%' }}>
+      <View style={{ ...styles.innerContainers, height: "45%" }}>
         <Text
           style={{
             ...globalStyles.titleTextBold,
@@ -107,9 +107,9 @@ const Room = ({ navigation, route }) => {
         <Text
           style={{
             ...globalStyles.subText,
-            textAlign: 'center',
+            textAlign: "center",
             fontSize: 15,
-            width: '70%',
+            width: "70%",
             margin: 5,
           }}
         >{`Share the room code to allow others to join the game. Maximum of 10 players`}</Text>
@@ -117,15 +117,15 @@ const Room = ({ navigation, route }) => {
           style={{
             ...globalStyles.lightContainer,
             padding: 0,
-            width: '100%',
-            height: '40%',
+            width: "100%",
+            height: "40%",
           }}
         >
           <Text
             style={{
               ...globalStyles.titleTextMedium,
-              width: '100%',
-              height: '45%',
+              width: "100%",
+              height: "45%",
             }}
           >
             ROOM
@@ -133,10 +133,10 @@ const Room = ({ navigation, route }) => {
           <View
             style={{
               ...globalStyles.darkContainer,
-              width: '55%',
-              height: '45%',
-              justifyContent: 'center',
-              alignItems: 'center',
+              width: "55%",
+              height: "45%",
+              justifyContent: "center",
+              alignItems: "center",
               width: "55%",
               height: "50%",
               justifyContent: "center",
@@ -146,8 +146,8 @@ const Room = ({ navigation, route }) => {
             <Text
               style={{
                 ...globalStyles.titleTextMedium,
-                width: '100%',
-                height: '100%',
+                width: "100%",
+                height: "100%",
               }}
             >
               {type === "Captain" ? roomName : roomCode}
@@ -155,14 +155,14 @@ const Room = ({ navigation, route }) => {
           </View>
         </View>
       </View>
-      <View style={{ ...styles.innerContainers, justifyContent: 'flex-end' }}>
+      <View style={{ ...styles.innerContainers, justifyContent: "flex-end" }}>
         <View
           style={{
             ...globalStyles.lightContainer,
             marginVertical: 10,
-            alignItems: 'flex-start',
-            height: '65%',
-            width: '100%',
+            alignItems: "flex-start",
+            height: "65%",
+            width: "100%",
             padding: 10,
           }}
         >
@@ -170,9 +170,9 @@ const Room = ({ navigation, route }) => {
             style={{
               ...globalStyles.titleTextMedium,
               fontSize: 24,
-              width: '100%',
-              height: '15%',
-              textAlign: 'left',
+              width: "100%",
+              height: "15%",
+              textAlign: "left",
               margin: 5,
             }}
           >
@@ -188,22 +188,22 @@ const Room = ({ navigation, route }) => {
 
           <View
             style={{
-              width: '70%',
-              height: '40%',
-              position: 'absolute',
-              marginLeft: '60%',
-              marginTop: '30%',
+              width: "70%",
+              height: "40%",
+              position: "absolute",
+              marginLeft: "60%",
+              marginTop: "30%",
             }}
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-              {amount ? `${amount * mockUsernames.length}ETH` : '0ETH'}
+              {amount ? `${amount * mockUsernames.length}ETH` : "0ETH"}
             </Text>
             <Text
               style={{
                 ...globalStyles.subText,
                 fontSize: 12,
-                color: '#00E6B7',
+                color: "#00E6B7",
               }}
             >
               PROPOSE NEW BUY-IN
@@ -215,15 +215,15 @@ const Room = ({ navigation, route }) => {
           style={{
             ...globalStyles.lightBtn,
             marginTop: 10,
-            height: '15%',
-            width: '65%',
-            justifyContent: 'center',
+            height: "15%",
+            width: "65%",
+            justifyContent: "center",
           }}
         >
           <Text
             style={{
               ...globalStyles.buttonText,
-              width: '100%',
+              width: "100%",
             }}
           >
             START GAME
@@ -235,9 +235,9 @@ const Room = ({ navigation, route }) => {
             fontSize: 12,
             marginTop: 15,
             marginBottom: 5,
-            width: '100%',
-            height: '10%',
-            flexWrap: 'wrap',
+            width: "100%",
+            height: "10%",
+            flexWrap: "wrap",
           }}
         >
           {`We are not responsible for any loss of friendship, life long grudges or
@@ -251,21 +251,21 @@ const Room = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     height: windowHeight,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: "flex-start",
+    alignItems: "center",
     padding: 0,
     margin: 0,
     width: windowWidth,
   },
   innerContainers: {
-    width: '90%',
-    height: '50%',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    width: "90%",
+    height: "50%",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   flatlist: {
     paddingVertical: 10,
-    width: '100%',
+    width: "100%",
   },
 });
 
