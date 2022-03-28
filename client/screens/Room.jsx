@@ -197,7 +197,7 @@ const Room = ({ navigation, route }) => {
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-              {amount ? `${amount * mockUsernames.length}ETH` : "0ETH"}
+              {amount ? `${amount * userNames.length}ETH` : "0ETH"}
             </Text>
             <Text
               style={{
