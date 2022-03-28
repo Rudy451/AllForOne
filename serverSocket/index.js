@@ -1,50 +1,50 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const http = require('http');
+const http = require("http");
 const server = http.createServer(app);
-const { Server } = require('socket.io');
+const { Server } = require("socket.io");
 const io = new Server(server);
-const { instrument } = require('@socket.io/admin-ui');
+const { instrument } = require("@socket.io/admin-ui");
 
-const cors = require('cors');
+const cors = require("cors");
 
 // const { Controller } = require("./controllers");
 
-const host = 'localhost';
+const host = "localhost";
 const port = 3000;
 
 const corsOptions = {
-  origin: '*',
+  origin: "*",
   //   methods: ['GET']
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
-io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
 
-  socket.on('join room', (roomCode) => {
+  socket.on("join room", (roomCode) => {
     // if (roomCode === "") {
     socket.join(roomCode);
     // } else {
     //   socket.to(roomCode);
     // }
 
-    console.log('Here is the room code', roomCode);
+    // console.log("Here is the room code", roomCode);
   });
-  socket.on('room check', (roomCheck) => {
+  socket.on("room check", (roomCheck) => {
     const roomList = Array.from(io.sockets.adapter.rooms).filter((rm) => {
       return rm[0] == roomCheck;
     });
-    console.log(roomList, 'list here');
+    // console.log(roomList, "list here");
     // comsole.log(roomCheck, 'roomcheck here')
 
     socket.join(roomList[0][0]);
-    socket.broadcast.emit('user connected', socket.id);
+    // socket.broadcast.emit("user connected", socket.id);
   });
 
-  socket.on('get users', async (roomCode) => {
+  socket.on("get users", async (roomCode) => {
     //this works
     // let roomSockets = [];
     // let sockets = await io.in(roomCode).fetchSockets();
@@ -57,8 +57,8 @@ io.on('connection', (socket) => {
     let ids = await io.in(roomCode).allSockets();
     console.log([...ids]);
     // console.log(roomUsers);
-    socket.emit('users', [...ids]);
-    console.log([...ids]);
+    socket.emit("users", [...ids]);
+    // console.log([...ids]);
     // let userss = io.sockets.clients(roomCode);
     // console.log(userss);
     // io.in(roomCode).clients((err, clients) => {
@@ -67,16 +67,17 @@ io.on('connection', (socket) => {
     // });
   });
 
-  // let users = [];
-  // socket.on('join server', (username) => {
-  //   const user = {
-  //     username,
-  //     id: socket.id,
-  //   };
-  //   users.push(user);
-  //   console.log('Here is the users: ', users);
-  //   io.emit('new user', users);
-  // });
+  let users = [];
+  socket.on("update users", (username, amount) => {
+    const user = {
+      username,
+      amount,
+      id: socket.id,
+    };
+    users.push(user);
+    console.log("Here is the users: ", users);
+    io.emit("new user", users);
+  });
 
   // socket.on('join room', (roomName) => {
   //   socket.join(roomName);
