@@ -32,6 +32,7 @@ const Room = ({ navigation, route }) => {
   const { type, roomCode } = route.params;
   const { socket } = useContext(SocketContext);
   const [roomName, setRoomName] = useState(getRoomName);
+  const [userNames, setUserNames] = useState([]);
 
   const pressHandler = () => {
     navigation.navigate('Main');
@@ -47,6 +48,11 @@ const Room = ({ navigation, route }) => {
     if (type === 'Captain') {
       socket.emit('join room', roomName);
       console.log(roomName, 'here is roomcode');
+      setUserNames((userNames) => [
+        ...userNames,
+        generateUserName(first, middle, end, ranNum),
+      ]);
+      console.log(userNames);
     }
     socket.emit('get users', roomName);
     socket.on('users', (res) => {
@@ -56,9 +62,13 @@ const Room = ({ navigation, route }) => {
     socket.on('user connected', (res) => {
       console.log(res);
     });
-    // //My IP address (Fatima)
-    // const socket = io('http://10.0.0.153:3000');
   }, []);
+  const ranNum = () => {
+    return Math.floor(Math.random() * 14);
+  };
+  const generateUserName = (arr1, arr2, arr3, cb) => {
+    return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
+  };
 
   // const joinRoom = (roomCode) => {
   //   socket.emit("join room", roomCode);
@@ -74,6 +84,7 @@ const Room = ({ navigation, route }) => {
     'MrStealYaCash',
     'TheDragon',
   ];
+
   const renderItem = ({ item }) => {
     return (
       <View
@@ -181,7 +192,7 @@ const Room = ({ navigation, route }) => {
           </Text>
 
           <FlatList
-            data={mockUsernames}
+            data={userNames}
             renderItem={renderItem}
             keyExtractor={(item) => item}
             style={styles.flatlist}
@@ -271,3 +282,51 @@ const styles = StyleSheet.create({
 });
 
 export default Room;
+const first = [
+  'Captain',
+  'Mr',
+  'Miss',
+  'Granny',
+  'Kanye',
+  'The',
+  'Little',
+  'Master',
+  'Sensei',
+  'Maestro',
+  'Madame',
+  'Sir',
+  'Prince',
+  'Major',
+];
+const middle = [
+  'Wiggle',
+  'Hippy',
+  'Long',
+  'Tart',
+  'StealYa',
+  'Bitter',
+  'Sly',
+  'Quick',
+  'Woke',
+  'Fire',
+  'Sweaty',
+  'Crazy',
+  'Wild',
+  'Cuckoo',
+];
+const end = [
+  'Bottom',
+  'Bean',
+  'Taco',
+  'Cash',
+  'Burrito',
+  'Cow',
+  'Cheese',
+  'Goat',
+  'Cabbage',
+  'Snail',
+  'Worm',
+  'Dragon',
+  'Lettuce',
+  'Potato',
+];

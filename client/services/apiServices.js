@@ -13,7 +13,7 @@ const methods = {
   //array of locations
   getLocations: async (user) => {
     const result = await fetch('http://127.0.0.1:8000/locations', {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify({
         public_key_address: '0xB1Ee4be5ddD602E944E8959c1e76C5088e93091a',
