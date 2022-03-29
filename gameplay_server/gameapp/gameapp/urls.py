@@ -15,8 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
+from django.conf.urls import handler400, handler403, handler404, handler500
 
 from play import views
+
+handler400 = views.error_handler_400
+handler403 = views.error_handler_403
+handler404 = views.error_handler_404
+handler500 = views.error_handler_500
 
 # test adding true routes today (03/23/2022)
 urlpatterns = [
