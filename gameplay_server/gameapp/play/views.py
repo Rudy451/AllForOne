@@ -52,7 +52,7 @@ def user_entry(request):
     user.update(last_login_time=timezone.now())
 
   # return city by closest coordinates to client
-  return HttpResponse(True)
+  return JsonResponse({"result": True})
 
 @api_view(['PUT'])
 def get_locations(request):
@@ -129,7 +129,7 @@ def user_question_request(request):
   #update_visited_landmarks(user, target_landmark)
 
   # return question to client
-  return HttpResponse(target_landmark.question)
+  return JsonResponse({"question": target_landmark.question})
 
 @api_view(['PUT'])
 def user_location_check(request):
@@ -189,18 +189,45 @@ def user_location_check(request):
       meters_from_destination = (float(user[0].city.allowable_distance_difference) - current_distance) * 1.1 / 0.00001
 
   # return status of push request
-  return HttpResponse(meters_from_destination)
+  return JsonResponse({"meters_difference_or_status": meters_from_destination})
 
 @api_view(['PUT'])
 def clear_user_game_status(request):
-  # extract user data for query
-  body_decoded = request.body.decode('utf-8')
-  user_query = json.loads(body_decoded)
-  user = Users.objects.select_related('city').filter(public_key_address=user_query['public_key_address'])
-  # check if user has been found
-  # if so clear apprpriate records fields & return true else return false
-  result = False
-  if(len(user) > 0):
-    user.update(completed_challenge_count=0, active_game_time=0.0)
-    result = True
-  return HttpResponse(result)
+  try:
+    # extract user data for query
+    body_decoded = request.body.decode('utf-8')
+    user_query = json.loads(body_decoded)
+    user = Users.objects.select_related('city').filter(public_key_address=user_query['public_key_address'])
+    # check if user has been found
+    # if so clear apprpriate records fields & return true else return false
+    result = False
+    if(len(user) > 0):
+      user.update(completed_challenge_count=0, active_game_time=0.0)
+      result = True
+    return JsonResponse({"result": result})
+  except:
+    return JsonResponse({"Fail": "An exception ocurred"}, status=500)
+
+def error_handler_400(request, exception=None):
+  return JsonResponse({
+    'status_code': 400,
+    'error': 'Could not process incoming request'
+  }, status=400)
+
+def error_handler_403(request, exception=None):
+  return JsonResponse({
+    'status_code': 403,
+    'error': 'Can not authorize incoming request'
+  }, status=403)
+
+def error_handler_404(request, exception=None):
+  return JsonResponse({
+    'status_code': 404,
+    'error': 'The resource was not found'
+  }, status=404)
+
+def error_handler_500(request):
+  return JsonResponse({
+    'status_code': 500,
+    'error': 'Internal error. We messed up... not you!'
+  }, status=500)
