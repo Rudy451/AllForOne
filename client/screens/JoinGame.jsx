@@ -13,6 +13,19 @@ const JoinGame = ({ navigation, route }) => {
   const { userNames, setUserNames } = useContext(UserNameContext);
 
   const pressHandler = () => {
+<<<<<<< HEAD
+    socket.emit("room check", roomCode);
+    socket.on("users", (res) => {
+      console.log("test here form joingame");
+      setUserNames(res);
+    });
+    // socket.emit("get users", roomCode);
+
+    // socket.on("user connected", (res) => {
+    //   console.log(res);
+    // });
+    navigation.navigate("Room", { type: "Player", roomCode: roomCode });
+=======
     socket.emit('room check', roomCode);
     socket.emit('get users', roomCode);
     socket.on('users', (res) => {
@@ -26,6 +39,7 @@ const JoinGame = ({ navigation, route }) => {
       type: 'Player',
       roomCode: roomCode,
     });
+>>>>>>> 1836925f3243042726fec1a34364117f92c38919
   };
   return (
     <View style={globalStyles.container}>

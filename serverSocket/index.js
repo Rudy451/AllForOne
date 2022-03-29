@@ -4,9 +4,15 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
+<<<<<<< HEAD
+const { instrument } = require("@socket.io/admin-ui");
+const { first, middle, end } = require("./names");
+const cors = require("cors");
+=======
 const { instrument } = require('@socket.io/admin-ui');
 
 const cors = require('cors');
+>>>>>>> 1836925f3243042726fec1a34364117f92c38919
 
 // const { Controller } = require("./controllers");
 
@@ -21,29 +27,62 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+<<<<<<< HEAD
+//RANDOM NAME FUNCTIONS
+const ranNum = () => {
+  return Math.floor(Math.random() * 14);
+};
+const generateUserName = (first, middle, end, cb) => {
+  return `${first[cb()]}${middle[cb()]}${end[cb()]}`;
+};
+//ARRAY THAT HOLDS NAMES
+let userNames = [];
+
+//START OF SOCKETS
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
+
+  //CAPTAIN CREATE ROOM AND JOIN
+  socket.on("join room", async (roomCode) => {
+    console.log(roomCode, "roomcade server side");
+=======
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id);
 
   socket.on('join room', (roomCode) => {
     // if (roomCode === "") {
+>>>>>>> 1836925f3243042726fec1a34364117f92c38919
     socket.join(roomCode);
-    // } else {
-    //   socket.to(roomCode);
-    // }
-
-    // console.log("Here is the room code", roomCode);
+    userNames.push(generateUserName(first, middle, end, ranNum));
+    io.to(roomCode).emit("users", [...userNames]);
   });
+<<<<<<< HEAD
+  //JOIN GAME
+  socket.on("room check", async (roomCheck) => {
+=======
   socket.on('room check', (roomCheck) => {
+>>>>>>> 1836925f3243042726fec1a34364117f92c38919
     const roomList = Array.from(io.sockets.adapter.rooms).filter((rm) => {
       return rm[0] == roomCheck;
     });
-    // console.log(roomList, "list here");
-    // comsole.log(roomCheck, 'roomcheck here')
 
     socket.join(roomList[0][0]);
-    // socket.broadcast.emit("user connected", socket.id);
+    // let ids = await io.in(roomCheck).allSockets();
+    userNames.push(generateUserName(first, middle, end, ranNum));
+    io.to(roomCheck).emit("users", [...userNames]);
   });
 
+<<<<<<< HEAD
+  // socket.on("get users", async (roomCode) => {
+  //   let ids = await io.in(roomCode).allSockets();
+  //   console.log(ids, "IM AN ID");
+  //   console.log(roomCode, "HI IM A ROOMCODE");
+  //   socket.to(roomCode).emit("users", [...ids]);
+
+  //   // socket.emit("users", [...ids]);
+  // });
+
+=======
   socket.on('get users', async (roomCode) => {
     //this works
     // let roomSockets = [];
@@ -67,6 +106,7 @@ io.on('connection', (socket) => {
     // });
   });
 
+>>>>>>> 1836925f3243042726fec1a34364117f92c38919
   // let users = [];
   // socket.on("update users", (username, amount) => {
   //   const user = {
