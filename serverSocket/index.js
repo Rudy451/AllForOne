@@ -21,14 +21,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+//RANDOM NAME FUNCTIONS
 const ranNum = () => {
   return Math.floor(Math.random() * 14);
 };
 const generateUserName = (first, middle, end, cb) => {
   return `${first[cb()]}${middle[cb()]}${end[cb()]}`;
 };
+//ARRAY THAT HOLDS NAMES
 let userNames = [];
 
+//START OF SOCKETS
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 
@@ -36,7 +39,6 @@ io.on("connection", (socket) => {
   socket.on("join room", async (roomCode) => {
     console.log(roomCode, "roomcade server side");
     socket.join(roomCode);
-    // let ids = await io.in(roomCode).allSockets();
     userNames.push(generateUserName(first, middle, end, ranNum));
     io.to(roomCode).emit("users", [...userNames]);
   });
@@ -51,8 +53,6 @@ io.on("connection", (socket) => {
     userNames.push(generateUserName(first, middle, end, ranNum));
     io.to(roomCheck).emit("users", [...userNames]);
   });
-
-  // socket.to("some room").emit("some event");
 
   // socket.on("get users", async (roomCode) => {
   //   let ids = await io.in(roomCode).allSockets();
