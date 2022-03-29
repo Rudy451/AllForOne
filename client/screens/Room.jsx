@@ -19,11 +19,11 @@ import { SocketContext, UserNameContext } from "../services/useContext";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const roomName = ["Tiger", "Cow", "Chicken", "Dragon", "Fish", "Butterfly"];
+const roomNames = ["Tiger", "Cow", "Chicken", "Dragon", "Fish", "Butterfly"];
 
 const getRoomName = (() => {
-  let randomRoomIndex = Math.floor(Math.random() * roomName.length);
-  return roomName[randomRoomIndex];
+  let randomRoomIndex = Math.floor(Math.random() * roomNames.length);
+  return roomNames[randomRoomIndex];
 })();
 
 //START OF ROOM
@@ -41,21 +41,17 @@ const Room = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    socket.emit("user entered room", socket.id);
+    socket.on("users", (res) => {
+      console.log("hi I am from the captains room");
+
+      setUserNames([...res]);
+      console.log(res);
+    });
+    // socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
       console.log(roomName, "here is roomcode");
-
       console.log(userNames);
-      socket.emit("get users", roomName);
-      socket.on("users", (res) => {
-        console.log("hi");
-
-        setUserNames(res);
-        console.log(res);
-      });
-    } else {
-      setUserNames((prevUserName) => [...prevUserName, userNames]);
     }
 
     // setUserNames((userNames) => [
@@ -67,6 +63,7 @@ const Room = ({ navigation, route }) => {
     //   console.log(res);
     // });
   }, []);
+
   const ranNum = () => {
     return Math.floor(Math.random() * 14);
   };
