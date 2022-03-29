@@ -22,23 +22,6 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Main = ({ navigation }) => {
-  const [locationState, setLocationState] = useState([]);
-  //TODO
-  //getLocations api call
-  function doStuff() {
-    methods
-      .getLocations({ latitude: 35.045631, longitude: -85.309677 })
-      .then((result) => {
-        console.log(result);
-        setLocationState(result);
-      });
-    console.log("Checking", locationState);
-  }
-  useEffect(async () => {
-    doStuff();
-  }, []);
-  //set state with locations
-  //set initial region
   const [modalRuleVisible, setModalRuleVisible] = useState(false);
   const [modalLocationVisible, setModalLocationVisible] = useState(false);
   const [modalExitVisible, setModalExitVisible] = useState(false);
@@ -95,10 +78,23 @@ const Main = ({ navigation }) => {
       longitude: location.coords.longitude,
     };
   }
-  // console.log("checking interval: ", location);
+
+  const [locationState, setLocationState] = useState([]);
+  function doStuff() {
+    methods
+      .getLocations({ latitude: 35.045631, longitude: -85.309677 })
+      .then((result) => {
+        console.log(result);
+        setLocationState(result);
+      });
+    console.log("Checking", locationState);
+  }
+  useEffect(async () => {
+    doStuff();
+  }, []);
 
   const mapMarkers = () => {
-    return locationsForTheGame.map((location) => (
+    return locationState.map((location) => (
       <Marker
         key={location.location}
         coordinate={{
@@ -119,14 +115,14 @@ const Main = ({ navigation }) => {
       <MapView
         style={styles.map}
         provider="google"
-        initialRegion={{
-          latitude: 39.106805261119526,
-          longitude: -104.84521832274527,
-          // latitude: coordinate.latitude,
-          // longtitude: coordinate.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        // initialRegion={{
+        //   latitude: 39.106805261119526,
+        //   longitude: -104.84521832274527,
+        //   // latitude: coordinate.latitude,
+        //   // longtitude: coordinate.longitude,
+        //   latitudeDelta: 0.0922,
+        //   longitudeDelta: 0.0421,
+        // }}
       >
         <Marker
           coordinate={pin}
@@ -145,7 +141,7 @@ const Main = ({ navigation }) => {
             <Text>You're here!</Text>
           </Callout>
         </Marker>
-        {mapMarkers()}
+        {/* {mapMarkers()} */}
         {/* STARTING POINT OF THE GAME AND THE RADIUS WITHIN 1.1MILE */}
         <Circle
           center={{
