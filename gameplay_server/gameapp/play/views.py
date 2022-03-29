@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.db.models import Sum
 from rest_framework.decorators import api_view
@@ -43,19 +43,20 @@ def user_entry(request):
   body_decoded = request.body.decode('utf-8')
   user_query = json.loads(body_decoded)
   user = Users.objects.filter(public_key_address=user_query['public_key_address'])
-
+  print(user)
   # create new user if none exists
   if len(user) == 0:
-    user = Users.objects.create(public_key_address=user_query['public_key_address'], user_name=user_query['user_name'])
+    user = Users.objects.create(public_key_address=user_query['public_key_address'])
   # update city_id to closest city & last_login to now
   else:
-    user.update(last_login_time=timezone.now(), user_name=user_query['user_name'])
+    user.update(last_login_time=timezone.now())
 
   # return city by closest coordinates to client
-  return HttpResponse(user_query['user_name'])
+  return HttpResponse(True)
 
 @api_view(['PUT'])
 def get_locations(request):
+  print(request.body)
   body_decoded = request.body.decode('utf-8')
   user_query = json.loads(body_decoded)
   user = Users.objects.filter(public_key_address=user_query['public_key_address'])
@@ -72,7 +73,17 @@ def get_locations(request):
   user.update(city_id=shortest_city_id)
 
   landmarks = Landmarks.objects.filter(city_id__in=[shortest_city_id]).values('landmark_name', 'longitude', 'latitude', 'question', 'hint')
-  return HttpResponse(landmarks)
+  return JsonResponse({
+    "starting_point": landmarks[0],
+    "landmark_one": landmarks[1],
+    "landmark_two": landmarks[2],
+    "landmark_three": landmarks[3],
+    "landmark_four": landmarks[4],
+    "landmark_five": landmarks[5],
+    "landmark_six": landmarks[6],
+    "landmark_seven": landmarks[7],
+  })
+
 
 @api_view(['POST', 'PUT'])
 def user_question_request(request):

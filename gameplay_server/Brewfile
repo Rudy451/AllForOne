@@ -1,0 +1,13 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+tap "homebrew/services"
+tap "mongodb/brew"
+brew "gcc"
+brew "node@14"
+brew "mongosh"
+brew "nvm"
+brew "postgresql", restart_service: true
+brew "redis"
+brew "ruby"
+brew "mongodb/brew/mongodb-community"
