@@ -20,7 +20,12 @@ const socketOne = io("http://127.0.0.1:3000");
 
 export default function App() {
   // useEffect(() => {
-  //   const socket = io("http://127.0.0.1:3000");
+  //   socket.on("users", (res) => {
+  //     console.log("hi");
+
+  //     setUserNames(res);
+  //     console.log(res);
+  //   });
   // }, []);
 
   // const joinRoom = (roomCode) => {

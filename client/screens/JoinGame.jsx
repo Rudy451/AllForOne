@@ -14,14 +14,15 @@ const JoinGame = ({ navigation, route }) => {
 
   const pressHandler = () => {
     socket.emit("room check", roomCode);
-    socket.emit("get users", roomCode);
     socket.on("users", (res) => {
-      console.log("test here");
+      console.log("test here form joingame");
       setUserNames(res);
     });
-    socket.on("user connected", (res) => {
-      console.log(res);
-    });
+    // socket.emit("get users", roomCode);
+
+    // socket.on("user connected", (res) => {
+    //   console.log(res);
+    // });
     navigation.navigate("Room", { type: "Player", roomCode: roomCode });
   };
   return (
