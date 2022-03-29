@@ -5,7 +5,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import globalStyles from "../styles/globalStyles";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import RulesModal from "../modals/Rules";
@@ -26,6 +26,28 @@ const Main = ({ navigation }) => {
   const [modalLocationVisible, setModalLocationVisible] = useState(false);
   const [modalExitVisible, setModalExitVisible] = useState(false);
   const [modalCheckInVisible, setModalCheckInVisible] = useState(true);
+  const [initialLocation, setInitialLocation] = useState({
+    coords: {
+      latitude: 0,
+      longitude: 0,
+    },
+  });
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (initialLocation) {
+      console.log("inside useEffect: ", initialLocation);
+      mapRef.current.animateToRegion(
+        {
+          latitude: initialLocation.coords.latitude,
+          longitude: initialLocation.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        },
+        1000
+      );
+    }
+  }, [initialLocation]);
 
   const openRules = () => {
     setModalRuleVisible(!modalRuleVisible);
@@ -41,7 +63,8 @@ const Main = ({ navigation }) => {
   };
 
   //MAP CODE
-  const [location, setLocation] = useState(null);
+
+  const [locationState, setLocationState] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
   const [pin, setPin] = useState({
     latitude: 39.106805261119526,
@@ -60,39 +83,23 @@ const Main = ({ navigation }) => {
         accuracy: Location.Accuracy.Highest,
         maximumAge: 10000,
       });
-      setLocation(location);
+      // console.log(location);
+      setInitialLocation(location);
+      methods
+        .getLocations({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        })
+        .then((result) => {
+          console.log(result);
+          setLocationState(result);
+        });
       // }, 5000);
     })();
   }, []);
+  console.log("initial location: ", initialLocation);
+  // console.log("Checking", locationState);
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-  let coordinate = {};
-  if (location) {
-    coordinate = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    };
-  }
-
-  const [locationState, setLocationState] = useState([]);
-  function doStuff() {
-    methods
-      .getLocations({ latitude: 35.045631, longitude: -85.309677 })
-      .then((result) => {
-        console.log(result);
-        setLocationState(result);
-      });
-  }
-  useEffect(async () => {
-    doStuff();
-  }, []);
-
-  console.log("Checking", locationState);
   const mapMarkers = () => {
     return locationState.map((location) => (
       <Marker
@@ -113,16 +120,21 @@ const Main = ({ navigation }) => {
   return (
     <>
       <MapView
+        ref={mapRef}
         style={styles.map}
         provider="google"
-        // initialRegion={{
-        //   latitude: 39.106805261119526,
-        //   longitude: -104.84521832274527,
-        //   // latitude: coordinate.latitude,
-        //   // longtitude: coordinate.longitude,
-        //   latitudeDelta: 0.0922,
-        //   longitudeDelta: 0.0421,
-        // }}
+        initialRegion={{
+          // latitude: 39.106805261119526,
+          // longitude: -104.84521832274527,
+          latitude: initialLocation?.coords?.latitude,
+          // ? initialLocation?.coords?.latitude
+          // : 39.106805261119526,
+          longitude: initialLocation?.coords?.longitude,
+          // ? initialLocation?.coords?.longitude
+          // : -104.84521832274527,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
       >
         <Marker
           coordinate={pin}
@@ -141,7 +153,7 @@ const Main = ({ navigation }) => {
             <Text>You're here!</Text>
           </Callout>
         </Marker>
-        {/* {mapMarkers()} */}
+        {/* {locationState ? mapMarkers() : null} */}
         {/* STARTING POINT OF THE GAME AND THE RADIUS WITHIN 1.1MILE */}
         <Circle
           center={{
@@ -185,8 +197,9 @@ const Main = ({ navigation }) => {
             }}
           > */}
           <CheckInModal
-            location={location}
-            setLocation={setLocation}
+            pin={pin}
+            // location={location}
+            // setLocation={setLocation}
             modalCheckInVisible={modalCheckInVisible}
             setModalCheckInVisible={setModalCheckInVisible}
           />

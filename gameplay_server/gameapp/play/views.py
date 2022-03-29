@@ -56,7 +56,6 @@ def user_entry(request):
 
 @api_view(['PUT'])
 def get_locations(request):
-  print(request.body)
   body_decoded = request.body.decode('utf-8')
   user_query = json.loads(body_decoded)
   user = Users.objects.filter(public_key_address=user_query['public_key_address'])
@@ -65,11 +64,12 @@ def get_locations(request):
   cities = Cities.objects.all()
   shortest_city_id = ''
   shortest_distance = 100000000
-  for city in cities:
-    city_distance = distance_formula(city.latitude, city.longitude, user_query['latitude'], user_query['longitude'])
-    if city_distance < shortest_distance:
-      shortest_city_id = city.city_id
-      shortest_distance = city_distance
+  # for city in cities:
+  #   city_distance = distance_formula(city.latitude, city.longitude, user_query['latitude'], user_query['longitude'])
+  #   if city_distance < shortest_distance:
+  #     shortest_city_id = city.city_id
+  #     shortest_distance = city_distance
+  shortest_city_id = '15c98925-3583-4dfd-91f6-c13d3945fa3d'
   user.update(city_id=shortest_city_id)
 
   landmarks = Landmarks.objects.filter(city_id__in=[shortest_city_id]).values('landmark_name', 'longitude', 'latitude', 'question', 'hint')
@@ -91,7 +91,6 @@ def user_question_request(request):
   body_decoded = request.body.decode('utf-8')
   user_account = json.loads(body_decoded)
   user = Users.objects.select_related('city').filter(public_key_address=user_account['public_key_address'])
-
   # extract visited landmarks to filter for unvisited locations
   visited_landmarks = [
     user[0].landmark_one,
@@ -105,7 +104,7 @@ def user_question_request(request):
 
   # filter for target landmarks: matching city_id, non-visisted, order by average completion time for heuristic
   landmarks = Landmarks.objects.filter(city_id__in=[user[0].city.city_id]).exclude(pk__in=[landmark.pk for landmark in visited_landmarks]).order_by('average_challenge_completion_time')
-
+  print(landmarks)
   # Heuristic for question selection.
   target_landmark = None
   # Random selection for first push request

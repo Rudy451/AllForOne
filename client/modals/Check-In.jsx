@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import globalStyles from "../styles/globalStyles";
 import * as Location from "expo-location";
 import { AntDesign } from "@expo/vector-icons";
+import methods from "../services/apiServices";
 
 function CheckInModal({
-  setLocation,
+  pin,
+  // setLocation,
   modalCheckInVisible,
   setModalCheckInVisible,
 }) {
@@ -15,14 +17,28 @@ function CheckInModal({
   //if 0 then api call getQuestion()
   //if result>0 then display message with result
   //if winner then api call clearUser() and socket brodcast
+  const [question, setQuestion] = useState(null);
   const onPress = async () => {
-    let location = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Highest,
-      maximumAge: 10000,
-    });
-    setLocation(location);
+    // let location = await Location.getCurrentPositionAsync({
+    //   accuracy: Location.Accuracy.Highest,
+    //   maximumAge: 10000,
+    // });
+    // setLocation(location);
+    // console.log("This is current location", location);
+    let location = pin;
     console.log("This is current location", location);
+    methods.getQuestion().then((res) => {
+      console.log("res: ", res);
+      setQuestion(res);
+    });
+    // console.log("inside: ", question);
+    // let result = methods.checkIn({
+    //   latitude: location.latitude,
+    //   longitude: location.longitude,
+    //   question: data.question,
+    // });
   };
+  console.log("outside: ", question);
   const onClose = () => {
     setModalCheckInVisible(!modalCheckInVisible);
   };
@@ -38,11 +54,15 @@ function CheckInModal({
             <TouchableOpacity onPress={onClose}>
               <AntDesign name="closecircleo" size={24} color="#00E6B7" />
             </TouchableOpacity>
-            <Text style={[globalStyles.subText, { marginHorizontal: 20 }]}>
-              This is the start of your scavanger hunt. Go to the given location
-              and press check-in when you believe you are there. If correct a
-              riddle will be displayed in this.
-            </Text>
+            {question ? (
+              <Text>{question.question}</Text>
+            ) : (
+              <Text style={[globalStyles.subText, { marginHorizontal: 20 }]}>
+                This is the start of your scavanger hunt. Go to the given
+                location and press check-in when you believe you are there. If
+                correct a riddle will be displayed in this.
+              </Text>
+            )}
           </View>
           <TouchableOpacity style={styles.button} onPress={onPress}>
             <Text style={[globalStyles.titleTextBold, { textAlign: "center" }]}>
