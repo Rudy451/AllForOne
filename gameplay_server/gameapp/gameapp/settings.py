@@ -17,7 +17,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Gather environment variables for database connection.
 ENV_VARS = []
-ENV_FILE = Path('C:/Users/Rudy451/app_academy/aA-homeworks/sql+django_hw/django_tutorial_series/.env').absolute()
+# ENV_FILE = Path('C:/Users/Rudy451/app_academy/aA-homeworks/sql+django_hw/django_tutorial_series/.env').absolute()
+ENV_FILE = Path('/Users/fatima/CodeWorks/projectsCodeworks/AllForOne/.env').absolute()
 with open(ENV_FILE) as env_f:
     ENV_VARS += [line.strip("\n").split("=")[1] for line in env_f]
 
