@@ -87,12 +87,12 @@ const Main = ({ navigation }) => {
         console.log(result);
         setLocationState(result);
       });
-    console.log("Checking", locationState);
   }
   useEffect(async () => {
     doStuff();
   }, []);
 
+  console.log("Checking", locationState);
   const mapMarkers = () => {
     return locationState.map((location) => (
       <Marker
