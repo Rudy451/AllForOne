@@ -12,7 +12,7 @@ import IosFonts from "./screens/Credits";
 // import store from "./redux/store";
 // import { Provider } from "react-redux";
 import { io } from "socket.io-client";
-import react, { useState, useMemo, useEffect, useContext } from "react";
+import react, { useState, useMemo, useEffect } from "react";
 import { SocketContext, UserNameContext } from "./services/useContext";
 
 const Stack = createNativeStackNavigator();
@@ -32,28 +32,27 @@ export default function App() {
   //   // io.emit("join room", roomCode);
   //   console.log("connected to room");
   // };
-  const [socket, setSocket] = useState(socketOne);
-  const { userNames, setUserNames } = useContext(UserNameContext);
+  const [socket, setSocket] = useState(null);
+  const [userNames, setUserNames] = useState([]);
 
   const valueSocket = useMemo(
     () => ({ socket, setSocket }),
     [socket, setSocket]
   );
-  const valueUsers = useMemo(
+
+  const valueUserName = useMemo(
     () => ({ userNames, setUserNames }),
     [userNames, setUserNames]
   );
 
-  // useEffect(() => {
-  //   socket.on("connect", () => {
-  //     console.log(socket.data.username); // ojIckSD2jqNzOqIrAGzL
-  //   });
-  // });
+  useEffect(() => {
+    setSocket(socketOne);
+  }, [socketOne]);
 
   return (
     // <Provider>
     <SocketContext.Provider value={valueSocket}>
-      <UserNameContext.Provider value={valueUsers}>
+      <UserNameContext.Provider value={valueUserName}>
         <SafeAreaView
           style={{
             flex: 1,
