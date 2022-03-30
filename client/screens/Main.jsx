@@ -99,9 +99,13 @@ const Main = ({ navigation }) => {
             longitude: location.coords.longitude,
           })
           .then((result) => {
-            // console.log(result);
+            console.log(result);
             setLocationState(result);
-            setStartLocation(result.starting_point);
+            let start = Object.values(result);
+            let val = start.find(
+              (location) => location.landmark_name === "Game Start"
+            );
+            setStartLocation(val);
           });
       } catch (error) {
         console.log(
