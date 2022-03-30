@@ -38,8 +38,6 @@ const addUserToRoom = (ids) => {
   if (ids) {
     [...ids].forEach((i) => {
       filteredUsers.push(users.find((user) => user.id == i));
-
-      // users.id.indexOf(i) > -1;
     });
     return filteredUsers;
   }
@@ -60,12 +58,16 @@ io.on("connection", (socket) => {
     id: socket.id,
   };
   users.push(user);
+  socket.emit("current user", (user) => {
+    console.log("INSIDE THE SERVER", user);
+  });
+
+  console.log("INSIDE THE SERVER", user);
 
   //CAPTAIN CREATE ROOM AND JOIN
   socket.on("join room", async (roomCode) => {
     socket.join(roomCode);
     let ids = await io.in(roomCode).allSockets();
-
     // userNames.push(generateUserName(first, middle, end, ranNum));
     io.to(roomCode).emit("users", addUserToRoom(ids));
   });

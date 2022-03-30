@@ -5,7 +5,6 @@ import {
   Dimensions,
   StyleSheet,
   SafeAreaView,
-  ScrollView,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import React, { useState, useEffect, useContext, useRef } from "react";
@@ -13,9 +12,9 @@ import globalStyles from "../styles/globalStyles";
 import EnterCryptoModal from "../modals/EnterCrypto";
 import { FontAwesome5 } from "@expo/vector-icons";
 import BuyInAmount from "../modals/BuyInAmount";
-import { io } from "socket.io-client";
 import {
   AmountContext,
+  CurrentUserContext,
   SocketContext,
   UserNameContext,
 } from "../services/useContext";
@@ -36,18 +35,13 @@ const Room = ({ navigation, route }) => {
   const { socket } = useContext(SocketContext);
   const { userNames, setUserNames } = useContext(UserNameContext);
   const { amount, setAmount } = useContext(AmountContext);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const [roomName, setRoomName] = useState(getRoomName);
 
   const amountRef = useRef(amount);
   const pressHandler = () => {
     navigation.navigate("Main");
-  };
-
-  const updateAmount = (a) => {
-    setAmount(a);
-    console.log("hello", amount);
-    return a;
   };
 
   useEffect(() => {
@@ -58,7 +52,10 @@ const Room = ({ navigation, route }) => {
     socket.on("users", (res) => {
       setUserNames(res);
     });
-
+    socket.on("current user", (res) => {
+      console.log("TEST CURRENT USER: ", res);
+      setCurrentUser(res);
+    });
     // socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);

@@ -12,6 +12,7 @@ import * as Location from "expo-location";
 import { AntDesign } from "@expo/vector-icons";
 import methods from "../services/apiServices";
 import FinalModal from "./Final";
+import { Socket } from "socket.io-client";
 
 function CheckInModal({
   pin,
@@ -61,7 +62,7 @@ function CheckInModal({
           } else if (res.miles_difference_or_status > 0) {
             Alert.alert(
               `You are ${res.miles_difference_or_status.toFixed(
-                2
+                3
               )} miles away from the target! KEEP GOING!`
             );
           } else if (res.miles_difference_or_status === "winner") {
@@ -96,6 +97,9 @@ function CheckInModal({
             //withdraw funds with metamask
             //need the public_key_address
             methods.clearUser();
+            setQuestion("YOU ARE THE WINNER!!! WELL DONE");
+            // setWinner();
+
             //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
           }
         });
