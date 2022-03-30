@@ -14,15 +14,6 @@ const JoinGame = ({ navigation, route }) => {
 
   const pressHandler = () => {
     socket.emit("room check", roomCode);
-    socket.on("users", (res) => {
-      console.log("test here form joingame");
-      setUserNames(res);
-    });
-    // socket.emit("get users", roomCode);
-
-    // socket.on("user connected", (res) => {
-    //   console.log(res);
-    // });
     navigation.navigate("Room", { type: "Player", roomCode: roomCode });
   };
   return (
