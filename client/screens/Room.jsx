@@ -44,12 +44,7 @@ const Room = ({ navigation, route }) => {
     socket.on("users", (res) => {
       console.log("hi I am from the captains room");
 
-      setUserNames([res]);
-
-      //   (prevRes) => {
-      //   [...prevRes, res];
-      //   console.log(prevRes, "prevres");
-      // });
+      setUserNames(res);
       console.log(res);
     });
     // socket.emit("user entered room", socket.id);
@@ -101,7 +96,7 @@ const Room = ({ navigation, route }) => {
       >
         <FontAwesome5 name="hourglass-half" size={20} color="#00E6B7" />
         <Text style={{ ...globalStyles.subText, padding: 0, paddingLeft: 10 }}>
-          {item}
+          {item.username}
         </Text>
       </View>
     );
@@ -200,7 +195,7 @@ const Room = ({ navigation, route }) => {
           <FlatList
             data={userNames}
             renderItem={renderItem}
-            keyExtractor={(item) => item}
+            keyExtractor={(item) => item.id}
             style={styles.flatlist}
           ></FlatList>
 
