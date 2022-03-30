@@ -58,9 +58,7 @@ io.on("connection", (socket) => {
     id: socket.id,
   };
   users.push(user);
-  socket.emit("current user", (user) => {
-    console.log("INSIDE THE SERVER", user);
-  });
+  socket.emit("current user", user);
 
   console.log("INSIDE THE SERVER", user);
 
