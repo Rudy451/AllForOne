@@ -184,7 +184,7 @@ def user_location_check(request):
           new_average_game_completion_time = float(city_records.aggregate(Sum('completion_time'))['completion_time__sum'])  / 5.0
           user[0].city.average_game_completion_time=new_average_game_completion_time
           user[0].city.save()
-          miles_from_destination = user[0].user_name
+          miles_from_destination = 'winner'
         # else just confirm success
         else:
           miles_from_destination = 0
