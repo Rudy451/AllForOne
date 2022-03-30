@@ -1,7 +1,9 @@
+const baseUrl = "http://2927-2601-285-4080-7fa0-b07a-9df3-1dc8-ab23.ngrok.io";
 const methods = {
   //returns true or false
   userEntry: async (user) => {
-    const result = await fetch("http://127.0.0.1:8000/entry", {
+    // const result = await fetch(`${baseUrl}`/entry, {
+    const result = await fetch(`${baseUrl}/entry`, {
       method: "PUT",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -12,7 +14,7 @@ const methods = {
   },
   //array of locations
   getLocations: async (user) => {
-    const result = await fetch("http://127.0.0.1:8000/locations", {
+    const result = await fetch(`${baseUrl}/locations`, {
       method: "PUT",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -27,7 +29,7 @@ const methods = {
   //returns 0 if it's correct, getQuestion api call
   //returns winner name, we call socket to brodcast
   checkIn: async (data) => {
-    const result = await fetch("http://127.0.0.1:8000/check", {
+    const result = await fetch(`${baseUrl}/check`, {
       method: "PUT",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -41,7 +43,7 @@ const methods = {
   },
   //returns random question/riddle
   getQuestion: async () => {
-    const result = await fetch("http://127.0.0.1:8000/question", {
+    const result = await fetch(`${baseUrl}/question`, {
       method: "PUT",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
@@ -52,7 +54,7 @@ const methods = {
   },
   //when the user is announced this call needs happen
   clearUser: async (user) => {
-    const result = await fetch("http://127.0.0.1:8000/clear", {
+    const result = await fetch(`${baseUrl}/clear`, {
       method: "PUT",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({
