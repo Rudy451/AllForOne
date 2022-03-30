@@ -4,25 +4,30 @@ import globalStyles from "../styles/globalStyles";
 import { TextInput } from "react-native-gesture-handler";
 import EnterRoomCode from "../EnterRoomCode";
 // import { socket } from "socket.io-client";
-import { SocketContext, UserNameContext } from "../services/useContext";
+import {
+  AmountContext,
+  SocketContext,
+  UserNameContext,
+} from "../services/useContext";
 
 const JoinGame = ({ navigation, route }) => {
   const { type } = route.params;
   const [roomCode, setRoomCode] = useState("");
   const { socket } = useContext(SocketContext);
-  const { userNames, setUserNames } = useContext(UserNameContext);
-
+  const { setUserNames } = useContext(UserNameContext);
+  const { amount, setAmount } = useContext(AmountContext);
+  console.log(amount, "here is amount");
   const pressHandler = () => {
     socket.emit("room check", roomCode);
     socket.on("users", (res) => {
       console.log("test here form joingame");
       setUserNames(res);
     });
-    // socket.emit("get users", roomCode);
 
-    // socket.on("user connected", (res) => {
-    //   console.log(res);
-    // });
+    socket.emit("get amount", roomCode);
+    socket.on("player receive amount", (res) => {
+      setAmount(res.amount);
+    });
     navigation.navigate("Room", { type: "Player", roomCode: roomCode });
   };
   return (
