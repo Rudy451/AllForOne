@@ -1,5 +1,5 @@
 const methods = {
-  //returns a random username
+  //returns true or false
   userEntry: async (user) => {
     const result = await fetch("http://127.0.0.1:8000/entry", {
       method: "PUT",

@@ -2,6 +2,7 @@ import { NavigationRouteContext } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 import { NavigationEvents } from "react-navigation";
+import methods from "../services/apiServices";
 import globalStyles from "../styles/globalStyles";
 
 function SignInModal({
@@ -15,6 +16,14 @@ function SignInModal({
     //sign in with metamask
     //API CALL userEntry(data)
     //set the username state
+    // methods.userEntry().then((res) => {
+    //   if (res) {
+    //     //navigate to the room
+    //   }else {
+    //     //alert or try again!
+    //     //add a link to create an account
+    //   }
+    // })
     if (type === "Captain") {
       navigation.navigate("Room", { type: "Captain" });
       setSignInVisibility(!isSignInVisible);

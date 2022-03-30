@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+} from "react-native";
 import globalStyles from "../styles/globalStyles";
 import * as Location from "expo-location";
 import { AntDesign } from "@expo/vector-icons";
@@ -12,12 +19,6 @@ function CheckInModal({
   modalCheckInVisible,
   setModalCheckInVisible,
 }) {
-  //TODO
-  //api call checkIn()
-  //conditions logic
-  //if 0 then api call getQuestion()
-  //if result>0 then display message with result
-  //if winner then api call clearUser() and socket brodcast
   const [question, setQuestion] = useState(null);
   const onPress = async () => {
     // let location = await Location.getCurrentPositionAsync({
@@ -28,12 +29,6 @@ function CheckInModal({
     // console.log("This is current location", location);
     let location = pin;
     console.log("This is current location", location);
-
-    // methods.getQuestion().then((res) => {
-    //   console.log("res: ", res);
-    //   setQuestion(res);
-    // });
-    // console.log("inside: ", question);
     console.log(
       "latitude:",
       location.latitude,
@@ -42,15 +37,68 @@ function CheckInModal({
       "question:",
       startLocation.question
     );
-    methods
-      .checkIn({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        question: startLocation.question,
-      })
-      .then((res) => {
-        console.log(res);
-      });
+    //TODO
+    //api call checkIn()
+    //conditions logic
+    //if 0 then api call getQuestion()
+    //if result>0 then display message with result
+    //if winner then api call clearUser() and socket brodcast
+    if (!question) {
+      methods
+        .checkIn({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          question: startLocation.question,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.miles_difference_or_status === 0) {
+            methods.getQuestion().then((res) => {
+              console.log("res: ", res.miles_difference_or_status);
+              setQuestion(res);
+            });
+          } else if (res.miles_difference_or_status > 0) {
+            Alert.alert(
+              `You are ${res.miles_difference_or_status.toFixed(
+                2
+              )} miles away from the target! KEEP GOING!`
+            );
+          } else if (res.miles_difference_or_status === "winner") {
+            //withdraw funds with metamask
+            //need the public_key_address
+            methods.clearUser();
+            //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
+          }
+        });
+    } else {
+      console.log("this is the new question: ", question);
+      methods
+        .checkIn({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          question: question.question,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.miles_difference_or_status === 0) {
+            methods.getQuestion().then((res) => {
+              console.log("res: ", res);
+              setQuestion(res);
+            });
+          } else if (res.miles_difference_or_status > 0) {
+            Alert.alert(
+              `You are ${res.miles_difference_or_status.toFixed(
+                2
+              )} miles away from the target! KEEP GOING!`
+            );
+          } else if (res.miles_difference_or_status === "winner") {
+            //withdraw funds with metamask
+            //need the public_key_address
+            methods.clearUser();
+            //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
+          }
+        });
+    }
   };
   // console.log("outside: ", question);
   const onClose = () => {
