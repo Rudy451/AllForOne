@@ -41,50 +41,19 @@ const Room = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    socket.on("users", (res) => {
-      console.log("hi I am from the captains room");
+    // socket.on("update users",() => {
 
+    // })
+    socket.on("users", (res) => {
       setUserNames([...res]);
       console.log(res);
     });
-    // socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
       console.log(roomName, "here is roomcode");
       console.log(userNames);
     }
-
-    // setUserNames((userNames) => [
-    //   ...userNames,
-    //   generateUserName(first, middle, end, ranNum),
-    // ]);
-
-    // socket.on("user connected", (res) => {
-    //   console.log(res);
-    // });
   }, []);
-
-  const ranNum = () => {
-    return Math.floor(Math.random() * 14);
-  };
-  const generateUserName = (arr1, arr2, arr3, cb) => {
-    return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
-  };
-
-  // const joinRoom = (roomCode) => {
-  //   socket.emit("join room", roomCode);
-  //   console.log("connected to room");
-  // };
-
-  // joinRoom();
-  // console.log(joinRoom);
-
-  const mockUsernames = [
-    "CaptainWatchYoBack",
-    "KanyeWinAll",
-    "MrStealYaCash",
-    "TheDragon",
-  ];
 
   const renderItem = ({ item }) => {
     return (
@@ -283,51 +252,3 @@ const styles = StyleSheet.create({
 });
 
 export default Room;
-const first = [
-  "Captain",
-  "Mr",
-  "Miss",
-  "Granny",
-  "Kanye",
-  "The",
-  "Little",
-  "Master",
-  "Sensei",
-  "Maestro",
-  "Madame",
-  "Sir",
-  "Prince",
-  "Major",
-];
-const middle = [
-  "Wiggle",
-  "Hippy",
-  "Long",
-  "Tart",
-  "StealYa",
-  "Bitter",
-  "Sly",
-  "Quick",
-  "Woke",
-  "Fire",
-  "Sweaty",
-  "Crazy",
-  "Wild",
-  "Cuckoo",
-];
-const end = [
-  "Bottom",
-  "Bean",
-  "Taco",
-  "Cash",
-  "Burrito",
-  "Cow",
-  "Cheese",
-  "Goat",
-  "Cabbage",
-  "Snail",
-  "Worm",
-  "Dragon",
-  "Lettuce",
-  "Potato",
-];
