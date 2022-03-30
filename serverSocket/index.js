@@ -28,19 +28,30 @@ const ranNum = () => {
 const generateUserName = (first, middle, end, cb) => {
   return `${first[cb()]}${middle[cb()]}${end[cb()]}`;
 };
+
 //ARRAY THAT HOLDS NAMES
-let userNames = [];
+let users = [];
+// const addUserToRoom = (ids) => {
+//   if (users.id.includes(ids) {
+//   }
+// };
 
 //START OF SOCKETS
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
+  const user = {
+    username: generateUserName(first, middle, end, ranNum),
+    id: socket.id,
+  };
+  users.push(user);
+  console.log(users, "hi my name");
 
   //CAPTAIN CREATE ROOM AND JOIN
   socket.on("join room", async (roomCode) => {
-    console.log(roomCode, "roomcade server side");
     socket.join(roomCode);
-    userNames.push(generateUserName(first, middle, end, ranNum));
-    io.to(roomCode).emit("users", [...userNames]);
+
+    // userNames.push(generateUserName(first, middle, end, ranNum));
+    io.to(roomCode).emit("users", user.username);
   });
   //JOIN GAME
   socket.on("room check", async (roomCheck) => {
@@ -50,8 +61,9 @@ io.on("connection", (socket) => {
 
     socket.join(roomList[0][0]);
     // let ids = await io.in(roomCheck).allSockets();
-    userNames.push(generateUserName(first, middle, end, ranNum));
-    io.to(roomCheck).emit("users", [...userNames]);
+    // userNames.push(generateUserName(first, middle, end, ranNum));
+
+    io.to(roomCheck).emit("users", user.username);
   });
 
   // socket.on("get users", async (roomCode) => {
@@ -73,12 +85,6 @@ io.on("connection", (socket) => {
   //   users.push(user);
   //   console.log("Here is the users: ", users);
   //   io.emit("new user", users);
-  // });
-
-  // socket.on('join room', (roomName) => {
-  //   socket.join(roomName);
-  //   socket.emit('joined room', roomName);
-  //   console.log('Here is the room code', roomName);
   // });
 
   // socket.on('disconnect', () => {

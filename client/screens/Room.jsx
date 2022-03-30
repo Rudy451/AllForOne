@@ -44,7 +44,12 @@ const Room = ({ navigation, route }) => {
     socket.on("users", (res) => {
       console.log("hi I am from the captains room");
 
-      setUserNames([...res]);
+      setUserNames([res]);
+
+      //   (prevRes) => {
+      //   [...prevRes, res];
+      //   console.log(prevRes, "prevres");
+      // });
       console.log(res);
     });
     // socket.emit("user entered room", socket.id);
@@ -281,53 +286,4 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
-
 export default Room;
-const first = [
-  "Captain",
-  "Mr",
-  "Miss",
-  "Granny",
-  "Kanye",
-  "The",
-  "Little",
-  "Master",
-  "Sensei",
-  "Maestro",
-  "Madame",
-  "Sir",
-  "Prince",
-  "Major",
-];
-const middle = [
-  "Wiggle",
-  "Hippy",
-  "Long",
-  "Tart",
-  "StealYa",
-  "Bitter",
-  "Sly",
-  "Quick",
-  "Woke",
-  "Fire",
-  "Sweaty",
-  "Crazy",
-  "Wild",
-  "Cuckoo",
-];
-const end = [
-  "Bottom",
-  "Bean",
-  "Taco",
-  "Cash",
-  "Burrito",
-  "Cow",
-  "Cheese",
-  "Goat",
-  "Cabbage",
-  "Snail",
-  "Worm",
-  "Dragon",
-  "Lettuce",
-  "Potato",
-];
