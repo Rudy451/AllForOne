@@ -15,7 +15,7 @@ const port = 3000;
 
 const corsOptions = {
   origin: "*",
-  //   methods: ['GET']
+  //   mYAYethods: ['GET']
 };
 
 app.use(cors(corsOptions));
@@ -58,9 +58,7 @@ io.on("connection", (socket) => {
     id: socket.id,
   };
   users.push(user);
-  socket.emit("current user", (user) => {
-    console.log("INSIDE THE SERVER", user);
-  });
+  socket.emit("current user", user);
 
   console.log("INSIDE THE SERVER", user);
 
@@ -96,6 +94,8 @@ io.on("connection", (socket) => {
   socket.on("get amount", (room) => {
     io.to(room).emit("player receive amount", addAmount(room));
   });
+
+  // socket.on("listen winner", ())
 
   // socket.on("get users", async (roomCode) => {
   //   console.log(ids, "IM AN ID");

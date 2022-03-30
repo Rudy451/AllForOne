@@ -50,11 +50,11 @@ export default function App() {
 
   useEffect(() => {
     setSocket(socketOne);
+    socketOne.on("current user", (res) => {
+      console.log("TEST CURRENT USER: ", res);
+      setCurrentUser(res);
+    });
   }, [socketOne]);
-  socketOne.on("current user", (res) => {
-    console.log("TEST CURRENT USER: ", res);
-    setCurrentUser(res);
-  });
 
   return (
     // <Provider>
