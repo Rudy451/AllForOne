@@ -213,6 +213,7 @@ const Main = ({ navigation }) => {
           > */}
           <CheckInModal
             pin={pin}
+            startLocation={startLocation}
             // location={location}
             // setLocation={setLocation}
             modalCheckInVisible={modalCheckInVisible}

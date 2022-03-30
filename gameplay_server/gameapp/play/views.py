@@ -12,7 +12,8 @@ from .models import Cities, Landmarks, Users, TimeRecords
 
 # Distance formula between user coordinates & target coordinates
 def distance_formula(city_latitude, city_longitude, user_latitude, user_longitude):
-  return math.pow(math.fabs(city_latitude) - math.fabs(user_latitude), 2) + math.pow(math.fabs(city_longitude) - math.fabs(user_longitude), 2)
+  # return math.pow(math.fabs(city_latitude) - math.fabs(user_latitude), 2) + math.pow(math.fabs(city_longitude) - math.fabs(user_longitude), 2)
+  return math.pow(float(city_latitude) - float(user_latitude), 2) + math.pow(float(city_longitude) - float(user_longitude), 2)
 
 def update_visited_landmarks(user, landmark):
   # update visited landmarks for future question filtering
@@ -143,6 +144,7 @@ def user_location_check(request):
   if len(user) > 0:
     # calculate current distance between user (as of last push) and target location
     current_distance = distance_formula(user[0].city.latitude, user[0].city.longitude, user_query['latitude'], user_query['longitude'])
+
     # if in range update appropriate user & landmark table records before confirming success to client
     if current_distance < user[0].city.allowable_distance_difference:
       landmark = Landmarks.objects.filter(question=user_query['question'])
