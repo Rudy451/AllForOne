@@ -29,7 +29,7 @@ with open(ENV_FILE) as env_f:
 SECRET_KEY = ENV_VARS[0]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', ENV_VARS[4]]
 
