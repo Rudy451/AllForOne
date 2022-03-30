@@ -11,6 +11,7 @@ import globalStyles from "../styles/globalStyles";
 import * as Location from "expo-location";
 import { AntDesign } from "@expo/vector-icons";
 import methods from "../services/apiServices";
+import FinalModal from "./Final";
 
 function CheckInModal({
   pin,
