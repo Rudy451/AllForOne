@@ -26,6 +26,7 @@ const Main = ({ navigation }) => {
   const [modalLocationVisible, setModalLocationVisible] = useState(false);
   const [modalExitVisible, setModalExitVisible] = useState(false);
   const [modalCheckInVisible, setModalCheckInVisible] = useState(true);
+  const [startLocation, setStartLocation] = useState(null);
   const [initialLocation, setInitialLocation] = useState({
     coords: {
       latitude: 0,
@@ -36,11 +37,13 @@ const Main = ({ navigation }) => {
 
   useEffect(() => {
     if (initialLocation) {
-      console.log("inside useEffect: ", initialLocation);
+      // console.log("inside useEffect: ", initialLocation);
       mapRef.current.animateToRegion(
         {
-          latitude: initialLocation.coords.latitude,
-          longitude: initialLocation.coords.longitude,
+          // latitude: initialLocation.coords.latitude,
+          // longitude: initialLocation.coords.longitude,
+          latitude: 35.045631,
+          longitude: -85.309677,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         },
@@ -67,55 +70,52 @@ const Main = ({ navigation }) => {
   const [locationState, setLocationState] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
   const [pin, setPin] = useState({
-    latitude: 39.106805261119526,
-    longitude: -104.84521832274527,
+    //Denver
+    // latitude: 39.106805261119526,
+    // longitude: -104.84521832274527,
+    //Chattnooga
+    latitude: 35.045631,
+    longitude: -85.309677,
   });
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-      // setInterval(async () => {
-      let location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Highest,
-        maximumAge: 10000,
-      });
-      // console.log(location);
-      setInitialLocation(location);
-      methods
-        .getLocations({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        })
-        .then((result) => {
-          console.log(result);
-          setLocationState(result);
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+        // setInterval(async () => {
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Highest,
+          maximumAge: 10000,
         });
+        // console.log("current location: ", location);
+        setInitialLocation(location);
+        methods
+          .getLocations({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          })
+          .then((result) => {
+            // console.log(result);
+            setLocationState(result);
+            setStartLocation(result.starting_point);
+          });
+      } catch (error) {
+        console.log(
+          "There has been a problem with your fetch operation: " + error.message
+        );
+      }
       // }, 5000);
     })();
   }, []);
-  console.log("initial location: ", initialLocation);
-  // console.log("Checking", locationState);
+  let text = "Waiting...";
+  if (errorMsg) text = errorMsg;
+  else if (initialLocation) text = JSON.stringify(initialLocation);
 
-  const mapMarkers = () => {
-    return locationState.map((location) => (
-      <Marker
-        key={location.location}
-        coordinate={{
-          latitude: location.latitude,
-          longitude: location.longitude,
-        }}
-        pinColor="teal"
-      >
-        <Callout>
-          <Text>{location.location}</Text>
-        </Callout>
-      </Marker>
-    ));
-  };
+  console.log("startLocation: ", startLocation);
 
   return (
     <>
@@ -153,19 +153,34 @@ const Main = ({ navigation }) => {
             <Text>You're here!</Text>
           </Callout>
         </Marker>
-        {/* {locationState ? mapMarkers() : null} */}
+        {startLocation ? (
+          <Marker
+            key={startLocation}
+            coordinate={{
+              latitude: parseFloat(startLocation.latitude),
+              longitude: parseFloat(startLocation.longitude),
+            }}
+            pinColor="teal"
+          >
+            <Callout>
+              <Text>{startLocation.landmark_name}</Text>
+            </Callout>
+          </Marker>
+        ) : null}
         {/* STARTING POINT OF THE GAME AND THE RADIUS WITHIN 1.1MILE */}
-        <Circle
-          center={{
-            latitude: 39.7478,
-            longitude: -104.9949,
-          }}
-          //radius in meters
-          radius={1770.28}
-          strokeWidth={1}
-          strokeColor={"#1a66ff"}
-          fillColor={"rgba(230,238,255,0.5)"}
-        />
+        {startLocation && (
+          <Circle
+            center={{
+              latitude: parseFloat(startLocation.latitude),
+              longitude: parseFloat(startLocation.longitude),
+            }}
+            //radius in meters
+            radius={1770.28}
+            strokeWidth={1}
+            strokeColor={"#1a66ff"}
+            fillColor={"rgba(230,238,255,0.5)"}
+          />
+        )}
       </MapView>
 
       <View
@@ -198,6 +213,7 @@ const Main = ({ navigation }) => {
           > */}
           <CheckInModal
             pin={pin}
+            startLocation={startLocation}
             // location={location}
             // setLocation={setLocation}
             modalCheckInVisible={modalCheckInVisible}

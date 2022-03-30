@@ -7,6 +7,7 @@ import methods from "../services/apiServices";
 
 function CheckInModal({
   pin,
+  startLocation,
   // setLocation,
   modalCheckInVisible,
   setModalCheckInVisible,
@@ -27,18 +28,31 @@ function CheckInModal({
     // console.log("This is current location", location);
     let location = pin;
     console.log("This is current location", location);
-    methods.getQuestion().then((res) => {
-      console.log("res: ", res);
-      setQuestion(res);
-    });
-    // console.log("inside: ", question);
-    // let result = methods.checkIn({
-    //   latitude: location.latitude,
-    //   longitude: location.longitude,
-    //   question: data.question,
+
+    // methods.getQuestion().then((res) => {
+    //   console.log("res: ", res);
+    //   setQuestion(res);
     // });
+    // console.log("inside: ", question);
+    console.log(
+      "latitude:",
+      location.latitude,
+      "longitude:",
+      location.longitude,
+      "question:",
+      startLocation.question
+    );
+    methods
+      .checkIn({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        question: startLocation.question,
+      })
+      .then((res) => {
+        console.log(res);
+      });
   };
-  console.log("outside: ", question);
+  // console.log("outside: ", question);
   const onClose = () => {
     setModalCheckInVisible(!modalCheckInVisible);
   };
@@ -55,7 +69,9 @@ function CheckInModal({
               <AntDesign name="closecircleo" size={24} color="#00E6B7" />
             </TouchableOpacity>
             {question ? (
-              <Text>{question.question}</Text>
+              <Text style={[globalStyles.subText, { marginHorizontal: 20 }]}>
+                {question.question}
+              </Text>
             ) : (
               <Text style={[globalStyles.subText, { marginHorizontal: 20 }]}>
                 This is the start of your scavanger hunt. Go to the given
