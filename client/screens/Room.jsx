@@ -8,13 +8,17 @@ import {
   ScrollView,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import globalStyles from "../styles/globalStyles";
 import EnterCryptoModal from "../modals/EnterCrypto";
 import { FontAwesome5 } from "@expo/vector-icons";
 import BuyInAmount from "../modals/BuyInAmount";
 import { io } from "socket.io-client";
-import { SocketContext, UserNameContext } from "../services/useContext";
+import {
+  AmountContext,
+  SocketContext,
+  UserNameContext,
+} from "../services/useContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -28,45 +32,37 @@ const getRoomName = (() => {
 
 //START OF ROOM
 const Room = ({ navigation, route }) => {
-  const [amount, setAmount] = useState();
   const { type, roomCode } = route.params;
   const { socket } = useContext(SocketContext);
   const { userNames, setUserNames } = useContext(UserNameContext);
+  const { amount, setAmount } = useContext(AmountContext);
 
   const [roomName, setRoomName] = useState(getRoomName);
-  // const [userNames, setUserNames] = useState([]);
 
+  const amountRef = useRef(amount);
   const pressHandler = () => {
     navigation.navigate("Main");
   };
 
+  const updateAmount = (a) => {
+    setAmount(a);
+    console.log("hello", amount);
+    return a;
+  };
+
   useEffect(() => {
-    socket.on("users", (res) => {
-      console.log("hi I am from the captains room");
-
-      setUserNames([res]);
-
-      //   (prevRes) => {
-      //   [...prevRes, res];
-      //   console.log(prevRes, "prevres");
-      // });
-      console.log(res);
+    socket.on("receive amount", (res) => {
+      console.log(res, "Room amount");
+      setAmount(res.amount);
     });
+    socket.on("users", (res) => {
+      setUserNames(res);
+    });
+
     // socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
-      console.log(roomName, "here is roomcode");
-      console.log(userNames);
     }
-
-    // setUserNames((userNames) => [
-    //   ...userNames,
-    //   generateUserName(first, middle, end, ranNum),
-    // ]);
-
-    // socket.on("user connected", (res) => {
-    //   console.log(res);
-    // });
   }, []);
 
   const ranNum = () => {
@@ -75,21 +71,6 @@ const Room = ({ navigation, route }) => {
   const generateUserName = (arr1, arr2, arr3, cb) => {
     return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
   };
-
-  // const joinRoom = (roomCode) => {
-  //   socket.emit("join room", roomCode);
-  //   console.log("connected to room");
-  // };
-
-  // joinRoom();
-  // console.log(joinRoom);
-
-  const mockUsernames = [
-    "CaptainWatchYoBack",
-    "KanyeWinAll",
-    "MrStealYaCash",
-    "TheDragon",
-  ];
 
   const renderItem = ({ item }) => {
     return (
@@ -101,7 +82,7 @@ const Room = ({ navigation, route }) => {
       >
         <FontAwesome5 name="hourglass-half" size={20} color="#00E6B7" />
         <Text style={{ ...globalStyles.subText, padding: 0, paddingLeft: 10 }}>
-          {item}
+          {item.username}
         </Text>
       </View>
     );
@@ -109,7 +90,11 @@ const Room = ({ navigation, route }) => {
   return (
     <SafeAreaView style={globalStyles.container}>
       {type === "Captain" ? (
-        <EnterCryptoModal setAmount={setAmount} amount={amount} />
+        <EnterCryptoModal
+          setAmount={setAmount}
+          amount={amount}
+          roomName={roomName}
+        />
       ) : (
         <BuyInAmount amount={amount} navigation={navigation} />
       )}
@@ -200,7 +185,7 @@ const Room = ({ navigation, route }) => {
           <FlatList
             data={userNames}
             renderItem={renderItem}
-            keyExtractor={(item) => item}
+            keyExtractor={(item) => item.id}
             style={styles.flatlist}
           ></FlatList>
 
@@ -215,7 +200,7 @@ const Room = ({ navigation, route }) => {
           >
             <Text style={globalStyles.subText}>Current Total:</Text>
             <Text style={{ ...globalStyles.titleTextMedium, fontSize: 30 }}>
-              {amount ? `${amount * userNames.length}ETH` : "0ETH"}
+              {`${amount * userNames.length}ETH`}
             </Text>
             <Text
               style={{
