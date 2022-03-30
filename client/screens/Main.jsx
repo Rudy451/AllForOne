@@ -186,7 +186,6 @@ const Main = ({ navigation }) => {
           />
         )}
       </MapView>
-
       <View
         style={{
           backgroundColor: "#182624",
