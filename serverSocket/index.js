@@ -31,10 +31,18 @@ const generateUserName = (first, middle, end, cb) => {
 
 //ARRAY THAT HOLDS NAMES
 let users = [];
-// const addUserToRoom = (ids) => {
-//   if (users.id.includes(ids) {
-//   }
-// };
+const addUserToRoom = (ids) => {
+  console.log([...ids], "ids here");
+  let filteredUsers = [];
+  if (ids) {
+    [...ids].forEach((i) => {
+      filteredUsers.push(users.find((user) => user.id == i));
+
+      // users.id.indexOf(i) > -1;
+    });
+    return filteredUsers;
+  }
+};
 
 //START OF SOCKETS
 io.on("connection", (socket) => {
@@ -49,9 +57,11 @@ io.on("connection", (socket) => {
   //CAPTAIN CREATE ROOM AND JOIN
   socket.on("join room", async (roomCode) => {
     socket.join(roomCode);
+    let ids = await io.in(roomCode).allSockets();
 
     // userNames.push(generateUserName(first, middle, end, ranNum));
-    io.to(roomCode).emit("users", user.username);
+    console.log(addUserToRoom(ids), "addusertoroom");
+    io.to(roomCode).emit("users", addUserToRoom(ids));
   });
   //JOIN GAME
   socket.on("room check", async (roomCheck) => {
@@ -60,14 +70,13 @@ io.on("connection", (socket) => {
     });
 
     socket.join(roomList[0][0]);
-    // let ids = await io.in(roomCheck).allSockets();
-    // userNames.push(generateUserName(first, middle, end, ranNum));
 
-    io.to(roomCheck).emit("users", user.username);
+    let ids = await io.in(roomCheck).allSockets();
+    console.log(addUserToRoom(ids), "from room check");
+    io.to(roomCheck).emit("users", addUserToRoom(ids));
   });
 
   // socket.on("get users", async (roomCode) => {
-  //   let ids = await io.in(roomCode).allSockets();
   //   console.log(ids, "IM AN ID");
   //   console.log(roomCode, "HI IM A ROOMCODE");
   //   socket.to(roomCode).emit("users", [...ids]);
