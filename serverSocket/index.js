@@ -29,52 +29,29 @@ const generateUserName = (first, middle, end, cb) => {
   return `${first[cb()]}${middle[cb()]}${end[cb()]}`;
 };
 
-let name = generateUserName(first, middle, end, ranNum);
 //ARRAY THAT HOLDS NAMES
 let users = [];
-//  const addUserToRoom = (id) => {
-//    if(user.id === )
-//  }
+// const addUserToRoom = (ids) => {
+//   if (users.id.includes(ids) {
+//   }
+// };
 
 //START OF SOCKETS
 io.on("connection", (socket) => {
-  // socket.data.username = "alice";
-  // console.log(socket.data.username);
-  // socket.on("join server", () => {
-  //   const user = {
-  //     username,
-  //     id: socket.id,
-  //   };
-  //   console.log(user);
-  //   users.push(user);
-  //   console.log("Here is the users: ", users);
-  //   io.emit("new user", users);
-
   console.log("a user connected", socket.id);
-  // });
+  const user = {
+    username: generateUserName(first, middle, end, ranNum),
+    id: socket.id,
+  };
+  users.push(user);
+  console.log(users, "hi my name");
 
-  // socket.emit("update users", () => {
-  //   const user = {
-  //     username: generateUserName(first, middle, end, ranNum),
-  //     id: socket.id,
-  //   };
-  //   console.log(user);
-  //   users.push(user);
-  //   console.log("Here is the users: ", users);
-  //   io.emit("new user", users);
-  // });
   //CAPTAIN CREATE ROOM AND JOIN
   socket.on("join room", async (roomCode) => {
     socket.join(roomCode);
-    const user = {
-      username: name,
-      id: socket.id,
-    };
-    users.push(user);
-    console.log(name, "hi my name");
 
     // userNames.push(generateUserName(first, middle, end, ranNum));
-    io.to(roomCode).emit("users", socket.id);
+    io.to(roomCode).emit("users", user.username);
   });
   //JOIN GAME
   socket.on("room check", async (roomCheck) => {
@@ -84,8 +61,9 @@ io.on("connection", (socket) => {
 
     socket.join(roomList[0][0]);
     // let ids = await io.in(roomCheck).allSockets();
-    userNames.push(generateUserName(first, middle, end, ranNum));
-    io.to(roomCheck).emit("users", [...userNames]);
+    // userNames.push(generateUserName(first, middle, end, ranNum));
+
+    io.to(roomCheck).emit("users", user.username);
   });
 
   // socket.on("get users", async (roomCode) => {

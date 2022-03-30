@@ -41,19 +41,55 @@ const Room = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    // socket.on("update users",() => {
-
-    // })
     socket.on("users", (res) => {
-      setUserNames([...res]);
+      console.log("hi I am from the captains room");
+
+      setUserNames([res]);
+
+      //   (prevRes) => {
+      //   [...prevRes, res];
+      //   console.log(prevRes, "prevres");
+      // });
       console.log(res);
     });
+    // socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
       console.log(roomName, "here is roomcode");
       console.log(userNames);
     }
+
+    // setUserNames((userNames) => [
+    //   ...userNames,
+    //   generateUserName(first, middle, end, ranNum),
+    // ]);
+
+    // socket.on("user connected", (res) => {
+    //   console.log(res);
+    // });
   }, []);
+
+  const ranNum = () => {
+    return Math.floor(Math.random() * 14);
+  };
+  const generateUserName = (arr1, arr2, arr3, cb) => {
+    return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
+  };
+
+  // const joinRoom = (roomCode) => {
+  //   socket.emit("join room", roomCode);
+  //   console.log("connected to room");
+  // };
+
+  // joinRoom();
+  // console.log(joinRoom);
+
+  const mockUsernames = [
+    "CaptainWatchYoBack",
+    "KanyeWinAll",
+    "MrStealYaCash",
+    "TheDragon",
+  ];
 
   const renderItem = ({ item }) => {
     return (
@@ -250,5 +286,4 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
-
 export default Room;
