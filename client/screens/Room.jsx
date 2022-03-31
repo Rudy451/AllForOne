@@ -58,13 +58,6 @@ const Room = ({ navigation, route }) => {
     }
   }, []);
 
-  const ranNum = () => {
-    return Math.floor(Math.random() * 14);
-  };
-  const generateUserName = (arr1, arr2, arr3, cb) => {
-    return `${arr1[cb()]}${arr2[cb()]}${arr3[cb()]}`;
-  };
-
   const renderItem = ({ item }) => {
     return (
       <View
