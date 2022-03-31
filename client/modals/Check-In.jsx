@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Modal,
   StyleSheet,
@@ -13,6 +13,7 @@ import { AntDesign } from "@expo/vector-icons";
 import methods from "../services/apiServices";
 import FinalModal from "./Final";
 import { Socket } from "socket.io-client";
+import { CurrentUserContext } from "../services/useContext";
 
 function CheckInModal({
   locationState,
@@ -24,6 +25,7 @@ function CheckInModal({
   modalCheckInVisible,
   setModalCheckInVisible,
 }) {
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [question, setQuestion] = useState(null);
   const onPress = async () => {
     // let location = await Location.getCurrentPositionAsync({

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { AmountContext, SocketContext } from "../services/useContext";
 import globalStyles from "../styles/globalStyles";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 function EnterCryptoModal({ roomName }) {
   const { socket } = useContext(SocketContext);
@@ -26,58 +27,60 @@ function EnterCryptoModal({ roomName }) {
     Alert.alert(`Amount has been set to ${amount}ETH`);
   };
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        //TODO metamask sign in logic goes here
-        Alert.alert("Modal has been closed.");
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={globalStyles.subText}>
-            Captain sets the pot amount for all players. Players will be sent an
-            alert to agree or diagree with the buy-in amount.
-          </Text>
-          <View
-            style={{
-              ...globalStyles.lightContainer,
-              justifyContent: "center",
-            }}
-          >
+    <KeyboardAwareScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          //TODO metamask sign in logic goes here
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={globalStyles.subText}>
+              Captain sets the pot amount for all players. Players will be sent
+              an alert to agree or diagree with the buy-in amount.
+            </Text>
             <View
               style={{
-                ...globalStyles.darkContainer,
-                height: 90,
-                width: 254,
+                ...globalStyles.lightContainer,
                 justifyContent: "center",
               }}
             >
-              <TextInput
-                keyboardType="numeric"
-                autoCorrect={false}
-                value={amount}
-                onChangeText={(text) => setAmount(text)}
+              <View
                 style={{
-                  ...globalStyles.titleTextMedium,
+                  ...globalStyles.darkContainer,
+                  height: 90,
+                  width: 254,
+                  justifyContent: "center",
                 }}
-                placeholder="Enter amount"
-                placeholderTextColor={"white"}
-              ></TextInput>
+              >
+                <TextInput
+                  keyboardType="numeric"
+                  autoCorrect={false}
+                  value={amount}
+                  onChangeText={(text) => setAmount(text)}
+                  style={{
+                    ...globalStyles.titleTextMedium,
+                  }}
+                  placeholder="Enter amount"
+                  placeholderTextColor={"white"}
+                ></TextInput>
+              </View>
             </View>
+            <Pressable
+              style={{ ...globalStyles.lightBtn, width: "75%", height: 55 }}
+              onPress={handlePress}
+            >
+              <Text style={globalStyles.buttonText}>SET PRICE</Text>
+            </Pressable>
           </View>
-          <Pressable
-            style={{ ...globalStyles.lightBtn, width: "75%", height: 55 }}
-            onPress={handlePress}
-          >
-            <Text style={globalStyles.buttonText}>SET PRICE</Text>
-          </Pressable>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+    </KeyboardAwareScrollView>
   );
 }
 const styles = StyleSheet.create({
