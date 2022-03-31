@@ -52,7 +52,10 @@ const Room = ({ navigation, route }) => {
     socket.on("users", (res) => {
       setUserNames(res);
     });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0abd2f934326b49e1c4164bb61b556571a7e9d7f
     // socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);
