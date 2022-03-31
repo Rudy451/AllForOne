@@ -13,7 +13,6 @@ import LocationModal from "../modals/Locations";
 import ExitModal from "../modals/Exit";
 import MapView, { Callout, Marker, Circle } from "react-native-maps";
 import * as Location from "expo-location";
-import locationsForTheGame from "../cities/Denver";
 import CheckInModal from "../modals/Check-In";
 import { AntDesign } from "@expo/vector-icons";
 import methods from "../services/apiServices";
@@ -27,6 +26,7 @@ const Main = ({ navigation }) => {
   const [modalExitVisible, setModalExitVisible] = useState(false);
   const [modalCheckInVisible, setModalCheckInVisible] = useState(true);
   const [startLocation, setStartLocation] = useState(null);
+  const [completedLocations, setCompletedLocations] = useState([]);
   const [initialLocation, setInitialLocation] = useState({
     coords: {
       latitude: 0,
@@ -37,7 +37,6 @@ const Main = ({ navigation }) => {
 
   useEffect(() => {
     if (initialLocation) {
-      // console.log("inside useEffect: ", initialLocation);
       mapRef.current.animateToRegion(
         {
           // latitude: initialLocation.coords.latitude,
@@ -66,7 +65,6 @@ const Main = ({ navigation }) => {
   };
 
   //MAP CODE
-
   const [locationState, setLocationState] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
   const [pin, setPin] = useState({
@@ -114,12 +112,34 @@ const Main = ({ navigation }) => {
       }
       // }, 5000);
     })();
-  }, []);
+  }, [completedLocations]);
+
   let text = "Waiting...";
   if (errorMsg) text = errorMsg;
   else if (initialLocation) text = JSON.stringify(initialLocation);
 
   console.log("startLocation: ", startLocation);
+
+  const updateCompletedLocations = () => {
+    console.log("HIIIII");
+    console.log(completedLocations);
+    return completedLocations.map((location) => {
+      return (
+        <Marker
+          key={location.question}
+          coordinate={{
+            latitude: parseFloat(location.latitude),
+            longitude: parseFloat(location.longitude),
+          }}
+          pinColor="teal"
+        >
+          <Callout>
+            <Text>{`${location.landmark_name} completed`}</Text>
+          </Callout>
+        </Marker>
+      );
+    });
+  };
 
   return (
     <>
@@ -128,14 +148,11 @@ const Main = ({ navigation }) => {
         style={styles.map}
         provider="google"
         initialRegion={{
+          //Denver coords
           // latitude: 39.106805261119526,
           // longitude: -104.84521832274527,
           latitude: initialLocation?.coords?.latitude,
-          // ? initialLocation?.coords?.latitude
-          // : 39.106805261119526,
           longitude: initialLocation?.coords?.longitude,
-          // ? initialLocation?.coords?.longitude
-          // : -104.84521832274527,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -185,6 +202,7 @@ const Main = ({ navigation }) => {
             fillColor={"rgba(230,238,255,0.5)"}
           />
         )}
+        {completedLocations ? updateCompletedLocations() : null}
       </MapView>
       <View
         style={{
@@ -215,6 +233,9 @@ const Main = ({ navigation }) => {
             }}
           > */}
           <CheckInModal
+            locationState={locationState}
+            completedLocations={completedLocations}
+            setCompletedLocations={setCompletedLocations}
             pin={pin}
             startLocation={startLocation}
             // location={location}
@@ -227,6 +248,7 @@ const Main = ({ navigation }) => {
         <TouchableOpacity onPress={openLocation}>
           <Entypo name="location" size={24} color="#00E6B7" />
           <LocationModal
+            completedLocations={completedLocations}
             modalLocationVisible={modalLocationVisible}
             setModalLocationVisible={setModalLocationVisible}
           />
