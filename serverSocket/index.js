@@ -8,14 +8,12 @@ const { instrument } = require("@socket.io/admin-ui");
 const { first, middle, end } = require("./names");
 const cors = require("cors");
 
-// const { Controller } = require("./controllers");
-
 const host = "localhost";
 const port = 3000;
 
 const corsOptions = {
   origin: "*",
-  //   methods: ['GET']
+  //   mYAYethods: ['GET']
 };
 
 app.use(cors(corsOptions));
@@ -28,19 +26,47 @@ const ranNum = () => {
 const generateUserName = (first, middle, end, cb) => {
   return `${first[cb()]}${middle[cb()]}${end[cb()]}`;
 };
+
 //ARRAY THAT HOLDS NAMES
-let userNames = [];
+let users = [];
+let amountArr = [];
+const addUserToRoom = (ids) => {
+  console.log([...ids], "ids here");
+  let filteredUsers = [];
+  if (ids) {
+    [...ids].forEach((i) => {
+      filteredUsers.push(users.find((user) => user.id == i));
+    });
+    return filteredUsers;
+  }
+};
+const addAmount = (room) => {
+  console.log(room, "ids here");
+  let filteredAmount;
+  if (room) {
+    filteredAmount = amountArr.find((el) => el.room === room);
+  }
+  return filteredAmount;
+};
 
 //START OF SOCKETS
 io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+  const user = {
+    username: generateUserName(first, middle, end, ranNum),
+    id: socket.id,
+  };
+  users.push(user);
+  socket.emit("current user", user);
+
+  console.log("INSIDE THE SERVER", user);
 
   //CAPTAIN CREATE ROOM AND JOIN
   socket.on("join room", async (roomCode) => {
-    console.log(roomCode, "roomcade server side");
     socket.join(roomCode);
-    userNames.push(generateUserName(first, middle, end, ranNum));
-    io.to(roomCode).emit("users", [...userNames]);
+    let ids = await io.in(roomCode).allSockets();
+    // userNames.push(generateUserName(first, middle, end, ranNum));
+    io.to(roomCode).emit("users", addUserToRoom(ids));
+    io.to(roomCode).emit("winner", addUserToRoom(ids));
   });
   //JOIN GAME
   socket.on("room check", async (roomCheck) => {
@@ -49,43 +75,36 @@ io.on("connection", (socket) => {
     });
 
     socket.join(roomList[0][0]);
-    // let ids = await io.in(roomCheck).allSockets();
-    userNames.push(generateUserName(first, middle, end, ranNum));
-    io.to(roomCheck).emit("users", [...userNames]);
+
+    let ids = await io.in(roomCheck).allSockets();
+    io.to(roomCheck).emit("users", addUserToRoom(ids));
   });
 
-  // socket.on("get users", async (roomCode) => {
-  //   let ids = await io.in(roomCode).allSockets();
-  //   console.log(ids, "IM AN ID");
-  //   console.log(roomCode, "HI IM A ROOMCODE");
-  //   socket.to(roomCode).emit("users", [...ids]);
+  socket.on("set amount", (amount, room) => {
+    const amounts = {
+      amount,
+      room,
+    };
+    amountArr.push(amounts);
+    console.log(amounts, "amount and room");
+    io.to(room).emit("receive amount", addAmount(room));
+  });
 
-  //   // socket.emit("users", [...ids]);
-  // });
+  socket.on("get amount", (room) => {
+    io.to(room).emit("player receive amount", addAmount(room));
+  });
 
-  // let users = [];
-  // socket.on("update users", (username, amount) => {
-  //   const user = {
-  //     username,
-  //     amount,
-  //     id: socket.id,
-  //   };
-  //   users.push(user);
-  //   console.log("Here is the users: ", users);
-  //   io.emit("new user", users);
-  // });
+  socket.on("announce winner", (room, userName) => {
+    io.to(room).emit(
+      "winner",
+      `${userName} has won the pot!! Good game and better luck next time!`
+    );
+  });
 
-  // socket.on('join room', (roomName) => {
-  //   socket.join(roomName);
-  //   socket.emit('joined room', roomName);
-  //   console.log('Here is the room code', roomName);
-  // });
-
-  // socket.on('disconnect', () => {
-  //   users = users.filter((u) => u.id !== socket.id);
-  //   io.emit('new user', users);
-  // io.emit('user disconnected')
-  // });
+  socket.on("disconnect", () => {
+    users = users.filter((u) => u.id !== socket.id);
+    console.log("disconnected from game");
+  });
 });
 
 instrument(io, { auth: false });

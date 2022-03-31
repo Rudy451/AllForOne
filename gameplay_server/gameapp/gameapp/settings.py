@@ -30,7 +30,8 @@ SECRET_KEY = ENV_VARS[0]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', ENV_VARS[4]]
+# ALLOWED_HOSTS = ['127.0.0.1', ENV_VARS[4], '*']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

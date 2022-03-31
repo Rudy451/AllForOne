@@ -1,39 +1,29 @@
-import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView } from 'react-native';
-import Home from './screens/Home';
-import globalStyles from './styles/globalStyles';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import JoinGame from './screens/JoinGame';
-import Room from './screens/Room';
-import Main from './screens/Main';
-import IosFonts from './screens/Credits';
-// import store from "./redux/store";
-// import { Provider } from "react-redux";
-import { io } from 'socket.io-client';
-import react, { useState, useMemo, useEffect } from 'react';
-import { SocketContext, UserNameContext } from './services/useContext';
+import "react-native-gesture-handler";
+import { SafeAreaView } from "react-native";
+import Home from "./screens/Home";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import JoinGame from "./screens/JoinGame";
+import Room from "./screens/Room";
+import Main from "./screens/Main";
+import IosFonts from "./screens/Credits";
+import { io } from "socket.io-client";
+import react, { useState, useMemo, useEffect } from "react";
+import {
+  AmountContext,
+  SocketContext,
+  UserNameContext,
+  CurrentUserContext,
+} from "./services/useContext";
 
 const Stack = createNativeStackNavigator();
-const socketOne = io('http://127.0.0.1:3000');
+const socketOne = io("http://4d41-104-128-161-116.ngrok.io");
 
 export default function App() {
-  // useEffect(() => {
-  //   socket.on("users", (res) => {
-  //     console.log("hi");
-
-  //     setUserNames(res);
-  //     console.log(res);
-  //   });
-  // }, []);
-
-  // const joinRoom = (roomCode) => {
-  //   // io.emit("join room", roomCode);
-  //   console.log("connected to room");
-  // };
-  const [socket, setSocket] = useState(socketOne);
+  const [socket, setSocket] = useState(null);
   const [userNames, setUserNames] = useState([]);
+  const [amount, setAmount] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const valueSocket = useMemo(
     () => ({ socket, setSocket }),
@@ -45,55 +35,73 @@ export default function App() {
     [userNames, setUserNames]
   );
 
-  useEffect(() => {}, [userNames]);
+  const valueAmount = useMemo(
+    () => ({ amount, setAmount }),
+    [amount, setAmount]
+  );
+  const valueCurrentUser = useMemo(
+    () => ({ currentUser, setCurrentUser }),
+    [currentUser, setCurrentUser]
+  );
+
+  useEffect(() => {
+    setSocket(socketOne);
+    socketOne.on("current user", (res) => {
+      console.log("TEST CURRENT USER: ", res);
+      setCurrentUser(res);
+    });
+  }, [socketOne]);
 
   return (
-    // <Provider>
     <SocketContext.Provider value={valueSocket}>
       <UserNameContext.Provider value={valueUserName}>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            position: 'relative',
-            overflow: 'scroll',
-            backgroundColor: '#0b1313',
-          }}
-        >
-          <NavigationContainer>
-            <Stack.Navigator
-              initialRouteName='Home'
-              screenOptions={{
-                headerShown: false,
+        <AmountContext.Provider value={valueAmount}>
+          <CurrentUserContext.Provider value={valueCurrentUser}>
+            <SafeAreaView
+              style={{
+                flex: 1,
+                position: "relative",
+                overflow: "scroll",
+                backgroundColor: "#0b1313",
               }}
             >
-              <Stack.Screen
-                name='Home'
-                component={Home}
-                options={{ gestureEnabled: false }}
-              />
-              <Stack.Screen
-                name='Room'
-                component={Room}
-                options={{ gestureEnabled: true }}
-              />
-              <Stack.Screen
-                name='JoinGame'
-                component={JoinGame}
-                options={{ gestureEnabled: true }}
-              />
-              <Stack.Screen
-                name='Main'
-                component={Main}
-                options={{ gestureEnabled: false }}
-              />
-              <Stack.Screen
-                name='Credits'
-                component={IosFonts}
-                options={{ gestureEnabled: false }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </SafeAreaView>
+              <NavigationContainer>
+                <Stack.Navigator
+                  initialRouteName="Home"
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                >
+                  <Stack.Screen
+                    name="Home"
+                    component={Home}
+                    options={{ gestureEnabled: false }}
+                  />
+                  <Stack.Screen
+                    name="Room"
+                    component={Room}
+                    options={{ gestureEnabled: true }}
+                  />
+                  <Stack.Screen
+                    name="JoinGame"
+                    component={JoinGame}
+                    options={{ gestureEnabled: true }}
+                  />
+                  <Stack.Screen
+                    name="Main"
+                    component={Main}
+                    options={{ gestureEnabled: false }}
+                  />
+                  <Stack.Screen
+                    name="Credits"
+                    component={IosFonts}
+                    options={{ gestureEnabled: false }}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </SafeAreaView>
+          </CurrentUserContext.Provider>
+        </AmountContext.Provider>
       </UserNameContext.Provider>
     </SocketContext.Provider>
   );
