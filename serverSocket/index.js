@@ -8,8 +8,6 @@ const { instrument } = require("@socket.io/admin-ui");
 const { first, middle, end } = require("./names");
 const cors = require("cors");
 
-// const { Controller } = require("./controllers");
-
 const host = "localhost";
 const port = 3000;
 
