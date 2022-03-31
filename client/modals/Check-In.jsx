@@ -15,6 +15,9 @@ import FinalModal from "./Final";
 import { CurrentUserContext, SocketContext } from "../services/useContext";
 
 function CheckInModal({
+  locationState,
+  completedLocations,
+  setCompletedLocations,
   pin,
   startLocation,
   // setLocation,
@@ -50,6 +53,9 @@ function CheckInModal({
     //if 0 then api call getQuestion()
     //if result>0 then display message with result
     //if winner then api call clearUser() and socket brodcast
+    const locationsArr = Object.keys(locationState).map(function (k) {
+      return locationState[k];
+    });
     if (!question) {
       methods
         .checkIn({
@@ -70,12 +76,15 @@ function CheckInModal({
                 3
               )} miles away from the target! KEEP GOING!`
             );
+<<<<<<< HEAD
           } else if (res.miles_difference_or_status === "winner") {
             //withdraw funds with metamask
             //need the public_key_address
 
             methods.clearUser();
             //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
+=======
+>>>>>>> 0abd2f934326b49e1c4164bb61b556571a7e9d7f
           }
         });
     } else {
@@ -89,6 +98,10 @@ function CheckInModal({
         .then((res) => {
           console.log(res);
           if (res.miles_difference_or_status === 0) {
+            let completed = locationsArr.find(
+              (loc) => loc.question === question.question
+            );
+            setCompletedLocations((prev) => [...prev, completed]);
             methods.getQuestion().then((res) => {
               console.log("res: ", res);
               setQuestion(res);
@@ -108,7 +121,6 @@ function CheckInModal({
             });
             methods.clearUser();
             // setWinner();
-
             //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
           }
         });

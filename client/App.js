@@ -7,8 +7,6 @@ import JoinGame from "./screens/JoinGame";
 import Room from "./screens/Room";
 import Main from "./screens/Main";
 import IosFonts from "./screens/Credits";
-// import store from "./redux/store";
-// import { Provider } from "react-redux";
 import { io } from "socket.io-client";
 import react, { useState, useMemo, useEffect } from "react";
 import {
