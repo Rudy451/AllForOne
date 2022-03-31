@@ -1,8 +1,6 @@
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native";
 import Home from "./screens/Home";
-import globalStyles from "./styles/globalStyles";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import JoinGame from "./screens/JoinGame";
@@ -57,7 +55,6 @@ export default function App() {
   }, [socketOne]);
 
   return (
-    // <Provider>
     <SocketContext.Provider value={valueSocket}>
       <UserNameContext.Provider value={valueUserName}>
         <AmountContext.Provider value={valueAmount}>
@@ -111,52 +108,3 @@ export default function App() {
     </SocketContext.Provider>
   );
 }
-
-const first = [
-  "Captain",
-  "Mr",
-  "Miss",
-  "Granny",
-  "Kanye",
-  "The",
-  "Little",
-  "Master",
-  "Sensei",
-  "Maestro",
-  "Madame",
-  "Sir",
-  "Prince",
-  "Major",
-];
-const middle = [
-  "Wiggle",
-  "Hippy",
-  "Long",
-  "Tart",
-  "StealYa",
-  "Bitter",
-  "Sly",
-  "Quick",
-  "Woke",
-  "Fire",
-  "Sweaty",
-  "Crazy",
-  "Wild",
-  "Cuckoo",
-];
-const end = [
-  "Bottom",
-  "Bean",
-  "Taco",
-  "Cash",
-  "Burrito",
-  "Cow",
-  "Cheese",
-  "Goat",
-  "Cabbage",
-  "Snail",
-  "Worm",
-  "Dragon",
-  "Lettuce",
-  "Potato",
-];

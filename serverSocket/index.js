@@ -68,6 +68,7 @@ io.on("connection", (socket) => {
     let ids = await io.in(roomCode).allSockets();
     // userNames.push(generateUserName(first, middle, end, ranNum));
     io.to(roomCode).emit("users", addUserToRoom(ids));
+    io.to(roomCode).emit("winner", addUserToRoom(ids));
   });
   //JOIN GAME
   socket.on("room check", async (roomCheck) => {
@@ -95,33 +96,17 @@ io.on("connection", (socket) => {
     io.to(room).emit("player receive amount", addAmount(room));
   });
 
-  // socket.on("listen winner", ())
+  socket.on("announce winner", (room, userName) => {
+    io.to(room).emit(
+      "winner",
+      `${userName} has won the pot!! Good game and better luck next time!`
+    );
+  });
 
-  // socket.on("get users", async (roomCode) => {
-  //   console.log(ids, "IM AN ID");
-  //   console.log(roomCode, "HI IM A ROOMCODE");
-  //   socket.to(roomCode).emit("users", [...ids]);
-
-  //   // socket.emit("users", [...ids]);
-  // });
-
-  // let users = [];
-  // socket.on("update users", (username, amount) => {
-  //   const user = {
-  //     username,
-  //     amount,
-  //     id: socket.id,
-  //   };
-  //   users.push(user);
-  //   console.log("Here is the users: ", users);
-  //   io.emit("new user", users);
-  // });
-
-  // socket.on('disconnect', () => {
-  //   users = users.filter((u) => u.id !== socket.id);
-  //   io.emit('new user', users);
-  // io.emit('user disconnected')
-  // });
+  socket.on("disconnect", () => {
+    users = users.filter((u) => u.id !== socket.id);
+    console.log("disconnected from game");
+  });
 });
 
 instrument(io, { auth: false });

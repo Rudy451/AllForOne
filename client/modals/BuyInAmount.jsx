@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
-import globalStyles from '../styles/globalStyles';
+import React, { useState } from "react";
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import globalStyles from "../styles/globalStyles";
 
 function BuyInAmount({ amount, navigation }) {
   const [modalVisible, setModalVisible] = useState(true);
   const handleDisagree = () => {
     //leave the game go back to home page
     setModalVisible(!modalVisible);
-    navigation.navigate('Home');
+    navigation.navigate("Home");
   };
   const handleAgree = () => {
     //TODO metamask agreement
@@ -15,11 +15,11 @@ function BuyInAmount({ amount, navigation }) {
   };
   return (
     <Modal
-      animationType='slide'
+      animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
+        Alert.alert("Modal has been closed.");
         setModalVisible(!modalVisible);
       }}
     >
@@ -36,14 +36,14 @@ function BuyInAmount({ amount, navigation }) {
           </Text>
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
             <Pressable
               style={{
                 ...styles.button,
-                backgroundColor: 'green',
+                backgroundColor: "green",
               }}
               onPress={handleAgree}
             >
@@ -52,7 +52,7 @@ function BuyInAmount({ amount, navigation }) {
             <Pressable
               style={{
                 ...styles.button,
-                backgroundColor: 'red',
+                backgroundColor: "red",
               }}
               onPress={handleDisagree}
             >
@@ -67,17 +67,17 @@ function BuyInAmount({ amount, navigation }) {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: '40%',
-    marginHorizontal: '10%',
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: "40%",
+    marginHorizontal: "10%",
   },
   modalView: {
     margin: 40,
-    backgroundColor: 'black',
+    backgroundColor: "black",
     padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -87,26 +87,26 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#00E6B7',
-    justifyContent: 'space-around',
+    borderColor: "#00E6B7",
+    justifyContent: "space-around",
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: 'center',
+    textAlign: "center",
   },
   button: {
-    width: '70%',
-    height: '60%',
+    width: "70%",
+    height: "60%",
     borderRadius: 10,
-    paddingHorizontal: '5%',
+    paddingHorizontal: "5%",
     elevation: 2,
-    justifyContent: 'center',
-    marginHorizontal: '5%',
+    justifyContent: "center",
+    marginHorizontal: "5%",
   },
 });
 
