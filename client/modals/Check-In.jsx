@@ -12,18 +12,21 @@ import * as Location from "expo-location";
 import { AntDesign } from "@expo/vector-icons";
 import methods from "../services/apiServices";
 import FinalModal from "./Final";
-import { Socket } from "socket.io-client";
-import { CurrentUserContext } from "../services/useContext";
+import { CurrentUserContext, SocketContext } from "../services/useContext";
 
 function CheckInModal({
   pin,
   startLocation,
   // setLocation,
+  room,
   modalCheckInVisible,
   setModalCheckInVisible,
 }) {
+  const { socket } = useContext(SocketContext);
+
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [question, setQuestion] = useState(null);
+  console.log(room, "here is room in check in");
   const onPress = async () => {
     // let location = await Location.getCurrentPositionAsync({
     //   accuracy: Location.Accuracy.Highest,
@@ -70,6 +73,7 @@ function CheckInModal({
           } else if (res.miles_difference_or_status === "winner") {
             //withdraw funds with metamask
             //need the public_key_address
+
             methods.clearUser();
             //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
           }
@@ -98,8 +102,11 @@ function CheckInModal({
           } else if (res.miles_difference_or_status === "winner") {
             //withdraw funds with metamask
             //need the public_key_address
+            socket.emit("announce winner", room, currentUser.username);
+            socket.on("winner", (res) => {
+              setQuestion({ question: res });
+            });
             methods.clearUser();
-            setQuestion("YOU ARE THE WINNER!!! WELL DONE");
             // setWinner();
 
             //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER

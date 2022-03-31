@@ -41,7 +41,7 @@ const Room = ({ navigation, route }) => {
 
   const amountRef = useRef(amount);
   const pressHandler = () => {
-    navigation.navigate("Main");
+    navigation.navigate("Main", { room: roomName });
   };
 
   useEffect(() => {
@@ -52,10 +52,7 @@ const Room = ({ navigation, route }) => {
     socket.on("users", (res) => {
       setUserNames(res);
     });
-    socket.on("current user", (res) => {
-      console.log("TEST CURRENT USER: ", res);
-      setCurrentUser(res);
-    });
+
     // socket.emit("user entered room", socket.id);
     if (type === "Captain") {
       socket.emit("join room", roomName);

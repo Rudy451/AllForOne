@@ -5,7 +5,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import globalStyles from "../styles/globalStyles";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import RulesModal from "../modals/Rules";
@@ -17,11 +17,14 @@ import locationsForTheGame from "../cities/Denver";
 import CheckInModal from "../modals/Check-In";
 import { AntDesign } from "@expo/vector-icons";
 import methods from "../services/apiServices";
+import { Socket } from "socket.io-client";
+import { SocketContext } from "../services/useContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const Main = ({ navigation }) => {
+const Main = ({ navigation, route }) => {
+  const { room } = route.params;
   const [modalRuleVisible, setModalRuleVisible] = useState(false);
   const [modalLocationVisible, setModalLocationVisible] = useState(false);
   const [modalExitVisible, setModalExitVisible] = useState(false);
@@ -217,6 +220,7 @@ const Main = ({ navigation }) => {
           <CheckInModal
             pin={pin}
             startLocation={startLocation}
+            room={room}
             // location={location}
             // setLocation={setLocation}
             modalCheckInVisible={modalCheckInVisible}
