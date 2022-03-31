@@ -41,7 +41,7 @@ const Room = ({ navigation, route }) => {
 
   const amountRef = useRef(amount);
   const pressHandler = () => {
-    navigation.navigate("Main");
+    navigation.navigate("Main", { room: roomName });
   };
 
   useEffect(() => {
