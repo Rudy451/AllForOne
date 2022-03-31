@@ -47,12 +47,8 @@ function CheckInModal({
       "question:",
       startLocation.question
     );
-    //TODO
-    //api call checkIn()
-    //conditions logic
-    //if 0 then api call getQuestion()
-    //if result>0 then display message with result
-    //if winner then api call clearUser() and socket brodcast
+
+    //API CALL QUESTIONS
     const locationsArr = Object.keys(locationState).map(function (k) {
       return locationState[k];
     });
@@ -76,15 +72,6 @@ function CheckInModal({
                 3
               )} miles away from the target! KEEP GOING!`
             );
-<<<<<<< HEAD
-          } else if (res.miles_difference_or_status === "winner") {
-            //withdraw funds with metamask
-            //need the public_key_address
-
-            methods.clearUser();
-            //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
-=======
->>>>>>> 0abd2f934326b49e1c4164bb61b556571a7e9d7f
           }
         });
     } else {
@@ -179,15 +166,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#000",
   },
-  //   modalView: {
-  //     backgroundColor: "#182624",
-  //     width: "95%",
-  //     bottom: "2%",
-  //     position: "absolute",
-  //     alignItems: "center",
-  //     borderRadius: 20,
-  //     paddingTop: 10,
-  //   },
+
   textView: {
     margin: 20,
     position: "relative",
