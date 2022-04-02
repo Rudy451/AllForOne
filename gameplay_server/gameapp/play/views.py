@@ -15,25 +15,6 @@ from .models import Cities, Landmarks, Users, TimeRecords
 def distance_formula(city_latitude, city_longitude, user_latitude, user_longitude):
   return geopy.distance.geodesic((city_latitude, city_longitude), (user_latitude, user_longitude)).mi
 
-def update_visited_landmarks(user, landmark):
-  # update visited landmarks for future question filtering
-  if(user[0].completed_challenge_count == 0):
-    user.update(landmark_one=landmark[0])
-  elif(user[0].completed_challenge_count == 1):
-    user.update(landmark_two=landmark[0])
-  elif(user[0].completed_challenge_count == 2):
-    user.update(landmark_three=landmark[0])
-  elif(user[0].completed_challenge_count == 3):
-    user.update(landmark_four=landmark[0])
-  elif(user[0].completed_challenge_count == 4):
-    user.update(landmark_five=landmark[0])
-  elif(user[0].completed_challenge_count == 5):
-    user.update(landmark_six=landmark[0])
-  elif(user[0].completed_challenge_count == 6):
-    user.update(landmark_seven=landmark[0])
-  else:
-    pass
-
 # test
 def home(request):
   return HttpResponse("It Works!!!")
@@ -65,16 +46,27 @@ def get_locations(request):
   cities = Cities.objects.all()
   shortest_city_id = ''
   shortest_distance = 100000000
-  # for city in cities:
-  #   city_distance = distance_formula(city.latitude, city.longitude, user_query['latitude'], user_query['longitude'])
-  #   if city_distance < shortest_distance:
-  #     shortest_city_id = city.city_id
-  #     shortest_distance = city_distance
-  shortest_city_id = '15c98925-3583-4dfd-91f6-c13d3945fa3d'
-  user.update(city_id=shortest_city_id)
+  for city in cities:
+    city_distance = distance_formula(city.latitude, city.longitude, user_query['latitude'], user_query['longitude'])
+    if city_distance < shortest_distance:
+      shortest_city_id = city.city_id
+      shortest_distance = city_distance
 
-  landmarks = Landmarks.objects.filter(city_id__in=[shortest_city_id]).values('landmark_name', 'longitude', 'latitude', 'question', 'hint')
-  print(landmarks)
+  landmarks = Landmarks.objects.filter(city_id__in=[shortest_city_id]).order_by('landmark_id')
+
+  user.update(
+    city_id=shortest_city_id,
+    landmark_one=landmarks[0],
+    landmark_two=landmarks[0],
+    landmark_three=landmarks[0],
+    landmark_four=landmarks[0],
+    landmark_five=landmarks[0],
+    landmark_six=landmarks[0],
+    landmark_seven=landmarks[0]
+  )
+
+  landmarks = landmarks.values('landmark_name', 'longitude', 'latitude', 'question', 'hint')
+
   return JsonResponse({
     "starting_point": landmarks[0],
     "landmark_one": landmarks[1],
@@ -85,7 +77,6 @@ def get_locations(request):
     "landmark_six": landmarks[6],
     "landmark_seven": landmarks[7],
   })
-
 
 @api_view(['POST', 'PUT'])
 def user_question_request(request):
@@ -106,13 +97,11 @@ def user_question_request(request):
 
   # filter for target landmarks: matching city_id, non-visisted, order by average completion time for heuristic
   landmarks = Landmarks.objects.filter(city_id__in=[user[0].city.city_id]).exclude(pk__in=[landmark.pk for landmark in visited_landmarks]).order_by('average_challenge_completion_time')
-  print(landmarks)
   # Heuristic for question selection.
   target_landmark = None
   # Random selection for first push request
   if user[0].completed_challenge_count == 0:
     # landmark_index = random.randint(0, 7)
-    print(landmarks[0])
     target_landmark = landmarks[0]
   # pick hardest question if current time plus hardest question time is less than target round time
   elif (user[0].active_game_time + landmarks[len(landmarks)-1].average_challenge_completion_time) < (float(user[0].completed_challenge_count) * float(user[0].city.average_game_completion_time) / 7.0):
@@ -127,9 +116,6 @@ def user_question_request(request):
       landmark_index += 1
     target_landmark = landmarks[landmark_index - 1]
 
-  # update visited landmarks in database with selected target
-  #update_visited_landmarks(user, target_landmark)
-
   # return question to client
   return JsonResponse({"question": target_landmark.question})
 
@@ -139,7 +125,6 @@ def user_location_check(request):
   body_decoded = request.body.decode('utf-8')
   user_query = json.loads(body_decoded)
   user = Users.objects.select_related('city').filter(public_key_address=user_query['public_key_address'])
-  print(user)
 
   # meters_from_destination: fail = user not found, winner = user solved all seven challenges, 0 = successfully solved riddle, else = distance in meters from target location
   miles_from_destination = "fail"
@@ -148,7 +133,6 @@ def user_location_check(request):
     # calculate current distance between user (as of last push) and target location
     landmark = Landmarks.objects.filter(question=user_query['question'])
     current_distance = (distance_formula(landmark[0].latitude, landmark[0].longitude, user_query['latitude'], user_query['longitude']))
-    print(current_distance)
     # if in range update appropriate user & landmark table records before confirming success to client
     if current_distance < user[0].city.allowable_distance_difference:
       if(len(landmark) > 0):
@@ -163,16 +147,31 @@ def user_location_check(request):
         landmark.update(
           average_challenge_completion_time=new_average_challenge_completion_time
         )
-        update_visited_landmarks(user, landmark)
+        # update visited landmarks for future question filtering
+        if(user[0].completed_challenge_count == 0):
+          user[0].landmark_one=landmark[0]
+        elif(user[0].completed_challenge_count == 1):
+          user[0].landmark_two=landmark[0]
+        elif(user[0].completed_challenge_count == 2):
+          user[0].landmark_three=landmark[0]
+        elif(user[0].completed_challenge_count == 3):
+          user[0].landmark_four=landmark[0]
+        elif(user[0].completed_challenge_count == 4):
+          user[0].landmark_five=landmark[0]
+        elif(user[0].completed_challenge_count == 5):
+          user[0].landmark_six=landmark[0]
+        elif(user[0].completed_challenge_count == 6):
+          user[0].landmark_seven=landmark[0]
+        else:
+          pass
         # update user completed challenges for tracking purposes
         new_completed_challenge_count = user[0].completed_challenge_count + 1
         # update user active game time for heuristic calculation
         new_active_game_time = float(user[0].active_game_time) + float(timezone.now().timestamp() - user[0].last_login_time.timestamp())
-        user.update(
-          completed_challenge_count=new_completed_challenge_count,
-          active_game_time=new_active_game_time,
-          last_login_time=timezone.now()
-        )
+        user[0].completed_challenge_count=new_completed_challenge_count
+        user[0].active_game_time=new_active_game_time
+        user[0].last_login_time=timezone.now()
+        user[0].save()
         # check if user has solved all seven challenges
         if(new_completed_challenge_count == 7):
           new_total_game_completion_time = user[0].active_game_time
@@ -207,7 +206,10 @@ def clear_user_game_status(request):
     # if so clear apprpriate records fields & return true else return false
     result = False
     if(len(user) > 0):
-      user.update(completed_challenge_count=0, active_game_time=0.0)
+      user.update(
+        completed_challenge_count=0,
+        active_game_time=0.0
+      )
       result = True
     return JsonResponse({"result": result})
   except:

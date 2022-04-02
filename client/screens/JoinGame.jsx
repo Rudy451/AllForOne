@@ -43,7 +43,7 @@ const JoinGame = ({ navigation, route }) => {
         <EnterRoomCode />
 
         <View
-          style={{ ...globalStyles.darkContainer, height: "20%", width: "70%" }}
+          style={{ ...globalStyles.darkContainer, height: "40%", width: "70%" }}
         >
           <TextInput
             autoCorrect={false}

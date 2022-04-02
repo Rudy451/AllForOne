@@ -52,6 +52,7 @@ function CheckInModal({
     const locationsArr = Object.keys(locationState).map(function (k) {
       return locationState[k];
     });
+    Alert.alert(`The Crazy Bean has won the pot!! Good game and better luck next time!`)
     if (!question) {
       methods
         .checkIn({
