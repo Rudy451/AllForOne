@@ -137,43 +137,36 @@ class Users(models.Model):
   landmark_one = models.ForeignKey(
     Landmarks,
     related_name='challenge_one',
-    default='03ee9967-9056-4cc1-9954-ff10f9d19973',
     on_delete=models.CASCADE
   )
   landmark_two = models.ForeignKey(
     Landmarks,
     related_name='challenge_two',
-    default='03ee9967-9056-4cc1-9954-ff10f9d19973',
     on_delete=models.CASCADE
   )
   landmark_three = models.ForeignKey(
     Landmarks,
     related_name='challenge_three',
-    default='03ee9967-9056-4cc1-9954-ff10f9d19973',
     on_delete=models.CASCADE
   )
   landmark_four = models.ForeignKey(
     Landmarks,
     related_name='challenge_four',
-    default='03ee9967-9056-4cc1-9954-ff10f9d19973',
     on_delete=models.CASCADE
   )
   landmark_five = models.ForeignKey(
     Landmarks,
     related_name='challenge_five',
-    default='03ee9967-9056-4cc1-9954-ff10f9d19973',
     on_delete=models.CASCADE
   )
   landmark_six = models.ForeignKey(
     Landmarks,
     related_name='challenge_six',
-    default='03ee9967-9056-4cc1-9954-ff10f9d19973',
     on_delete=models.CASCADE
   )
   landmark_seven = models.ForeignKey(
     Landmarks,
     related_name='challenge_seven',
-    default='03ee9967-9056-4cc1-9954-ff10f9d19973',
     on_delete=models.CASCADE
   )
 
