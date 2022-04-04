@@ -100,20 +100,15 @@ function CheckInModal({
               )} miles away from the target! KEEP GOING!`
             );
           } else if (res.miles_difference_or_status === "winner") {
-            //withdraw funds with metamask
-            //need the public_key_address
             socket.emit("announce winner", room, currentUser.username);
             socket.on("winner", (res) => {
               setQuestion({ question: res });
             });
             methods.clearUser();
-            // setWinner();
-            //NEED TO BROADCAST TO EVERYONE IN THIS ROOM THST THE GAME IS OVER
           }
         });
     }
   };
-  // console.log("outside: ", question);
   const onClose = () => {
     setModalCheckInVisible(!modalCheckInVisible);
   };

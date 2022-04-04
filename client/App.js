@@ -17,7 +17,8 @@ import {
 } from "./services/useContext";
 
 const Stack = createNativeStackNavigator();
-const socketOne = io("http://4d41-104-128-161-116.ngrok.io");
+// const socketOne = io("http://4d41-104-128-161-116.ngrok.io");
+const socketOne = io("http://localhost:3000");
 
 export default function App() {
   const [socket, setSocket] = useState(null);

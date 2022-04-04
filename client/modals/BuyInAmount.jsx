@@ -5,12 +5,10 @@ import globalStyles from "../styles/globalStyles";
 function BuyInAmount({ amount, navigation }) {
   const [modalVisible, setModalVisible] = useState(true);
   const handleDisagree = () => {
-    //leave the game go back to home page
     setModalVisible(!modalVisible);
     navigation.navigate("Home");
   };
   const handleAgree = () => {
-    //TODO metamask agreement
     setModalVisible(!modalVisible);
   };
   return (
