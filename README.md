@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/logo.png" />
+  <img src="images/logo.png" height=300, width=300/>
 </p>
 
 All For One is a mobile real life scavenger hunt game.
@@ -70,6 +70,6 @@ Fork the repo and do your thing. Push to your fork and submit a pull request.
 ## Developers
 
 * Fatima Tapiya - [Github](https://github.com/Fatima031598) - [LinkedIn](https://www.linkedin.com/in/fatima-tapiya/)
-* Savannah Manning - [GitHub](https://github.com/savhappy) - [LinkedIn](https://www.linkedin.com/search/results/all/?keywords=savannah%20manning&origin=RICH_QUERY_SUGGESTION&position=0&searchId=0ff5c9a9-ea99-4b7f-80a7-64bdd46ae412&sid=zM()
+* Savannah Manning - [GitHub](https://github.com/savhappy) - [LinkedIn](https://www.linkedin.com/search/results/all/?keywords=savannah%20manning&origin=RICH_QUERY_SUGGESTION&position=0&searchId=0ff5c9a9-ea99-4b7f-80a7-64bdd46ae412&sid=zM)
 * Dane Johnson - [GitHub](https://github.com/Rudy451) - [LinkedIn](https://www.linkedin.com/in/dane-johnson-aa3606111/)
 
