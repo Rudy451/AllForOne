@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useRef, useContext } from "react";
-import globalStyles from "../styles/globalStyles";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import RulesModal from "../modals/Rules";
 import LocationModal from "../modals/Locations";
@@ -199,7 +198,7 @@ const Main = ({ navigation, route }) => {
               longitude: parseFloat(startLocation.longitude),
             }}
             //radius in meters
-            radius={1770.28}
+            radius={600}
             strokeWidth={1}
             strokeColor={"#1a66ff"}
             fillColor={"rgba(230,238,255,0.5)"}
@@ -225,16 +224,6 @@ const Main = ({ navigation, route }) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={openCheckIn}>
           <AntDesign name="playcircleo" size={24} color="#00E6B7" />
-          {/* <View
-            style={{
-              height: "100%",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              bottom: "8%",
-              position: "absolute",
-            }}
-          > */}
           <CheckInModal
             locationState={locationState}
             completedLocations={completedLocations}
@@ -247,7 +236,6 @@ const Main = ({ navigation, route }) => {
             modalCheckInVisible={modalCheckInVisible}
             setModalCheckInVisible={setModalCheckInVisible}
           />
-          {/* </View> */}
         </TouchableOpacity>
         <TouchableOpacity onPress={openLocation}>
           <Entypo name="location" size={24} color="#00E6B7" />
