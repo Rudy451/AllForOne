@@ -1,4 +1,5 @@
-const baseUrl = "http://2927-2601-285-4080-7fa0-b07a-9df3-1dc8-ab23.ngrok.io";
+// const baseUrl = "http://2927-2601-285-4080-7fa0-b07a-9df3-1dc8-ab23.ngrok.io";
+const baseUrl = "http://127.0.0.1:8000";
 const methods = {
   //returns true or false
   userEntry: async (user) => {
