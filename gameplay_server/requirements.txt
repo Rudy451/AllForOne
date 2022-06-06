@@ -2,4 +2,5 @@ Django
 djangorestframework
 django-rest-auth
 django-cors-headers
+django-redis
 psycopg2-binary

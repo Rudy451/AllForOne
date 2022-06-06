@@ -1,15 +1,40 @@
+from msilib.schema import PublishComponent
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.db.models import Sum
+from django.conf import settings
+from django.core.cache import cache
 from rest_framework.decorators import api_view
 import json
 import math
 import random
 import geopy.distance
 
-from .models import Cities, Landmarks, Users, TimeRecords
+from .models import Cities, Landmarks, ChattanoogaLandmarkTimeRecords
 
 # Create your views here.
+
+####### ALL FOR ONE CONTROLLERS##################################
+
+# PREMISE
+# Users are randomly assigned five locations along with a common starting point
+# The first location after the starting point is randomly assigned to avoid route collisions
+# The ensuing selections are determined by an informal optimization algorithm: We assume each user completes his/her route from point A to point B within the typical time
+# NOTE: This assumption is faulty because route times will change in real-time as participants in the same game & other simultaneous games beat the old record times
+# If a user beats the old mark then he or she will be assigned a historically tougher route in terms of time (time considers the difficulty of a particular riddle & the distance between points)
+# Users who beat target time for a particular route will trigger an update to that route's time record in the database
+# If a user really struggles and takes too much time then he or she will obviously be assigned a historically easier problem
+# Once a user reaches their target location within an acceptible margin of error, they will be assigned a new question until somebody wins
+
+# PROBLEMS/AREAS OF IMPROVEMENT
+# A lot of data has been cached to avoid excessive database calls although some of that same data is frequently updated. Hope is that Redis can handle the frequent updates
+# Another problem is that the optimization "algorithm" does not evaluate the time data in sorted order because everything is stored in hash tables. However, that scenario was acceptible because we only iterate through five points max
+
+# STORAGE/DATA
+# Database Tables = Cities (Determine which landmarks are selected), Landmarks (Determine which questions get selected & used for location verification), Landmark Route Times (Chattanooga, Denver & SF - Feed to optimization problem for route selections)
+# Cached Data = City id (Used to access landmarks), landmarks (Used for route selection & location verification), landmark_spot (Access landmark data in constant time; Used to find point B in route), riddle time (Players solve time that's used in optimization algorithm),
+# target time (Historically best time used in optimization algorithm), old_landmark_spot (Access last solved landmark problem in constant time; Used to find point A in route)
+
 
 # Distance formula between user coordinates & target coordinates
 def distance_formula(city_latitude, city_longitude, user_latitude, user_longitude):
@@ -19,199 +44,184 @@ def distance_formula(city_latitude, city_longitude, user_latitude, user_longitud
 def home(request):
   return HttpResponse("It Works!!!")
 
-@api_view(['POST', 'PUT'])
+@api_view(['PATCH'])
 def user_entry(request):
-  # extract user data for query
   body_decoded = request.body.decode('utf-8')
   user_query = json.loads(body_decoded)
-  user = Users.objects.filter(public_key_address=user_query['public_key_address'])
-  print(user)
-  # create new user if none exists
-  if len(user) == 0:
-    user = Users.objects.create(public_key_address=user_query['public_key_address'])
-  # update city_id to closest city & last_login to now
-  else:
-    user.update(last_login_time=timezone.now())
-
-  # return city by closest coordinates to client
-  return JsonResponse({"result": True})
+  try:
+    # Check if user data is already cached; If not create a new cache entry with users public key
+    assert request.session.get("public_key_address") == None
+    request.session["public_key_address"] = user_query["public_key_address"]
+    # Prepare game data for caching (See above description for details)
+    cache.set(request.session["public_key_address"], {
+        "city_id": None,
+        "landmarks": [],
+        "landmark_spot": None,
+        "riddle_time": 0,
+        "target_time": 0
+    })
+    # Confirm everything worked
+    return JsonResponse({"result": True})
+  except:
+    return JsonResponse({"result": False})
 
 @api_view(['PUT'])
 def get_locations(request):
-  body_decoded = request.body.decode('utf-8')
-  user_query = json.loads(body_decoded)
-  user = Users.objects.filter(public_key_address=user_query['public_key_address'])
-
-   # select closest city for questions
-  cities = Cities.objects.all()
-  shortest_city_id = ''
-  shortest_distance = 100000000
-  for city in cities:
-    city_distance = distance_formula(city.latitude, city.longitude, user_query['latitude'], user_query['longitude'])
-    if city_distance < shortest_distance:
-      shortest_city_id = city.city_id
-      shortest_distance = city_distance
-
-  landmarks = Landmarks.objects.filter(city_id__in=[shortest_city_id]).order_by('landmark_id')
-
-  user.update(
-    city_id=shortest_city_id,
-    landmark_one=landmarks[0],
-    landmark_two=landmarks[0],
-    landmark_three=landmarks[0],
-    landmark_four=landmarks[0],
-    landmark_five=landmarks[0],
-    landmark_six=landmarks[0],
-    landmark_seven=landmarks[0]
-  )
-
-  landmarks = landmarks.values('landmark_name', 'longitude', 'latitude', 'question', 'hint')
-
-  return JsonResponse({
-    "starting_point": landmarks[0],
-    "landmark_one": landmarks[1],
-    "landmark_two": landmarks[2],
-    "landmark_three": landmarks[3],
-    "landmark_four": landmarks[4],
-    "landmark_five": landmarks[5],
-    "landmark_six": landmarks[6],
-    "landmark_seven": landmarks[7],
-  })
-
-@api_view(['POST', 'PUT'])
-def user_question_request(request):
-  # extract user data for query
-  body_decoded = request.body.decode('utf-8')
-  user_account = json.loads(body_decoded)
-  user = Users.objects.select_related('city').filter(public_key_address=user_account['public_key_address'])
-  # extract visited landmarks to filter for unvisited locations
-  visited_landmarks = [
-    user[0].landmark_one,
-    user[0].landmark_two,
-    user[0].landmark_three,
-    user[0].landmark_four,
-    user[0].landmark_five,
-    user[0].landmark_six,
-    user[0].landmark_seven
-  ]
-
-  # filter for target landmarks: matching city_id, non-visisted, order by average completion time for heuristic
-  landmarks = Landmarks.objects.filter(city_id__in=[user[0].city.city_id]).exclude(pk__in=[landmark.pk for landmark in visited_landmarks]).order_by('average_challenge_completion_time')
-  # Heuristic for question selection.
-  target_landmark = None
-  # Random selection for first push request
-  if user[0].completed_challenge_count == 0:
-    # landmark_index = random.randint(0, 7)
-    target_landmark = landmarks[0]
-  # pick hardest question if current time plus hardest question time is less than target round time
-  elif (user[0].active_game_time + landmarks[len(landmarks)-1].average_challenge_completion_time) < (float(user[0].completed_challenge_count) * float(user[0].city.average_game_completion_time) / 7.0):
-    target_landmark = landmarks[len(landmarks)-1]
-  # pick easiest question if current time plus easiest question time is greater than or equal to than target round time
-  elif (user[0].active_game_time + landmarks[0].average_challenge_completion_time) >= (float(user[0].completed_challenge_count) * float(user[0].city.average_game_completion_time) / 7.0):
-    target_landmark = landmarks[0]
-  else:
-    # heuristic: pick first landmark with average question time that fits within target time range
-    landmark_index = 1
-    while (float(user[0].active_game_time) + float(landmarks[landmark_index].average_challenge_completion_time)) < (float(user[0].city.average_game_completion_time) / 7.0):
-      landmark_index += 1
-    target_landmark = landmarks[landmark_index - 1]
-
-  # return question to client
-  return JsonResponse({"question": target_landmark.question})
-
-@api_view(['PUT'])
-def user_location_check(request):
-  # extract user data for query
-  body_decoded = request.body.decode('utf-8')
-  user_query = json.loads(body_decoded)
-  user = Users.objects.select_related('city').filter(public_key_address=user_query['public_key_address'])
-
-  # meters_from_destination: fail = user not found, winner = user solved all seven challenges, 0 = successfully solved riddle, else = distance in meters from target location
-  miles_from_destination = "fail"
-
-  if len(user) > 0:
-    # calculate current distance between user (as of last push) and target location
-    landmark = Landmarks.objects.filter(question=user_query['question'])
-    current_distance = (distance_formula(landmark[0].latitude, landmark[0].longitude, user_query['latitude'], user_query['longitude']))
-    # if in range update appropriate user & landmark table records before confirming success to client
-    if current_distance < user[0].city.allowable_distance_difference:
-      if(len(landmark) > 0):
-        # new total challenge completion time used as part of average challenge completion time calculation
-        new_total_challenge_completion_time = float(timezone.now().timestamp() - user[0].last_login_time.timestamp())
-        landmark_records = TimeRecords.objects.filter(landmark=landmark[0]).order_by('completion_time')
-        landmark_records[0].completion_time=new_total_challenge_completion_time
-        landmark_records[0].completion_date=timezone.now()
-        landmark_records[0].landmark=landmark[0]
-        landmark_records[0].save()
-        new_average_challenge_completion_time = float(landmark_records.aggregate(Sum('completion_time'))['completion_time__sum'])  / 5.0
-        landmark.update(
-          average_challenge_completion_time=new_average_challenge_completion_time
-        )
-        # update visited landmarks for future question filtering
-        if(user[0].completed_challenge_count == 0):
-          user[0].landmark_one=landmark[0]
-        elif(user[0].completed_challenge_count == 1):
-          user[0].landmark_two=landmark[0]
-        elif(user[0].completed_challenge_count == 2):
-          user[0].landmark_three=landmark[0]
-        elif(user[0].completed_challenge_count == 3):
-          user[0].landmark_four=landmark[0]
-        elif(user[0].completed_challenge_count == 4):
-          user[0].landmark_five=landmark[0]
-        elif(user[0].completed_challenge_count == 5):
-          user[0].landmark_six=landmark[0]
-        elif(user[0].completed_challenge_count == 6):
-          user[0].landmark_seven=landmark[0]
-        else:
-          pass
-        # update user completed challenges for tracking purposes
-        new_completed_challenge_count = user[0].completed_challenge_count + 1
-        # update user active game time for heuristic calculation
-        new_active_game_time = float(user[0].active_game_time) + float(timezone.now().timestamp() - user[0].last_login_time.timestamp())
-        user[0].completed_challenge_count=new_completed_challenge_count
-        user[0].active_game_time=new_active_game_time
-        user[0].last_login_time=timezone.now()
-        user[0].save()
-        # check if user has solved all seven challenges
-        if(new_completed_challenge_count == 7):
-          new_total_game_completion_time = user[0].active_game_time
-          city_records = TimeRecords.objects.filter(city=user[0].city).order_by('completion_time')
-          city_records[0].completion_time=new_total_game_completion_time
-          city_records[0].completion_date=timezone.now()
-          city_records[0].city=user[0].city
-          city_records[0].save()
-          new_average_game_completion_time = float(city_records.aggregate(Sum('completion_time'))['completion_time__sum'])  / 5.0
-          user[0].city.average_game_completion_time=new_average_game_completion_time
-          user[0].city.save()
-          miles_from_destination = 'winner'
-        # else just confirm success
-        else:
-          miles_from_destination = 0
-    else:
-      # return distance from target in meters for client
-      # Convert to int/round to 0
-      miles_from_destination = math.fabs(float(user[0].city.allowable_distance_difference) - current_distance)
-
-  # return status of push request
-  return JsonResponse({"miles_difference_or_status": miles_from_destination})
-
-@api_view(['PUT'])
-def clear_user_game_status(request):
   try:
-    # extract user data for query
+    # Confirm user public key is cached (Pprtipating in an active game)
+    public_key_address = request.session.get("public_key_address")
+    assert public_key_address != None
+    # Grab local cache data for processing & updates
+    local_cache_store = cache.get(public_key_address)
+    # Confirm user has NOT been assigned locations
+    assert(len(local_cache_store["landmarks"]) == 0)
     body_decoded = request.body.decode('utf-8')
     user_query = json.loads(body_decoded)
-    user = Users.objects.select_related('city').filter(public_key_address=user_query['public_key_address'])
-    # check if user has been found
-    # if so clear apprpriate records fields & return true else return false
-    result = False
-    if(len(user) > 0):
-      user.update(
-        completed_challenge_count=0,
-        active_game_time=0.0
-      )
-      result = True
-    return JsonResponse({"result": result})
+    # Grab user's latitude & longitude data to determine which city they're in
+    assert user_query["latitude"] != None and user_query["longitude"] != None
+    # select closest city for questions
+    cities = Cities.objects.all()
+    shortest_city_id = ''
+    shortest_distance = 100000000
+    for city in cities:
+      city_distance = distance_formula(city.latitude, city.longitude, user_query['latitude'], user_query['longitude'])
+      if city_distance < shortest_distance:
+        shortest_city_id = city.city_id
+        shortest_distance = city_distance
+    # Gather landmarks for random selection and fill landmarks array in the user's cache location
+    landmarks = list(Landmarks.objects.values('landmark_id', 'landmark_name', 'longitude', 'latitude', 'question', 'hint').filter(city_id__in=[shortest_city_id]).order_by('landmark_id'))
+    # NOTE: Loops seven times instead of five once more locations are added
+    local_cache_store["city_id"] = shortest_city_id
+    local_cache_store["landmarks"].append(landmarks.pop(0))
+    for query_len in range(6, 1, -1):
+      spot = random.randint(0, query_len)
+      local_cache_store["landmarks"].append(landmarks.pop(spot))
+    # Set location to zero for initial starting point
+    local_cache_store["landmark_spot"] = 0
+    # Update cache
+    cache.set(public_key_address, local_cache_store)
+    # Remove landmark ids for data returned to client
+    for item in local_cache_store["landmarks"]:
+      del item["landmark_id"]
+    return JsonResponse({
+      "starting_point": local_cache_store["landmarks"][0],
+      "landmark_one": local_cache_store["landmarks"][1],
+      "landmark_two": local_cache_store["landmarks"][2],
+      "landmark_three": local_cache_store["landmarks"][3],
+      "landmark_four": local_cache_store["landmarks"][4],
+      "landmark_five": local_cache_store["landmarks"][5],
+    })
+  except:
+    return JsonResponse({})
+
+@api_view(['GET'])
+def user_question_request(request):
+  try:
+    # Confirm user public key is cached (partipating in an active game)
+    public_key_address = request.session.get("public_key_address")
+    assert public_key_address != None
+    # Grab local cache data for processing & updates
+    local_cache_store = cache.get(public_key_address)
+    # If user is starting the game grab the starting location for next question
+    if "old_landmark_spot" not in local_cache_store:
+      local_cache_store["old_landmark_spot"] = local_cache_store["landmark_spot"]
+    else:
+      # If user has reached starting location then randomly assign one of the five pre-selected locations.
+      # Updated cached target time for optimization algorithm to determine next question
+      if len(local_cache_store["landmarks"]) == 6:
+        local_cache_store["landmark_spot"] = random.randint(1, 5)
+        landmarks = ChattanoogaLandmarkTimeRecords.objects.values(local_cache_store["landmarks"][local_cache_store["landmark_spot"]]["landmark_name"].replace(" ", "_").lower()).filter(starting_landmark_id__in=[local_cache_store["landmarks"][local_cache_store["old_landmark_spot"]]["landmark_id"]])
+        local_cache_store["target_time"] = list(landmarks[0].values())[0]
+      else:
+        # Update starting location for question selection (Point A)
+        local_cache_store["old_landmark_spot"] = local_cache_store["landmark_spot"]
+        # Filter cached landmarks for locations that don't match the current starting location (Point A)
+        open_landmarks = [local_cache_store["landmarks"][word_spot]["landmark_name"].replace(" ", "_").lower() for word_spot in range(0, len(local_cache_store["landmarks"])) if word_spot != local_cache_store["old_landmark_spot"]]
+        # Query city time table for open landmarks (Not DRY but couldn't find a way to filter array for one call to values())
+        if len(local_cache_store["landmarks"]) == 5:
+          landmarks = ChattanoogaLandmarkTimeRecords.objects.values(open_landmarks[0], open_landmarks[1], open_landmarks[2], open_landmarks[3])
+        elif len(local_cache_store["landmarks"]) == 4:
+          landmarks = ChattanoogaLandmarkTimeRecords.objects.values(open_landmarks[0], open_landmarks[1], open_landmarks[2])
+        elif len(local_cache_store["landmarks"]) == 3:
+          landmarks = ChattanoogaLandmarkTimeRecords.objects.values(open_landmarks[0], open_landmarks[1])
+        else:
+          landmarks = ChattanoogaLandmarkTimeRecords.objects.values(open_landmarks[0])
+        # Get all route times from landmark time records for current starting point
+        landmarks = landmarks.get(starting_landmark_id=local_cache_store["landmarks"][local_cache_store["old_landmark_spot"]]["landmark_id"])
+        # Get current surplus (if one exists) for time required to solve last riddle
+        current_time_surplus = float(local_cache_store["target_time"]) - float(local_cache_store["riddle_time"])
+        # Spot used to access next question
+        optimal_spot = 0
+        # Optimization "algorithm": Loop through all open landmarks & determine whether current surplus is less than expected completion time for current open landmark AND that the current open landmark time is less than the current optimum
+        for spot in range(0, len(landmarks)):
+          if current_time_surplus < landmarks[open_landmarks[spot]] and landmarks[open_landmarks[spot]] < landmarks[open_landmarks[optimal_spot]]:
+            optimal_spot = spot
+        # Assign new landmark spot after above processing. Adjustments might be required if old landmark spot equals the current optimum spot
+        local_cache_store["landmark_spot"] = optimal_spot + (0 if local_cache_store["old_landmark_spot"] != optimal_spot else -1 if (optimal_spot + 1) == len(local_cache_store["landmarks"]) else 1)
+        # Assign target time to optimum location's stored time
+        local_cache_store["target_time"] = landmarks[open_landmarks[optimal_spot]]
+    # Reset riddle time & update the cache
+    local_cache_store["riddle_time"] = timezone.now()
+    cache.set(public_key_address, local_cache_store)
+    # Return question
+    return JsonResponse({
+      "question": local_cache_store["landmarks"][local_cache_store["landmark_spot"]]["question"]
+    })
+  except:
+    return JsonResponse({})
+
+@api_view(['PATCH'])
+def user_location_check(request):
+  try:
+    # Confirm user public key is cached (partipating in an active game)
+    public_key_address = request.session.get("public_key_address")
+    assert public_key_address != None
+    # Grab local cache data for processing & updates
+    local_cache_store = cache.get(public_key_address)
+    body_decoded = request.body.decode('utf-8')
+    user_query = json.loads(body_decoded)
+    # Grab user's latitude & longitude data to determine whether he or she is within range of the target point
+    assert user_query["latitude"] != None and user_query["longitude"] != None
+    landmark = Landmarks.objects.filter(question=local_cache_store["landmarks"][local_cache_store["landmark_spot"]]["question"])
+    current_distance = (distance_formula(landmark[0].latitude, landmark[0].longitude, user_query['latitude'], user_query['longitude']))
+    allowable_distance_difference = 0.01242740000000
+    # If user if within range then execute necessary processing
+    if current_distance < allowable_distance_difference:
+      # If user is solving a riddle then check determine what processing is req'd
+      if local_cache_store["target_time"] > 0:
+        # Update riddle time to reflect completion. Used for next optimization algorithm round
+        local_cache_store["riddle_time"] = float(timezone.now().timestamp() - local_cache_store["riddle_time"].timestamp()) / 60.0
+        # If user beats the record time for the spec'd route then update the corresponding time record for that route
+        if local_cache_store["riddle_time"] < local_cache_store["target_time"]:
+          target_landmark = local_cache_store["landmarks"][local_cache_store["landmark_spot"]]["landmark_name"].replace(" ", "_").lower()
+          target_record = ChattanoogaLandmarkTimeRecords.objects.get(starting_landmark_id=local_cache_store["landmarks"][local_cache_store["old_landmark_spot"]]["landmark_id"])
+          setattr(target_record, target_landmark, local_cache_store["riddle_time"])
+          target_record.save()
+        # Remove current startin point
+        local_cache_store["landmarks"].pop(local_cache_store["old_landmark_spot"])
+        # Update landmark index if previous deletion affects accuracy
+        if(local_cache_store["old_landmark_spot"] < local_cache_store["landmark_spot"]):
+          local_cache_store["landmark_spot"] -= 1
+        # Update Cache
+        cache.set(public_key_address, local_cache_store)
+      # Return zero if within range or winner if they've solved all five (eventually seven) riddles
+      miles_from_destination = "winner" if len(local_cache_store["landmarks"]) == 1 else 0
+    else:
+      # Return distance from target location if out of range
+      miles_from_destination = math.fabs(float(allowable_distance_difference) - current_distance)
+    return JsonResponse({"miles_difference_or_status": miles_from_destination})
+  except:
+    return JsonResponse({})
+
+@api_view(['GET'])
+def clear_user_game_status(request):
+  try:
+    # Confirm user public key is cached (partipating in an active game)
+    public_key_address = request.session.get("public_key_address")
+    assert public_key_address != None
+    # Clear cache for current game
+    cache.delete(public_key_address)
+    return JsonResponse({"Success": "You game is now over"})
   except:
     return JsonResponse({"Fail": "An exception ocurred"}, status=500)
 

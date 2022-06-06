@@ -28,20 +28,6 @@ class Cities(models.Model):
     null=False,
     blank=False
   )
-  allowable_distance_difference = models.DecimalField(
-    max_digits=24,
-    decimal_places=14,
-    default=0.0006,
-    null=False,
-    blank=False
-  )
-  average_game_completion_time = models.DecimalField(
-    max_digits=24,
-    decimal_places=14,
-    default=0.0,
-    null=False,
-    blank=False
-  )
 
 class Landmarks(models.Model):
   landmark_id = models.UUIDField(
@@ -83,13 +69,6 @@ class Landmarks(models.Model):
     null=False,
     blank=False
   )
-  average_challenge_completion_time = models.DecimalField(
-    max_digits=24,
-    decimal_places=14,
-    default=0.0,
-    null=False,
-    blank=False
-  )
   city = models.ForeignKey(
     Cities,
     blank=True,
@@ -97,104 +76,63 @@ class Landmarks(models.Model):
     on_delete=models.CASCADE
   )
 
-class Users(models.Model):
-  user_id=models.UUIDField(
-    primary_key=True,
-    default = uuid.uuid4,
-    editable=False
-  )
-  public_key_address = models.CharField(
-    max_length=42,
-    unique=True,
-    null=False,
-    blank=False
-  )
-  user_name = models.CharField(
-    max_length=100,
-    unique=True,
-    null=False,
-    blank=False
-  )
-  completed_challenge_count = models.IntegerField(
-    default=0,
-    null=False,
-    blank=False
-  )
-  active_game_time = models.DecimalField(
-    max_digits=24,
-    decimal_places=14,
-    default=0.0,
-    null=False,
-    blank=False
-  )
-  last_login_time = models.DateTimeField(
-    default=timezone.now
-  )
-  city = models.ForeignKey(
-    Cities,
-    on_delete=models.CASCADE
-  )
-  landmark_one = models.ForeignKey(
-    Landmarks,
-    related_name='challenge_one',
-    on_delete=models.CASCADE
-  )
-  landmark_two = models.ForeignKey(
-    Landmarks,
-    related_name='challenge_two',
-    on_delete=models.CASCADE
-  )
-  landmark_three = models.ForeignKey(
-    Landmarks,
-    related_name='challenge_three',
-    on_delete=models.CASCADE
-  )
-  landmark_four = models.ForeignKey(
-    Landmarks,
-    related_name='challenge_four',
-    on_delete=models.CASCADE
-  )
-  landmark_five = models.ForeignKey(
-    Landmarks,
-    related_name='challenge_five',
-    on_delete=models.CASCADE
-  )
-  landmark_six = models.ForeignKey(
-    Landmarks,
-    related_name='challenge_six',
-    on_delete=models.CASCADE
-  )
-  landmark_seven = models.ForeignKey(
-    Landmarks,
-    related_name='challenge_seven',
-    on_delete=models.CASCADE
-  )
-
-class TimeRecords(models.Model):
+class ChattanoogaLandmarkTimeRecords(models.Model):
   time_record_id=models.UUIDField(
     primary_key=True,
     default = uuid.uuid4,
     editable=False
   )
-  completion_time = models.DecimalField(
+  starting_landmark = models.ForeignKey(
+    Landmarks,
+    related_name='landmark_one',
+    on_delete=models.CASCADE
+  )
+  ice_cream_show = models.DecimalField(
     max_digits=24,
     decimal_places=14,
     default=0.0,
     null=False,
     blank=False
   )
-  completion_date = models.DateTimeField(
-    default=timezone.now
+  old_building_collapse = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
   )
-  city = models.ForeignKey(
-    Cities,
-    blank=True,
-    null=True,
-    on_delete=models.CASCADE
+  river_street_deli = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
   )
-  landmark = models.ForeignKey(
-    Landmarks,
-    blank=True,
-    null=True,
-    on_delete=models.CASCADE
+  clumpies = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
+  )
+  coolidge_park = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
+  )
+  renaissance_park = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
+  )
+  hunter_art_museum = models.DecimalField(
+    max_digits=24,
+    decimal_places=14,
+    default=0.0,
+    null=False,
+    blank=False
   )
