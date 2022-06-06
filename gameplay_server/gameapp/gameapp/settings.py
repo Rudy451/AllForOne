@@ -81,6 +81,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gameapp.wsgi.application'
 
+# Cache
+CACHE_TTL = 60 * 60 * 4
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://" + ENV_VARS[4] + ":" + ENV_VARS[6] + "/0",
+        "OPTIONS": {
+            "CLIENT_CLASS:": "django_redis.client.DefaultClient"
+        },
+        "TIMEOUT": CACHE_TTL
+    }
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
