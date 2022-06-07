@@ -57,7 +57,7 @@ expo start
 5. Scan the barcode with the Expo app on your phone or follow the terminal instructions to load up the simulator on your machine.
 
  ## Tech Stack
- [React Native](https://reactnative.dev/), [Expo](https://expo.io), [React Native Maps](https://github.com/react-community/react-native-maps), [JavaScript](https://www.javascript.com/), [Python](https://www.python.org/), [Express](https://expressjs.com/), [socket.IO](https://socket.io/),  [PostgreSQL](https://www.postgresql.org/), [Django](https://www.djangoproject.com/start/overview/)
+ [React Native](https://reactnative.dev/), [Expo](https://expo.io), [React Native Maps](https://github.com/react-community/react-native-maps), [JavaScript](https://www.javascript.com/), [Python](https://www.python.org/), [Express](https://expressjs.com/), [socket.IO](https://socket.io/), [Redis](https://redis.io/),   [PostgreSQL](https://www.postgresql.org/), [Django](https://www.djangoproject.com/start/overview/)
 
 
  ## Contributing
