@@ -1,0 +1,18 @@
+branch-defaults:
+  default:
+    environment: allforone-django-env
+    group_suffix: null
+global:
+  application_name: gameplay_server
+  branch: null
+  default_ec2_keyname: rudy451-keypair
+  default_platform: Python 3.8
+  default_region: us-west-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: null
+  sc: null
+  workspace_type: Application
