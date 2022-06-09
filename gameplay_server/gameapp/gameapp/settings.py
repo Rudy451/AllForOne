@@ -16,10 +16,19 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Gather environment variables for database connection.
-ENV_VARS = []
-ENV_FILE = Path('C:/Users/Rudy451/codeworks/pair-programming/AllForOne/.env').absolute()
-with open(ENV_FILE) as env_f:
-    ENV_VARS += [line.strip("\n").split("=")[1] for line in env_f]
+#ENV_VARS = []
+#ENV_FILE = Path('C:/Users/Rudy451/codeworks/pair-programming/AllForOne/.env').absolute()
+#with open(ENV_FILE) as env_f:
+#    ENV_VARS += [line.strip("\n").split("=")[1] for line in env_f]
+ENV_VARS = [
+    '6NB9H[:jjUzK.p',
+    'AllForOne',
+    'postgres',
+    '&7#62yAhsk7',
+    '127.0.0.1',
+    '5432',
+    '6379'
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -31,8 +40,8 @@ SECRET_KEY = ENV_VARS[0]
 DEBUG = True
 
 # ALLOWED_HOSTS = ['127.0.0.1', ENV_VARS[4], '*']
-ALLOWED_HOSTS = ['*']
-
+#ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['allforone-django-env.eba-kbkqhta8.us-west-2.elasticbeanstalk.com']
 
 # Application definition
 
@@ -47,7 +56,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'corsheaders',
-    'play'
+    'play',
 ]
 
 MIDDLEWARE = [
