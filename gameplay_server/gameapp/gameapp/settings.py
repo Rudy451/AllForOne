@@ -26,6 +26,7 @@ if 'RDS_DB_NAME' in os.environ:
     ENV_VARS[4] = os.environ['RDS_HOSTNAME']
     ENV_VARS[5] = os.environ['RDS_PORT']
     ENV_VARS[6] = os.environ['REDIS_PORT']
+    ENV_VARS[7] = os.environ['ENV_STATUS']
 else:
     ENV_FILE = Path('C:/Users/Rudy451/codeworks/pair-programming/AllForOne/.env').absolute()
     with open(ENV_FILE) as env_f:
@@ -43,7 +44,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['127.0.0.1', ENV_VARS[4], '*']
 #ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['allforone-django-env.eba-n62efk9w.us-west-2.elasticbeanstalk.com', 'localhost']
+ALLOWED_HOSTS = ['allforone-django-env.eba-n62efk9w.us-west-2.elasticbeanstalk.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -95,7 +96,22 @@ WSGI_APPLICATION = 'gameapp.wsgi.application'
 # Cache
 CACHE_TTL = 60 * 60 * 4
 
+print(ENV_VARS[7])
+
 CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": [
+            "master.allforone.jzigcc.usw2.cache.amazonaws.com:6379",
+            "replica.allforone.jzigcc.usw2.cache.amazonaws.com:6379",
+            "arn:aws:elasticache:us-west-2:358593241834:replicationgroup:allforone"
+        ],
+        "OPTIONS": {
+            "CLIENT_CLASS:": "django_redis.client.DefaultClient"
+        },
+        "TIMEOUT": CACHE_TTL
+    }
+} if ENV_VARS[7] == 'production' else {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://" + ENV_VARS[4] + ":" + ENV_VARS[6] + "/0",
