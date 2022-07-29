@@ -12,25 +12,27 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
 
 # Gather environment variables for database connection.
 ENV_VARS = []
-if 'RDS_DB_NAME' in os.environ:
-    ENV_VARS[0] = os.environ['SECRET_KEY']
-    ENV_VARS[1] = os.environ['RDS_DB_NAME']
-    ENV_VARS[2] = os.environ['RDS_USERNAME']
-    ENV_VARS[3] = os.environ['RDS_PASSWORD']
-    ENV_VARS[4] = os.environ['RDS_HOSTNAME']
-    ENV_VARS[5] = os.environ['RDS_PORT']
-    ENV_VARS[6] = os.environ['REDIS_PORT']
-    ENV_VARS[7] = os.environ['ENV_STATUS']
-else:
-    ENV_FILE = Path('C:/Users/Rudy451/codeworks/pair-programming/AllForOne/.env').absolute()
-    with open(ENV_FILE) as env_f:
-        ENV_VARS += [line.strip("\n").split("=")[1] for line in env_f]
+#if 'RDS_DB_NAME' in os.environ:
+ENV_VARS.append(os.environ['SECRET_KEY'])
+ENV_VARS.append(os.environ['DJANGO_HOST'])
+ENV_VARS.append(os.environ['DATABASE_URL'])
+ENV_VARS.append(os.environ['REDIS_URL'])
+#else:
+#    ENV_FILE = Path('C:/Users/Rudy451/codeworks/pair-programming/AllForOne/.env').absolute()
+#    with open(ENV_FILE) as env_f:
+#        ENV_VARS += [line.strip("\n").split("=")[1] for line in env_f]
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,7 +46,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['127.0.0.1', ENV_VARS[4], '*']
 #ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['allforone-django-env.eba-n62efk9w.us-west-2.elasticbeanstalk.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [ENV_VARS[1], 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -96,27 +98,18 @@ WSGI_APPLICATION = 'gameapp.wsgi.application'
 # Cache
 CACHE_TTL = 60 * 60 * 4
 
-print(ENV_VARS[7])
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": [
-            "master.allforone.jzigcc.usw2.cache.amazonaws.com:6379",
-            "replica.allforone.jzigcc.usw2.cache.amazonaws.com:6379",
-            "arn:aws:elasticache:us-west-2:358593241834:replicationgroup:allforone"
-        ],
+        "LOCATION": ENV_VARS[3],
         "OPTIONS": {
-            "CLIENT_CLASS:": "django_redis.client.DefaultClient"
-        },
-        "TIMEOUT": CACHE_TTL
-    }
-} if ENV_VARS[7] == 'production' else {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://" + ENV_VARS[4] + ":" + ENV_VARS[6] + "/0",
-        "OPTIONS": {
-            "CLIENT_CLASS:": "django_redis.client.DefaultClient"
+            "CLIENT_CLASS:": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "ssl_cert_reqs": None
+            },
+            "REDIS_CLIENT_KWAGS": {
+                "health_check_interval": 30
+            }
         },
         "TIMEOUT": CACHE_TTL
     }
@@ -128,14 +121,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': ENV_VARS[1],
-        'USER': ENV_VARS[2],
-        'PASSWORD': ENV_VARS[3],
-        'HOST': ENV_VARS[4],
-        'PORT': ENV_VARS[5]
-    }
+    'default': dj_database_url.config(
+        default=ENV_VARS[2]
+    )
 }
 
 # Internationalization

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon ./index.js"
+    "start": "npx nodemon ./index.js",
+    "deploy": "git add -A && git commit -m Heroku && git push heroku master",
+    "postinstall": "npm install --prefix server"
   },
   "author": "",
   "license": "ISC",
