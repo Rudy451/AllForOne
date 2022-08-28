@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url
+#import dj_databases_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,15 +24,14 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
 
 # Gather environment variables for database connection.
 ENV_VARS = []
-#if 'RDS_DB_NAME' in os.environ:
-ENV_VARS.append(os.environ['SECRET_KEY'])
+"""ENV_VARS.append(os.environ['SECRET_KEY'])
 ENV_VARS.append(os.environ['DJANGO_HOST'])
 ENV_VARS.append(os.environ['DATABASE_URL'])
-ENV_VARS.append(os.environ['REDIS_URL'])
+ENV_VARS.append(os.environ['REDIS_URL'])"""
 #else:
-#    ENV_FILE = Path('C:/Users/Rudy451/codeworks/pair-programming/AllForOne/.env').absolute()
-#    with open(ENV_FILE) as env_f:
-#        ENV_VARS += [line.strip("\n").split("=")[1] for line in env_f]
+ENV_FILE = Path('C:/Users/Rudy451/codeworks/pair-programming/AllForOne/.env').absolute()
+with open(ENV_FILE) as env_f:
+    ENV_VARS += [line.strip("\n").split("=")[1] for line in env_f]
 
 
 # Quick-start development settings - unsuitable for production
@@ -98,7 +97,7 @@ WSGI_APPLICATION = 'gameapp.wsgi.application'
 # Cache
 CACHE_TTL = 60 * 60 * 4
 
-CACHES = {
+"""CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": ENV_VARS[3],
@@ -113,6 +112,16 @@ CACHES = {
         },
         "TIMEOUT": CACHE_TTL
     }
+}"""
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://" + ENV_VARS[4] + ":" + ENV_VARS[6] + "/0",
+        "OPTIONS": {
+            "CLIENT_CLASS:": "django_redis.client.DefaultClient"
+        },
+        "TIMEOUT": CACHE_TTL
+    }
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
@@ -120,10 +129,21 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': dj_database_url.config(
         default=ENV_VARS[2]
     )
+}"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': ENV_VARS[1],
+        'USER': ENV_VARS[2],
+        'PASSWORD': ENV_VARS[3],
+        'HOST': ENV_VARS[4],
+        'PORT': ENV_VARS[5]
+    }
 }
 
 # Internationalization
