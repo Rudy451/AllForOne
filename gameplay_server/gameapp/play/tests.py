@@ -38,10 +38,14 @@ class UserEntryTests(TestCase):
     self.assertEquals(user_entry_check.func, user_entry)
 
 class GetLocationTests(TestCase):
+  def setUp(self):
+    self.user_entry_url = reverse("user_entry")
+    self.body = '{"public_key_address": "test_address"}'
+    self.client.patch(self.user_entry_url, self.body)
+
   def test_geolocation_url(self):
     geolocation_url = reverse("get_locations")
-    body = '{"public_key_address": "test_address"}'
-    response = self.client.put(geolocation_url, body)
+    response = self.client.put(geolocation_url)
     self.assertEquals(response.status_code, 200)
 
   def test_geolocation_view(self):
@@ -49,10 +53,14 @@ class GetLocationTests(TestCase):
     self.assertEquals(geolocation_check.func, get_locations)
 
 class UserQuestionRequestTests(TestCase):
+  def setUp(self):
+    self.user_entry_url = reverse("user_entry")
+    self.body = '{"public_key_address": "test_address"}'
+    self.client.patch(self.user_entry_url, self.body)
+
   def test_user_question_request_url(self):
-    user_question_request_url = reverse("get_locations")
-    body = '{"public_key_address": "test_address"}'
-    response = self.client.put(user_question_request_url, body)
+    user_question_request_url = reverse("user_request")
+    response = self.client.get(user_question_request_url)
     self.assertEquals(response.status_code, 200)
 
   def test_user_question_request_view(self):
@@ -60,9 +68,15 @@ class UserQuestionRequestTests(TestCase):
     self.assertEquals(user_question_request_check.func, user_question_request)
 
 class UserLocationCheckTests(TestCase):
+  def setUp(self):
+    self.user_entry_url = reverse("user_entry")
+    self.body = '{"public_key_address": "test_address"}'
+    self.client.patch(self.user_entry_url, self.body)
+    self.question = "What restaurant originally occupied this spot before it gave way to a crumbling roof?"
+
   def test_user_location_check_url(self):
     user_location_check_url = reverse("user_check")
-    body = '{"public_key_address": "test_address", "latitude": "35.05490819312549", "longitude": "-85.30943785558155"}'
+    body = '{"latitude": "35.05490819312549", "longitude": "-85.30943785558155"}'
     response = self.client.patch(user_location_check_url, body)
     self.assertEquals(response.status_code, 200)
 
@@ -71,9 +85,13 @@ class UserLocationCheckTests(TestCase):
     self.assertEquals(user_location_checks.func, user_location_check)
 
 class ClearUserGameStatus(TestCase):
+  def setUp(self):
+    self.user_entry_url = reverse("user_entry")
+    self.body = '{"public_key_address": "test_address"}'
+    self.client.patch(self.user_entry_url, self.body)
+
   def test_clear_user_game_status_url(self):
     clear_user_game_status_url = reverse("clear_user")
-    body = '{"public_key_address": "test_address"}'
     response = self.client.get(clear_user_game_status_url)
     self.assertEquals(response.status_code, 200)
 
