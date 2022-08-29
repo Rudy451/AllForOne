@@ -1,0 +1,206 @@
+[
+  {
+    "model": "play.cities",
+    "pk": "15c98925-3583-4dfd-91f6-c13d3945fa3d",
+    "fields": {
+      "city_name": "Chattanooga ",
+      "longitude": "-85.30967700000000",
+      "latitude": "35.04563100000000"
+    }
+  },
+  {
+    "model": "play.landmarks",
+    "pk": "03ee9967-9056-4cc1-9954-ff10f9d19973",
+    "fields": {
+      "landmark_name": "Game Start",
+      "longitude": "-85.30729600000000",
+      "latitude": "35.05817000000000",
+      "question": "This is the start of your scavenger hunt. Go to the given location and press check-in when you believe you are there. If correct a question will be displayed on a similar pop-up as this.",
+      "hint": "",
+      "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+    }
+  },
+  {
+    "model": "play.landmarks",
+    "pk": "16c6b0d7-d473-4790-a6b6-a67b8036c5a4",
+    "fields": {
+      "landmark_name": "Ice Cream Show",
+      "longitude": "-85.30774106324982",
+      "latitude": "35.05552237416245",
+      "question": "What's the name of the dog that's always ready to give you a hi five?",
+      "hint": "",
+      "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+    }
+  },
+  {
+    "model": "play.landmarks",
+    "pk": "1a240cc5-781f-4bd6-a973-86689c06be81",
+    "fields": {
+        "landmark_name": "Old Building Collapse",
+        "longitude": "-85.30943785558155",
+        "latitude": "35.05490819312549",
+        "question": "What restaurant originally occupied this spot before it gave way to a crumbling roof?",
+        "hint": "",
+        "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+    }
+  }, {
+    "model": "play.landmarks",
+    "pk": "2c41caed-67bc-45f4-98fb-cf6e036c4dda",
+    "fields": {
+      "landmark_name": "River Street Deli",
+      "longitude": "-85.30772240419256",
+      "latitude": "35.06218252025553",
+      "question": "What state is the owner of River Street Deli from?",
+      "hint": "",
+      "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+    }
+  }, {
+    "model": "play.landmarks",
+    "pk": "409fc8ca-a902-40e4-b03d-d3c465cdb188",
+    "fields": {
+      "landmark_name": "Clumpies",
+      "longitude": "-85.30768626201176",
+      "latitude": "35.06245598491883",
+      "question": "What kind of dance do you do in front of Clumpies?",
+      "hint": "",
+      "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+    }
+  }, {
+    "model": "play.landmarks",
+    "pk": "440534e0-4dc0-4d03-abd5-ed556d5caa29",
+    "fields": {
+      "landmark_name": "Coolidge Park",
+      "longitude": "-85.30759823642703",
+      "latitude": "35.06131478619901",
+      "question": "How many creatures are permanently at Coolidge park?",
+      "hint": "",
+      "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+    }
+  }, {
+    "model": "play.landmarks",
+    "pk": "7372775a-3287-472d-99b4-91fa4d97e8a5",
+    "fields": {
+      "landmark_name": "Renaissance Park",
+      "longitude": "-85.31094593831801",
+      "latitude": "35.06036164113993",
+      "question": "At Renaissance Park, what is the name of the artistic piece that sends you on a walk through wires and vines?",
+      "hint": "",
+      "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+    }
+  }, {
+    "model": "play.landmarks",
+    "pk": "8d2b6002-6975-4b38-8ff1-4b9250ab052d",
+    "fields": {
+      "landmark_name": "Hunter Art Museum",
+      "longitude": "-85.30664918880245",
+      "latitude": "35.05607791203153",
+      "question": "What is the equine statue made of?",
+      "hint": "",
+      "city": "15c98925-3583-4dfd-91f6-c13d3945fa3d"
+      }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "28583e9d-8482-438f-a6dc-1e2554630eb0",
+    "fields": {
+      "starting_landmark": "16c6b0d7-d473-4790-a6b6-a67b8036c5a4",
+      "ice_cream_show": "0E-14",
+      "old_building_collapse": "20.14820435368826",
+      "river_street_deli": "2.16493179366773",
+      "clumpies": "13.51321304819343",
+      "coolidge_park": "0.04861948490143",
+      "renaissance_park": "14.80795351054783",
+      "hunter_art_museum": "14.13275356908303"
+    }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "304d7fab-c9c2-4ef0-8cfa-c9e1a7620856",
+    "fields": {
+      "starting_landmark": "440534e0-4dc0-4d03-abd5-ed556d5caa29",
+      "ice_cream_show": "8.16414784334128",
+      "old_building_collapse": "9.64585362961023",
+      "river_street_deli": "0.33547351360321",
+      "clumpies": "0.05879523356756",
+      "coolidge_park": "0E-14",
+      "renaissance_park": "15.97852824912216",
+      "hunter_art_museum": "12.33187689548437"
+    }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "383410f4-5151-4f00-a69c-86dca67b82d8",
+    "fields": {
+      "starting_landmark": "03ee9967-9056-4cc1-9954-ff10f9d19973",
+      "ice_cream_show": "0.05520594914754",
+      "old_building_collapse": "0.04779060284297",
+      "river_street_deli": "0.26719334920247",
+      "clumpies": "17.56929211535319",
+      "coolidge_park": "5.45014919789009",
+      "renaissance_park": "0.24086310068766",
+      "hunter_art_museum": "9.24576555875158"
+    }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "4fdbf363-b1a1-4770-8e7e-6b72660dc960",
+    "fields": {
+      "starting_landmark": "8d2b6002-6975-4b38-8ff1-4b9250ab052d",
+      "ice_cream_show": "12.96305308330134",
+      "old_building_collapse": "0.06899988253911",
+      "river_street_deli": "12.25224535155797",
+      "clumpies": "10.83179495989820",
+      "coolidge_park": "14.54442141665426",
+      "renaissance_park": "3.21705512010725",
+      "hunter_art_museum": "0E-14"
+    }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "522ac1ac-8a9c-4a44-8d4a-33d22b39a3a2",
+    "fields": {
+      "starting_landmark": "2c41caed-67bc-45f4-98fb-cf6e036c4dda",
+      "ice_cream_show": "13.34679643122422",
+      "old_building_collapse": "17.50410237654094",
+      "river_street_deli": "0.13108363151550",
+      "clumpies": "10.69390919176930",
+      "coolidge_park": "0.45279898643494",
+      "renaissance_park": "8.99934775184326",
+      "hunter_art_museum": "20.99934775184326"
+    }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "d62cd723-3e25-45e3-aa3e-c0a87f57ff6c",
+    "fields": {
+      "starting_landmark": "7372775a-3287-472d-99b4-91fa4d97e8a5",
+      "ice_cream_show": "17.07823220410948",
+      "old_building_collapse": "12.33243380852452",
+      "river_street_deli": "9.39089249395518",
+      "clumpies": "9.91854431547926",
+      "coolidge_park": "0.32555391788483",
+      "renaissance_park": "0E-14",
+      "hunter_art_museum": "18.21733005538515"
+    }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "e2565392-7af6-4101-9b3e-f26223fa9479",
+    "fields": {
+      "starting_landmark": "409fc8ca-a902-40e4-b03d-d3c465cdb188",
+      "ice_cream_show": "17.71239525083746",
+      "old_building_collapse": "20.13762478172701",
+      "river_street_deli": "3.01924117351251",
+      "clumpies": "0E-14",
+      "coolidge_park": "12.61367884712035",
+      "renaissance_park": "16.57778803589854",
+      "hunter_art_museum": "0.05758705139160"
+    }
+  }, {
+    "model": "play.chattanoogalandmarktimerecords",
+    "pk": "e975cce6-ceea-4bae-91c4-1eb5221acfee",
+    "fields": {
+      "starting_landmark": "1a240cc5-781f-4bd6-a973-86689c06be81",
+      "ice_cream_show": "19.41435042747368",
+      "old_building_collapse": "0E-14",
+      "river_street_deli": "7.21191024988948",
+      "clumpies": "4.04761309216753",
+      "coolidge_park": "9.68361394489357",
+      "renaissance_park": "0.84516278505325",
+      "hunter_art_museum": "6.42673582846115"
+    }
+  }
+]

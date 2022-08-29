@@ -48,6 +48,8 @@ def user_entry(request):
   try:
     # Check if user data is already cached; If not create a new cache entry with users public key
     assert request.session.get("public_key_address") == None
+    assert user_query["public_key_address"] != None
+    assert len(user_query["public_key_address"]) > 0
     request.session["public_key_address"] = user_query["public_key_address"]
     # Prepare game data for caching (See above description for details)
     cache.set(request.session["public_key_address"], {
